@@ -1,6 +1,6 @@
 # Aplikasi Quran
 
-Aplikasi Quran is a Flutter project designed to provide a modern and user-friendly Quran application for users to read and explore the Quranic text. Please note that this project is a work in progress, and contributions are welcome.
+Aplikasi Quran is a Flutter project designed to provide a modern and user-friendly Quran application for users to read and explore the Quranic text. Please note that this project is a **work in progress**, and contributions are welcome.
 
 ## Tech
 - Flutter 3.13.1
@@ -12,18 +12,19 @@ Aplikasi Quran is a Flutter project designed to provide a modern and user-friend
 - Get It & Injectable
 
 ## Features
-
 - [✔] Display Quranic (Surah and Juz mode) text with translations.
+- [✔] Localization in English and Bahasa Indonesia.
 - [✔] Search functionality for finding specific Surah.
 - [✔] Search functionality for finding specific Surah.
 - [✔] Display Shalat time by location.
 - [In Progress] Bookmark and save favorite verses.
 - [In Progress] Night mode for comfortable reading at night.
+- [In Progress] Setting for changing font size, font type, language, etc.
+- [ ] Display Quranic text with tajweed.
 - [ ] Audio recitations of Quranic verses.
 - [ ] User-friendly and responsive design.
 
 ## Installation
-
 To run this Flutter project on your local machine, follow these steps:
 
 1. **Clone the repository:**
@@ -41,10 +42,11 @@ To run this Flutter project on your local machine, follow these steps:
     ```bash
     flutter pub get
 
-3. **Run Build Runner**
+3. **Run build runner and generate localization**
 
     ```bash
     flutter pub run build_runner build
+    flutter pub run easy_localization:generate -f keys -o locale_keys.g.dart --source-dir assets/translations
 
 4. **Run the application:**
 
