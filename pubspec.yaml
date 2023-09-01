@@ -1,0 +1,132 @@
+name: quranku
+description: Aplikasi quran mobile
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.19.6 <3.2.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  flutter_bloc: ^8.1.3
+  equatable: ^2.0.3
+  connectivity_plus: ^4.0.2
+  dartz: ^0.10.1
+  dio: ^5.3.2
+  get_it: ^7.6.0
+  injectable: ^2.1.1
+  font_awesome_flutter: ^10.1.0
+  shared_preferences: ^2.2.0
+  cached_network_image: ^3.2.3
+  easy_localization: ^3.0.2
+  lottie: ^2.6.0
+  flutter_svg: ^2.0.7
+  geolocator: ^10.0.0
+  geocoding: ^2.1.0
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.8.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  build_runner: ^2.0.6
+  injectable_generator:
+  freezed: ^2.4.0
+  json_serializable: ^6.7.1
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/translations/
+    - assets/lottie/
+    - assets/svg/
+  fonts:
+    - family: Lato
+      fonts:
+        - asset: assets/fonts/Lato/Lato-Regular.ttf
+        - asset: assets/fonts/Lato/Lato-Italic.ttf
+          style: italic
+        - asset: assets/fonts/Lato/Lato-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Lato/Lato-BoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/Lato/Lato-Black.ttf
+          weight: 900
+        - asset: assets/fonts/Lato/Lato-BlackItalic.ttf
+          weight: 900
+          style: italic
+        - asset: assets/fonts/Lato/Lato-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Lato/Lato-LightItalic.ttf
+          weight: 300
+          style: italic
+    - family: Mirza
+      fonts:
+        - asset: assets/fonts/Arabic/Mirza/Mirza-Regular.ttf
+        - asset: assets/fonts/Arabic//Mirza/Mirza-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Arabic//Mirza/Mirza-SemiBold.ttf
+          weight: 600
+    - family: DecoType-Thuluth-II
+      fonts:
+        - asset: assets/fonts/Arabic/DecoType-Thuluth-II-Regular.ttf
+    - family: Othmani
+      fonts:
+        - asset: assets/fonts/Arabic/Othmani.ttf
+    - family: Quran1
+      fonts:
+        - asset: assets/fonts/Arabic/Quran1.ttf
+    - family: Lotus-Linotype
+      fonts:
+        - asset: assets/fonts/Arabic/LotusLinotype-Bold.otf
+        - asset: assets/fonts/Arabic/LotusLinotype-Light.otf
+          weight: 300
+    - family: Al-Majeed
+      fonts:
+        - asset: assets/fonts/Arabic/Al-Majeed-Quranic.ttf
+    - family: Al-Mushaf
+      fonts:
+        - asset: assets/fonts/Arabic/Al-Mushaf-Quran.ttf
+    - family: Al-Qalam
+      fonts:
+        - asset: assets/fonts/Arabic/Al-Qalam-Quran.ttf
+    - family: Arslan-Wessam-A
+      fonts:
+        - asset: assets/fonts/Arabic/Arslan-Wessam-A.ttf
+    - family: Arslan-Wessam-B
+      fonts:
+        - asset: assets/fonts/Arabic/Arslan-Wessam-B.ttf
+    - family: Deco-Type
+      fonts:
+        - asset: assets/fonts/Arabic/Deco-Type.ttf
+    - family: Hafs
+      fonts:
+        - asset: assets/fonts/Arabic/Hafs.ttf
+    - family: Janna-LT
+      fonts:
+        - asset: assets/fonts/Arabic/Janna-LT-Bold.ttf
+    - family: LPMQ-IsepMisbah
+      fonts:
+        - asset: assets/fonts/Arabic/LPMQ-IsepMisbah.ttf
+    - family: Me-Quran
+      fonts:
+        - asset: assets/fonts/Arabic/Me-Quran.ttf
+    - family: Muhammadi
+      fonts:
+        - asset: assets/fonts/Arabic/Muhammadi.ttf
+    - family: Nabi
+      fonts:
+        - asset: assets/fonts/Arabic/Nabi.ttf
+    - family: Neirizi
+      fonts:
+        - asset: assets/fonts/Arabic/Neirizi.ttf
+    - family: PDMS-Saleem
+      fonts:
+        - asset: assets/fonts/Arabic/PDMS-Saleem.ttf
+
+
