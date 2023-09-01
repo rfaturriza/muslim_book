@@ -30,7 +30,7 @@ class SurahList extends StatelessWidget {
             if (index == 0) {
               return const Divider(color: Colors.transparent);
             }
-            return Divider(color: secondaryColor.shade500,thickness: 0.1);
+            return Divider(color: secondaryColor.shade500, thickness: 0.1);
           },
           itemCount: () {
             if (state is SurahLoadingState) {
@@ -95,7 +95,13 @@ class SurahList extends StatelessWidget {
                     ),
                   ),
                   subtitle: Text(
-                    '${surahData.revelation?.id ?? emptyString} | ${surahData.numberOfVerses} Ayat',
+                    '${surahData.revelation?.asLocale(context) ?? emptyString}'
+                    ' | '
+                    '${LocaleKeys.amountOfVerses.tr(
+                      args: [
+                        surahData.numberOfVerses?.toString() ?? emptyString
+                      ],
+                    )}',
                     style: context.textTheme.bodyMedium,
                   ),
                   trailing: Text(
@@ -120,7 +126,7 @@ class SurahList extends StatelessWidget {
     final locale = context.locale;
     final isIndonesia = locale == const Locale('id');
     final isEnglish = locale == const Locale('en');
-    final surahName = (){
+    final surahName = () {
       if (isEnglish) {
         return surah?.name?.transliteration?.en;
       } else if (isIndonesia) {

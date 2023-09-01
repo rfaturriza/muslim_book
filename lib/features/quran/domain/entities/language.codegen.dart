@@ -1,5 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../../core/utils/extension/string_ext.dart';
 import '../../data/models/language_model.codegen.dart';
 
 part 'language.codegen.freezed.dart';
@@ -15,8 +18,19 @@ class Language with _$Language {
   const Language._();
 
   LanguageModel toModel() => LanguageModel(
-    arab: arab,
-    id: id,
-    en: en,
-  );
+        arab: arab,
+        id: id,
+        en: en,
+      );
+
+  String asLocale(BuildContext context) {
+    final locale = context.locale;
+    if (locale.languageCode == 'en') {
+      return en ?? emptyString;
+    } else if (locale.languageCode == 'id') {
+      return id ?? emptyString;
+    } else {
+      return arab ?? emptyString;
+    }
+  }
 }

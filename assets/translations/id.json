@@ -40,6 +40,17 @@
   "errorLocationPermanentDenied": "Izin lokasi ditolak secara permanen",
   "surah": "Surah",
   "juz": "Juz",
-  "ayah": "Ayat",
-  "bookmark": "Penanda"
+  "verses": "Ayat",
+  "amountOfVerses": "{} ayat",
+  "bookmark": "Penanda",
+  "errorAddingJuzBookmark": "Juz {} gagal disimpan",
+  "errorAddingSurahBookmark": "Surah {} gagal disimpan",
+  "errorAddingVerseBookmark": "{} ayat {} gagal disimpan",
+  "successAddingVersesBookmark": "{} ayat {} berhasil disimpan",
+  "errorRemovingJuzBookmark": "Gagal menghapus penanda juz",
+  "errorRemovingSurahBookmark": "Gagal menghapus penanda surah",
+  "errorRemovingVerseBookmark": "{} ayat {} gagal dihapus",
+  "errorGettingJuzBookmarks": "Gagal mendapatkan penanda juz",
+  "errorGettingSurahBookmarks": "Gagal mendapatkan penanda surah",
+  "errorGettingVerseBookmarks": "Gagal mendapatkan penanda ayat"
 }
