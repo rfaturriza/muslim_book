@@ -30,12 +30,12 @@ To run this Flutter project on your local machine, follow these steps:
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/your-username/aplikasi-quran.git
+   git clone https://github.com/rfaturriza/quran_flutter.git
 
 2. **Navigate to the project directory:**
 
    ```bash
-   cd aplikasi-quran
+   cd quran_flutter
 
 3. **Install dependencies:**
 
