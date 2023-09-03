@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
+import 'package:quranku/features/bookmark/presentation/screen/bookmark_screen.dart';
 import 'package:quranku/features/quran/presentation/screens/components/background_gradient.dart';
 import 'package:quranku/features/quran/presentation/screens/components/juz_list.dart';
 import 'package:quranku/features/quran/presentation/screens/components/main_app_bar.dart';
@@ -21,9 +22,7 @@ class QuranScreen extends StatelessWidget {
       // appBar: appbar,
       body: Stack(
         children: [
-          const BackgroundGradient(
-            isShowBottom: false,
-          ),
+          const BackgroundGradient(isShowBottom: false),
           SafeArea(
             child: DefaultTabController(
               length: 3,
@@ -38,8 +37,7 @@ class QuranScreen extends StatelessWidget {
                     SliverPersistentHeader(
                         key: const ValueKey('appbar'),
                         pinned: true,
-                        delegate: BarHeaderPersistentDelegate(appBar)
-                    ),
+                        delegate: BarHeaderPersistentDelegate(appBar)),
                     const SliverAppBar(
                       backgroundColor: Colors.transparent,
                       expandedHeight: 100.0,
@@ -67,7 +65,7 @@ class QuranScreen extends StatelessWidget {
                   children: [
                     SurahList(),
                     JuzList(),
-                    Center(child: Text('Bookmark')),
+                    BookmarkScreen(),
                   ],
                 ),
               ),
@@ -81,6 +79,7 @@ class QuranScreen extends StatelessWidget {
 
 class BarHeaderPersistentDelegate extends SliverPersistentHeaderDelegate {
   BarHeaderPersistentDelegate(this._bar);
+
   final dynamic _bar;
 
   @override
@@ -96,11 +95,12 @@ class BarHeaderPersistentDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => minExtent;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset,
-      bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     Color animatedColor({double? offset}) {
       if (shrinkOffset > 0 && shrinkOffset < maxExtent) {
-        return context.theme.colorScheme.background.withOpacity((shrinkOffset / maxExtent)- (offset ?? 0));
+        return context.theme.colorScheme.background
+            .withOpacity((shrinkOffset / maxExtent));
       } else if (shrinkOffset > 0) {
         return context.theme.colorScheme.background;
       } else {

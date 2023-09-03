@@ -2,18 +2,17 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quranku/core/components/search_box.dart';
-import 'package:quranku/core/constants/font_constants.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/themes/color.dart';
 import 'package:quranku/features/quran/presentation/bloc/detailSurah/detail_surah_bloc.dart';
 import 'package:quranku/features/quran/presentation/bloc/surah/surah_bloc.dart';
-import 'package:quranku/features/quran/presentation/screens/components/number_pin.dart';
 
 import '../../../../../core/utils/extension/string_ext.dart';
 import '../../../../../generated/locale_keys.g.dart';
 import '../../../../../injection.dart';
 import '../../../domain/entities/surah.codegen.dart';
 import '../detail_surah_screen.dart';
+import 'list_tile_surah.dart';
 
 class SurahList extends StatelessWidget {
   const SurahList({Key? key}) : super(key: key);
@@ -83,36 +82,15 @@ class SurahList extends StatelessWidget {
                 }
 
                 final surahData = listSurah[index - 1];
-                return ListTile(
-                  onTap: () => _onTapSurah(context, surahData),
-                  leading: NumberPin(
-                    number: surahData.number?.toString() ?? emptyString,
-                  ),
-                  title: Text(
-                    surahData.name?.transliteration?.id ?? emptyString,
-                    style: context.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  subtitle: Text(
-                    '${surahData.revelation?.asLocale(context) ?? emptyString}'
-                    ' | '
-                    '${LocaleKeys.amountOfVerses.tr(
-                      args: [
-                        surahData.numberOfVerses?.toString() ?? emptyString
-                      ],
-                    )}',
-                    style: context.textTheme.bodyMedium,
-                  ),
-                  trailing: Text(
-                    surahData.name?.short ?? emptyString,
-                    textAlign: TextAlign.end,
-                    style: TextStyle(
-                      color: defaultColor.shade50,
-                      fontFamily: FontConst.decoTypeThuluthII,
-                      fontSize: 25,
-                    ),
-                  ),
+                return ListTileSurah(
+                  onTapSurah: () => onTapSurah(context, surahData),
+                  number: surahData.number?.toString() ?? emptyString,
+                  name: surahData.name?.transliteration?.asLocale(context) ??
+                      emptyString,
+                  revelation: surahData.revelation,
+                  numberOfVerses:
+                      surahData.numberOfVerses?.toString() ?? emptyString,
+                  trailingText: surahData.name?.short ?? emptyString,
                 );
               },
             );
@@ -122,27 +100,15 @@ class SurahList extends StatelessWidget {
     );
   }
 
-  void _onTapSurah(BuildContext context, Surah? surah) {
-    final locale = context.locale;
-    final isIndonesia = locale == const Locale('id');
-    final isEnglish = locale == const Locale('en');
-    final surahName = () {
-      if (isEnglish) {
-        return surah?.name?.transliteration?.en;
-      } else if (isIndonesia) {
-        return surah?.name?.transliteration?.id;
-      } else {
-        return surah?.name?.short;
-      }
-    }();
+  static void onTapSurah(BuildContext context, Surah? surah) {
     context.navigateTo(
       BlocProvider<SurahDetailBloc>(
         create: (_) => sl<SurahDetailBloc>()
           ..add(
-            SurahDetailFetchEvent(surahNumber: surah?.number),
+            FetchSurahDetailEvent(surahNumber: surah?.number),
           ),
         child: DetailSurahScreen(
-          surahName: surahName,
+          surahName: surah?.name?.transliteration?.asLocale(context),
         ),
       ),
     );

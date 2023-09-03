@@ -10,6 +10,7 @@ part 'detail_surah.codegen.freezed.dart';
 @freezed
 class DetailSurah with _$DetailSurah {
   const factory DetailSurah({
+    bool? isBookmarked,
     int? number,
     int? sequence,
     int? numberOfVerses,

@@ -28,6 +28,10 @@ dependencies:
   geocoding: ^2.1.0
   freezed_annotation: ^2.4.1
   json_annotation: ^4.8.1
+  hive: ^2.2.3
+  path_provider: ^2.1.1
+  hive_flutter: ^1.1.0
+  oktoast: ^3.3.1
 
 dev_dependencies:
   flutter_test:

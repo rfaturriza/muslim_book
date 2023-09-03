@@ -1,17 +1,18 @@
 part of 'detail_juz_bloc.dart';
 
-abstract class JuzDetailEvent extends Equatable {
-  const JuzDetailEvent();
+@freezed
+class JuzDetailEvent with _$JuzDetailEvent {
+  const factory JuzDetailEvent.fetchJuzDetail({
+    required int juzNumber,
+  }) = FetchJuzDetailEvent;
 
-  @override
-  List<Object?> get props => [];
-}
+  const factory JuzDetailEvent.onPressedBookmark({
+     JuzBookmark? juzBookmark,
+    required bool isBookmarked,
+  }) = OnPressedBookmarkEvent;
 
-class JuzDetailFetchEvent extends JuzDetailEvent {
-  final int juzNumber;
-
-  const JuzDetailFetchEvent({required this.juzNumber});
-
-  @override
-  List<Object?> get props => [juzNumber];
+  const factory JuzDetailEvent.onPressedVerseBookmark({
+    VerseBookmark? bookmark,
+    required bool isBookmarked,
+  }) = OnPressedVerseBookmarkEvent;
 }

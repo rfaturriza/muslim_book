@@ -1,26 +1,49 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quranku/core/components/spacer.dart';
 import 'package:quranku/core/constants/font_constants.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
+import 'package:quranku/features/bookmark/domain/entities/verse_bookmark.codegen.dart';
+import 'package:quranku/features/quran/domain/entities/juz.codegen.dart';
 import 'package:quranku/features/quran/domain/entities/verses.codegen.dart';
+import 'package:quranku/features/quran/presentation/bloc/detailJuz/detail_juz_bloc.dart';
+import 'package:quranku/features/quran/presentation/screens/components/verse_popup_menu.dart';
 
 import '../../../../../core/utils/extension/string_ext.dart';
 import '../../../../../core/utils/themes/color.dart';
+import '../../../domain/entities/detail_surah.codegen.dart';
+import '../../bloc/detailSurah/detail_surah_bloc.dart';
 import 'number_pin.dart';
 
+enum ClickFrom {
+  juz,
+  surah,
+  bookmark,
+}
+
 class VersesList extends StatelessWidget {
+  final ClickFrom clickFrom;
   final String? preBismillah;
+  final JuzConstant? juz;
+  final DetailSurah? surah;
   final List<Verses> listVerses;
 
-  const VersesList({super.key, required this.listVerses, this.preBismillah});
+  const VersesList({
+    super.key,
+    required this.listVerses,
+    this.preBismillah,
+    required this.clickFrom,
+    this.juz,
+    this.surah,
+  });
 
   @override
   Widget build(BuildContext context) {
     final isPreBismillah = preBismillah?.isNotEmpty == true;
     return ListView.separated(
-      itemCount: (){
-        if(isPreBismillah){
+      itemCount: () {
+        if (isPreBismillah) {
           return listVerses.length + 1;
         }
         return listVerses.length;
@@ -29,7 +52,7 @@ class VersesList extends StatelessWidget {
         if (isPreBismillah && index == 0) {
           return const Divider(color: Colors.transparent);
         }
-        return Divider(color: secondaryColor.shade500,thickness: 0.1);
+        return Divider(color: secondaryColor.shade500, thickness: 0.1);
       },
       itemBuilder: (context, index) {
         if (index == 0 && isPreBismillah) {
@@ -41,25 +64,86 @@ class VersesList extends StatelessWidget {
             ),
           );
         }
-        final verses = isPreBismillah ? listVerses[index - 1] : listVerses[index];
-        return ListTileVerses(verses: verses);
+        final verses =
+            isPreBismillah ? listVerses[index - 1] : listVerses[index];
+        return ListTileVerses(
+          verses: verses,
+          clickFrom: clickFrom,
+          juz: juz,
+          surah: surah,
+        );
       },
     );
   }
 }
 
 class ListTileVerses extends StatelessWidget {
+  final ClickFrom clickFrom;
   final Verses verses;
+  final JuzConstant? juz;
+  final DetailSurah? surah;
 
-  const ListTileVerses({super.key, required this.verses});
+  const ListTileVerses({
+    super.key,
+    required this.verses,
+    required this.clickFrom,
+    this.juz,
+    this.surah,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ListTile(
-          leading: NumberPin(
-            number: verses.number?.inSurah.toString() ?? emptyString,
+          leading: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: 32,
+                height: 32,
+                child: FittedBox(
+                  child: NumberPin(
+                    number: verses.number?.inSurah.toString() ?? emptyString,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: VersePopupMenuButton(
+                  isBookmarked: verses.isBookmarked,
+                  onBookmarkPressed: () {
+                    if (clickFrom == ClickFrom.surah) {
+                      final surahDetailBloc = context.read<SurahDetailBloc>();
+                      if (surah == null) return;
+                      surahDetailBloc.add(
+                        SurahDetailEvent.onPressedVerseBookmark(
+                          bookmark: VerseBookmark(
+                            surahName: surah!.name!,
+                            versesNumber: verses.number!,
+                          ),
+                          isBookmarked: verses.isBookmarked ?? false,
+                        ),
+                      );
+                    } else {
+                      final juzDetailBloc = context.read<JuzDetailBloc>();
+                      juzDetailBloc.add(
+                        JuzDetailEvent.onPressedVerseBookmark(
+                          bookmark: VerseBookmark(
+                            juz: JuzConstant(
+                              name: juz?.name ?? emptyString,
+                              number: juz?.number ?? 0,
+                              description: juz?.description ?? emptyString,
+                            ),
+                            versesNumber: verses.number!,
+                          ),
+                          isBookmarked: verses.isBookmarked ?? false,
+                        ),
+                      );
+                    }
+                  },
+                ),
+              )
+            ],
           ),
           title: Text(
             verses.text?.arab ?? emptyString,
@@ -119,7 +203,8 @@ class TransliterationVerses extends StatelessWidget {
         text: verses.text?.transliteration?.en ?? emptyString,
         number: verses.number?.inSurah.toString() ?? emptyString,
       );
-    } else if (isIndonesia && verses.text?.transliteration?.id?.isNotEmpty == true) {
+    } else if (isIndonesia &&
+        verses.text?.transliteration?.id?.isNotEmpty == true) {
       return ListTileTransliteration(
         text: verses.text?.transliteration?.id ?? emptyString,
         number: verses.number?.inSurah.toString() ?? emptyString,

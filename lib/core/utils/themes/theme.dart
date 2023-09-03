@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quranku/core/constants/font_constants.dart';
 
 import 'color.dart';
 import 'text.dart';
@@ -11,9 +12,10 @@ final themeData = ThemeData(
     primarySwatch: primaryColor,
     accentColor: secondaryColor[500],
     backgroundColor: backgroundColor,
-    errorColor: errorColor[500],
+    errorColor: errorColor[400],
   ),
+  dividerColor: secondaryColor[500],
   visualDensity: VisualDensity.adaptivePlatformDensity,
-  fontFamily: 'Lato',
+  fontFamily: FontConst.lato,
   textTheme: textTheme,
 );

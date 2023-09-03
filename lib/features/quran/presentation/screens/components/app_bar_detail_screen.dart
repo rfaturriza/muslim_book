@@ -34,10 +34,14 @@ class SliverAppBarDetailScreen extends StatelessWidget
     implements PreferredSizeWidget {
   const SliverAppBarDetailScreen({
     super.key,
+    this.isBookmarked = false,
     required this.title,
+    required this.onPressedBookmark,
   });
 
+  final bool isBookmarked;
   final String title;
+  final Function()? onPressedBookmark;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +58,18 @@ class SliverAppBarDetailScreen extends StatelessWidget
           color: secondaryColor.shade400,
         ),
       ),
+      actions: [
+        IconButton(
+          onPressed: onPressedBookmark,
+          icon: (){
+            if(isBookmarked){
+              return const Icon(Icons.bookmark);
+            }
+            return const Icon(Icons.bookmark_border);
+          }(),
+          color: secondaryColor,
+        ),
+      ],
     );
   }
 

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:quranku/features/quran/presentation/screens/constant.dart';
+import 'package:quranku/features/quran/domain/entities/juz.codegen.dart';
 
 part 'juz_state.dart';
 

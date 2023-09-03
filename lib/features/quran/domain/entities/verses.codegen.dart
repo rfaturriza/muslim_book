@@ -8,6 +8,7 @@ part 'verses.codegen.freezed.dart';
 @freezed
 class Verses with _$Verses {
   const factory Verses({
+    bool? isBookmarked,
     VersesNumber? number,
     VersesMeta? meta,
     VersesText? text,

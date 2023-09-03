@@ -1,17 +1,18 @@
 part of 'detail_surah_bloc.dart';
 
-abstract class SurahDetailEvent extends Equatable {
-  const SurahDetailEvent();
+@freezed
+class SurahDetailEvent with _$SurahDetailEvent {
+  const factory SurahDetailEvent.fetchSurahDetail({
+    int? surahNumber,
+  }) = FetchSurahDetailEvent;
 
-  @override
-  List<Object?> get props => [];
-}
+  const factory SurahDetailEvent.onPressedBookmark({
+    SurahBookmark? surahBookmark,
+    required bool isBookmarked,
+  }) = OnPressedBookmarkEvent;
 
-class SurahDetailFetchEvent extends SurahDetailEvent {
-  final int? surahNumber;
-
-  const SurahDetailFetchEvent({this.surahNumber});
-
-  @override
-  List<Object?> get props => [surahNumber];
+  const factory SurahDetailEvent.onPressedVerseBookmark({
+    VerseBookmark? bookmark,
+    required bool isBookmarked,
+  }) = OnPressedVerseBookmarkEvent;
 }

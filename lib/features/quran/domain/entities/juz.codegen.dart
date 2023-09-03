@@ -1,17 +1,23 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../../generated/locale_keys.g.dart';
 
-class JuzConstant {
-  final int number;
-  final String name;
-  final String description;
+part 'juz.codegen.freezed.dart';
+part 'juz.codegen.g.dart';
 
-  JuzConstant({
-    required this.number,
-    required this.name,
-    required this.description,
-  });
+@freezed
+class JuzConstant with _$JuzConstant {
+  const factory JuzConstant({
+    required int number,
+    required String name,
+    required String description,
+  }) = _JuzConstant;
+
+  const JuzConstant._();
+
+  factory JuzConstant.fromJson(Map<String, dynamic> json) =>
+      _$JuzConstantFromJson(json);
 
   static List<JuzConstant> juzList = [
     JuzConstant(
