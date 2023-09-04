@@ -100,7 +100,7 @@ class SurahList extends StatelessWidget {
     );
   }
 
-  static void onTapSurah(BuildContext context, Surah? surah) {
+  static void onTapSurah(BuildContext context, Surah? surah, {int? jumpToVerse}) {
     context.navigateTo(
       BlocProvider<SurahDetailBloc>(
         create: (_) => sl<SurahDetailBloc>()
@@ -109,6 +109,7 @@ class SurahList extends StatelessWidget {
           ),
         child: DetailSurahScreen(
           surahName: surah?.name?.transliteration?.asLocale(context),
+          jumpToVerse: jumpToVerse,
         ),
       ),
     );

@@ -32,6 +32,7 @@ dependencies:
   path_provider: ^2.1.1
   hive_flutter: ^1.1.0
   oktoast: ^3.3.1
+  scrollable_positioned_list: ^0.3.8
 
 dev_dependencies:
   flutter_test:

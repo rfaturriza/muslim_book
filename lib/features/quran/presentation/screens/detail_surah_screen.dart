@@ -14,8 +14,10 @@ import '../bloc/detailSurah/detail_surah_bloc.dart';
 
 class DetailSurahScreen extends StatelessWidget {
   final String? surahName;
+  final int? jumpToVerse;
 
-  const DetailSurahScreen({Key? key, this.surahName}) : super(key: key);
+  const DetailSurahScreen({Key? key, this.surahName, this.jumpToVerse,})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +26,14 @@ class DetailSurahScreen extends StatelessWidget {
       body: BlocConsumer<SurahDetailBloc, SurahDetailState>(
         listener: (context, state) {
           if (state.saveBookmarkResult?.isLeft() ?? false) {
-            final message = state.saveBookmarkResult?.asLeft().message;
+            final message = state.saveBookmarkResult
+                ?.asLeft()
+                .message;
             context.showErrorToast(message ?? emptyString);
           } else if (state.deleteBookmarkResult?.isLeft() ?? false) {
-            final message = state.saveBookmarkResult?.asLeft().message;
+            final message = state.saveBookmarkResult
+                ?.asLeft()
+                .message;
             context.showErrorToast(message ?? emptyString);
           } else if (state.saveVerseBookmarkResult?.isRight() ?? false) {
             final verseNumber = state.saveVerseBookmarkResult?.asRight();
@@ -41,13 +47,17 @@ class DetailSurahScreen extends StatelessWidget {
             context.showInfoToast(
                 LocaleKeys.successRemovingVersesBookmark.tr(args: [
                   surahName ?? emptyString,
-              verseNumber ?? emptyString,
-            ]));
+                  verseNumber ?? emptyString,
+                ]));
           } else if (state.saveVerseBookmarkResult?.isLeft() ?? false) {
-            final message = state.saveVerseBookmarkResult?.asLeft().message;
+            final message = state.saveVerseBookmarkResult
+                ?.asLeft()
+                .message;
             context.showErrorToast(message ?? emptyString);
           } else if (state.deleteVerseBookmarkResult?.isLeft() ?? false) {
-            final message = state.deleteVerseBookmarkResult?.asLeft().message;
+            final message = state.deleteVerseBookmarkResult
+                ?.asLeft()
+                .message;
             context.showErrorToast(message ?? emptyString);
           }
         },
@@ -62,23 +72,23 @@ class DetailSurahScreen extends StatelessWidget {
                   isBookmarked: detailSurah?.isBookmarked ?? false,
                   title: surahName ?? emptyString,
                   onPressedBookmark: (state.detailSurahResult?.isRight() ??
-                          false)
+                      false)
                       ? () {
-                          final detailSurah =
-                              state.detailSurahResult?.asRight();
-                          final surahBookmark = SurahBookmark(
-                            surahName: detailSurah!.name!,
-                            surahNumber: detailSurah.number!,
-                            revelation: detailSurah.revelation!,
-                            totalVerses: detailSurah.numberOfVerses ?? 0,
-                          );
-                          surahDetailBloc.add(
-                            OnPressedBookmarkEvent(
-                              surahBookmark: surahBookmark,
-                              isBookmarked: detailSurah.isBookmarked ?? false,
-                            ),
-                          );
-                        }
+                    final detailSurah =
+                    state.detailSurahResult?.asRight();
+                    final surahBookmark = SurahBookmark(
+                      surahName: detailSurah!.name!,
+                      surahNumber: detailSurah.number!,
+                      revelation: detailSurah.revelation!,
+                      totalVerses: detailSurah.numberOfVerses ?? 0,
+                    );
+                    surahDetailBloc.add(
+                      OnPressedBookmarkEvent(
+                        surahBookmark: surahBookmark,
+                        isBookmarked: detailSurah.isBookmarked ?? false,
+                      ),
+                    );
+                  }
                       : null,
                 ),
               ];
@@ -91,6 +101,7 @@ class DetailSurahScreen extends StatelessWidget {
                   final verses = detailSurah?.verses;
 
                   return VersesList(
+                    toVerses: jumpToVerse,
                     clickFrom: ClickFrom.surah,
                     listVerses: verses ?? [],
                     surah: detailSurah,

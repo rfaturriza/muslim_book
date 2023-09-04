@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +11,7 @@ import 'package:quranku/features/quran/domain/entities/juz.codegen.dart';
 import 'package:quranku/features/quran/domain/entities/verses.codegen.dart';
 import 'package:quranku/features/quran/presentation/bloc/detailJuz/detail_juz_bloc.dart';
 import 'package:quranku/features/quran/presentation/screens/components/verse_popup_menu.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../../../../../core/utils/extension/string_ext.dart';
 import '../../../../../core/utils/themes/color.dart';
@@ -22,11 +25,12 @@ enum ClickFrom {
   bookmark,
 }
 
-class VersesList extends StatelessWidget {
+class VersesList extends StatefulWidget {
   final ClickFrom clickFrom;
   final String? preBismillah;
   final JuzConstant? juz;
   final DetailSurah? surah;
+  final int? toVerses;
   final List<Verses> listVerses;
 
   const VersesList({
@@ -36,17 +40,53 @@ class VersesList extends StatelessWidget {
     required this.clickFrom,
     this.juz,
     this.surah,
+    this.toVerses,
   });
 
   @override
+  State<VersesList> createState() => _VersesListState();
+}
+
+class _VersesListState extends State<VersesList> {
+  late ItemScrollController _itemScrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _itemScrollController = ItemScrollController();
+    WidgetsBinding.instance.addPostFrameCallback(_getWidgetInfo);
+  }
+
+  Future<void> _getWidgetInfo(_) async {
+    if (widget.toVerses != null) {
+      final toVerse = (){
+        if (widget.preBismillah?.isNotEmpty == true) {
+          return widget.toVerses ?? 0;
+        }
+        if(widget.clickFrom == ClickFrom.juz){
+          return widget.toVerses ?? 0;
+        }
+        return (widget.toVerses ?? 0) - 1;
+      }();
+
+      _itemScrollController.scrollTo(
+        index: toVerse,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOutCubic,
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final isPreBismillah = preBismillah?.isNotEmpty == true;
-    return ListView.separated(
+    final isPreBismillah = widget.preBismillah?.isNotEmpty == true;
+    return ScrollablePositionedList.separated(
+      itemScrollController: _itemScrollController,
       itemCount: () {
         if (isPreBismillah) {
-          return listVerses.length + 1;
+          return widget.listVerses.length + 1;
         }
-        return listVerses.length;
+        return widget.listVerses.length;
       }(),
       separatorBuilder: (BuildContext context, int index) {
         if (isPreBismillah && index == 0) {
@@ -57,20 +97,20 @@ class VersesList extends StatelessWidget {
       itemBuilder: (context, index) {
         if (index == 0 && isPreBismillah) {
           return Text(
-            preBismillah ?? emptyString,
+            widget.preBismillah ?? emptyString,
             textAlign: TextAlign.center,
             style: context.textTheme.headlineMedium?.copyWith(
               fontFamily: FontConst.lpmqIsepMisbah,
             ),
           );
         }
-        final verses =
-            isPreBismillah ? listVerses[index - 1] : listVerses[index];
+        final indexVerses = isPreBismillah ? index - 1 : index;
+        final verses = widget.listVerses[indexVerses];
         return ListTileVerses(
           verses: verses,
-          clickFrom: clickFrom,
-          juz: juz,
-          surah: surah,
+          clickFrom: widget.clickFrom,
+          juz: widget.juz,
+          surah: widget.surah,
         );
       },
     );
@@ -119,6 +159,7 @@ class ListTileVerses extends StatelessWidget {
                         SurahDetailEvent.onPressedVerseBookmark(
                           bookmark: VerseBookmark(
                             surahName: surah!.name!,
+                            surahNumber: surah!.number!,
                             versesNumber: verses.number!,
                           ),
                           isBookmarked: verses.isBookmarked ?? false,

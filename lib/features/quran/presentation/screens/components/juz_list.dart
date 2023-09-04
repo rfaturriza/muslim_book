@@ -90,14 +90,14 @@ class JuzList extends StatelessWidget {
     );
   }
 
-  static void onTapJuz(BuildContext context, JuzConstant? juz) {
+  static void onTapJuz(BuildContext context, JuzConstant? juz, {int? jumpToVerse}) {
     context.navigateTo(
       BlocProvider<JuzDetailBloc>(
         create: (_) => sl<JuzDetailBloc>()
           ..add(
             FetchJuzDetailEvent(juzNumber: juz?.number ?? 0),
           ),
-        child: DetailJuzScreen(juz: juz),
+        child: DetailJuzScreen(juz: juz, jumpToVerse: jumpToVerse),
       ),
     );
   }

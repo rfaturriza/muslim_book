@@ -15,8 +15,9 @@ import 'components/app_bar_detail_screen.dart';
 
 class DetailJuzScreen extends StatelessWidget {
   final JuzConstant? juz;
+  final int? jumpToVerse;
 
-  const DetailJuzScreen({Key? key, this.juz}) : super(key: key);
+  const DetailJuzScreen({Key? key, this.juz, this.jumpToVerse}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -86,11 +87,17 @@ class DetailJuzScreen extends StatelessWidget {
                   return const LoadingScreen();
                 } else if (state.detailJuzResult?.isRight() ?? false) {
                   final verses = detailJuz?.verses;
+                  final toVerse =  (){
+                    if (jumpToVerse != null && verses != null) {
+                      return (jumpToVerse ?? 0) - (verses.first.number?.inQuran ?? 0);
+                    }
+                  }();
 
                   return VersesList(
                     clickFrom: ClickFrom.juz,
                     listVerses: verses ?? [],
                     juz: juz,
+                    toVerses: toVerse,
                   );
                 } else if (state.detailJuzResult?.isLeft() ?? false) {
                   final message = state.detailJuzResult?.asLeft().message;

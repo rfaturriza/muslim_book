@@ -74,6 +74,7 @@ class BookmarkScreen extends StatelessWidget {
                                 number: verse.surahNumber,
                                 name: verse.surahName,
                               ),
+                              jumpToVerse: verse.versesNumber.inSurah,
                             );
                           } else {
                             JuzList.onTapJuz(
@@ -83,6 +84,7 @@ class BookmarkScreen extends StatelessWidget {
                                 name: verse.juz?.name ?? emptyString,
                                 description: verse.juz?.description ?? emptyString,
                               ),
+                              jumpToVerse: verse.versesNumber.inQuran,
                             );
                           }
                         },
