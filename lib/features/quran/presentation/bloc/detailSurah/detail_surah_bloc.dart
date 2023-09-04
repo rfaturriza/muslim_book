@@ -62,13 +62,13 @@ class SurahDetailBloc extends Bloc<SurahDetailEvent, SurahDetailState> {
     );
     final failureOrVerseBookmark = await getListVerseBookmark(NoParams());
     final Either<Failure, DetailSurah?> addVerseBookmarked =
-    failureOrVerseBookmark.fold(
-          (failure) => left(failure),
-          (verseBookmark) {
+        failureOrVerseBookmark.fold(
+      (failure) => left(failure),
+      (verseBookmark) {
         final detailSurah = failureOrSurah.asRight();
         final updatedVerses = detailSurah?.verses?.map((verse) {
           if (verseBookmark.any((e) =>
-          e.versesNumber.inSurah == verse.number?.inSurah &&
+              e.versesNumber.inSurah == verse.number?.inSurah &&
               e.versesNumber.inQuran == verse.number?.inQuran)) {
             return verse.copyWith(isBookmarked: true);
           }
@@ -98,23 +98,42 @@ class SurahDetailBloc extends Bloc<SurahDetailEvent, SurahDetailState> {
         DeleteSurahBookmarkParams(event.surahBookmark!),
       );
 
-      emit(
-        state.copyWith(
-          deleteBookmarkResult: deleteResult,
+      final Either<Failure, DetailSurah?>? stateUpdateBookmark =
+          state.detailSurahResult?.fold(
+        (failure) => left(failure),
+        (detailJuz) => right(
+          detailJuz?.copyWith(isBookmarked: false),
         ),
-      );
-    } else {
-      final saveResult = await addSurahBookmark(
-        AddSurahBookmarkParams(event.surahBookmark!),
       );
 
       emit(
         state.copyWith(
-          saveBookmarkResult: saveResult,
+          detailSurahResult: stateUpdateBookmark,
+          deleteBookmarkResult: deleteResult,
         ),
       );
+      return;
     }
+    final saveResult = await addSurahBookmark(
+      AddSurahBookmarkParams(event.surahBookmark!),
+    );
+
+    final Either<Failure, DetailSurah?>? stateUpdateBookmark =
+    state.detailSurahResult?.fold(
+          (failure) => left(failure),
+          (detailJuz) => right(
+        detailJuz?.copyWith(isBookmarked: true),
+      ),
+    );
+
+    emit(
+      state.copyWith(
+        saveBookmarkResult: saveResult,
+        detailSurahResult: stateUpdateBookmark,
+      ),
+    );
   }
+
   void _onPressedVerseBookmark(OnPressedVerseBookmarkEvent event, emit) async {
     if (event.bookmark == null) return;
 
@@ -123,8 +142,9 @@ class SurahDetailBloc extends Bloc<SurahDetailEvent, SurahDetailState> {
         DeleteVerseBookmarkParams(event.bookmark!),
       );
 
-      final Either<Failure, DetailSurah?>? stateUpdateBookmark =
-      state.detailSurahResult?.fold((failure) => left(failure), (detailSurah) {
+      final Either<Failure, DetailSurah?>? stateUpdateBookmark = state
+          .detailSurahResult
+          ?.fold((failure) => left(failure), (detailSurah) {
         final updatedVerses = detailSurah?.verses
             ?.map((e) => e.copyWith(isBookmarked: false))
             .toList();
@@ -134,8 +154,9 @@ class SurahDetailBloc extends Bloc<SurahDetailEvent, SurahDetailState> {
       emit(
         state.copyWith(
           deleteVerseBookmarkResult: deleteResult.fold(
-                (l) => left(l),
-                (r) => right(event.bookmark?.versesNumber.inSurah.toString() ?? emptyString),
+            (l) => left(l),
+            (r) => right(
+                event.bookmark?.versesNumber.inSurah.toString() ?? emptyString),
           ),
           saveVerseBookmarkResult: null,
           detailSurahResult: stateUpdateBookmark,
@@ -147,8 +168,9 @@ class SurahDetailBloc extends Bloc<SurahDetailEvent, SurahDetailState> {
       AddVerseBookmarkParams(event.bookmark!),
     );
 
-    final Either<Failure, DetailSurah?>? stateUpdateBookmark =
-    state.detailSurahResult?.fold((failure) => left(failure), (detailSurah) {
+    final Either<Failure, DetailSurah?>? stateUpdateBookmark = state
+        .detailSurahResult
+        ?.fold((failure) => left(failure), (detailSurah) {
       final updatedVerses = detailSurah?.verses
           ?.map((e) => e.copyWith(isBookmarked: true))
           .toList();
@@ -158,8 +180,9 @@ class SurahDetailBloc extends Bloc<SurahDetailEvent, SurahDetailState> {
     emit(
       state.copyWith(
         saveVerseBookmarkResult: saveResult.fold(
-              (l) => left(l),
-              (r) => right(event.bookmark?.versesNumber.inSurah.toString() ?? emptyString),
+          (l) => left(l),
+          (r) => right(
+              event.bookmark?.versesNumber.inSurah.toString() ?? emptyString),
         ),
         deleteBookmarkResult: null,
         detailSurahResult: stateUpdateBookmark,
