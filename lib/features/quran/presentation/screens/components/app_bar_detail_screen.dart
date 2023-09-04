@@ -59,15 +59,18 @@ class SliverAppBarDetailScreen extends StatelessWidget
         ),
       ),
       actions: [
-        IconButton(
-          onPressed: onPressedBookmark,
-          icon: (){
-            if(isBookmarked){
-              return const Icon(Icons.bookmark);
-            }
-            return const Icon(Icons.bookmark_border);
-          }(),
-          color: secondaryColor,
+        Padding(
+          padding: const EdgeInsets.only(right: 8),
+          child: IconButton(
+            onPressed: onPressedBookmark,
+            icon: (){
+              if(isBookmarked){
+                return const Icon(Icons.bookmark);
+              }
+              return const Icon(Icons.bookmark_border);
+            }(),
+            color: secondaryColor,
+          ),
         ),
       ],
     );
