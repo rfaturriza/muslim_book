@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:quranku/core/utils/themes/color.dart';
 
@@ -23,11 +24,27 @@ extension ContextExt on BuildContext {
     FocusScope.of(this).requestFocus(FocusNode());
   }
 
-  void navigateTo(Widget widget) {
+  void navigateTo(Widget widget, {Bloc? bloc}) {
+    if (bloc != null) {
+      _navigateToWithBloc(widget, bloc);
+      return;
+    }
     Navigator.push(
       this,
       MaterialPageRoute(
         builder: (context) => widget,
+      ),
+    );
+  }
+
+  void _navigateToWithBloc(Widget widget, Bloc bloc) {
+    Navigator.push(
+      this,
+      MaterialPageRoute(
+        builder: (context) => BlocProvider(
+          create: (context) => bloc,
+          child: widget,
+        ),
       ),
     );
   }

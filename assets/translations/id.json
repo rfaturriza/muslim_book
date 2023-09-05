@@ -53,5 +53,6 @@
   "errorRemovingVerseBookmark": "{} ayat {} gagal dihapus",
   "errorGettingJuzBookmarks": "Gagal mendapatkan penanda juz",
   "errorGettingSurahBookmarks": "Gagal mendapatkan penanda surah",
-  "errorGettingVerseBookmarks": "Gagal mendapatkan penanda ayat"
+  "errorGettingVerseBookmarks": "Gagal mendapatkan penanda ayat",
+  "instructionQibla": "Sejajarkan kedua kepala panah\nJangan letakkan perangkat dekat dengan benda logam.\nKalibrasi setiap kali Anda menggunakannya."
 }

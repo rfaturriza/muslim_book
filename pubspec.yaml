@@ -24,7 +24,7 @@ dependencies:
   easy_localization: ^3.0.2
   lottie: ^2.6.0
   flutter_svg: ^2.0.7
-  geolocator: ^10.0.0
+  geolocator: ^9.0.2
   geocoding: ^2.1.0
   freezed_annotation: ^2.4.1
   json_annotation: ^4.8.1
@@ -33,6 +33,7 @@ dependencies:
   hive_flutter: ^1.1.0
   oktoast: ^3.3.1
   scrollable_positioned_list: ^0.3.8
+  flutter_qiblah: ^2.2.0
 
 dev_dependencies:
   flutter_test:

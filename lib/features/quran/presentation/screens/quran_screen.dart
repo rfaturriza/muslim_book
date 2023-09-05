@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/features/bookmark/presentation/screen/bookmark_screen.dart';
+import 'package:quranku/features/qibla/presentation/screens/qibla_compass.dart';
 import 'package:quranku/features/quran/presentation/screens/components/background_gradient.dart';
 import 'package:quranku/features/quran/presentation/screens/components/juz_list.dart';
 import 'package:quranku/features/quran/presentation/screens/components/main_app_bar.dart';
@@ -15,7 +16,14 @@ class QuranScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appBar = MainAppBar(onPressedMenu: () {}, onPressedSetting: () {});
+    final appBar = MainAppBar(
+      onPressedMenu: () {},
+      onPressedQibla: () {
+        context.navigateTo(
+          const QiblaCompassScreen(),
+        );
+      },
+    );
     final controller = ScrollController();
     return Scaffold(
       extendBodyBehindAppBar: true,

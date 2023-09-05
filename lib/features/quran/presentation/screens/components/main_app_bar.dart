@@ -7,11 +7,11 @@ class MainAppBar extends StatelessWidget  implements PreferredSizeWidget  {
   const MainAppBar({
     super.key,
     required this.onPressedMenu,
-    required this.onPressedSetting,
+    required this.onPressedQibla,
   });
 
   final void Function() onPressedMenu;
-  final void Function() onPressedSetting;
+  final void Function() onPressedQibla;
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +29,10 @@ class MainAppBar extends StatelessWidget  implements PreferredSizeWidget  {
       ),
       actions: [
         IconButton(
-          onPressed: onPressedSetting,
+          onPressed: onPressedQibla,
           icon: Icon(
-            FontAwesomeIcons.gear,
+            Icons.explore_outlined,
             color: defaultColor.shade50,
-            size: 20,
           ),
         ),
       ],
