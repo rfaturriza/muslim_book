@@ -40,7 +40,7 @@ class VersePopupMenuButton extends StatelessWidget {
             context.navigateBack();
           },
           icon: Icon(
-            Icons.play_circle,
+            Icons.play_circle_outline,
             color: secondaryColor.shade900,
           ),
         ),
