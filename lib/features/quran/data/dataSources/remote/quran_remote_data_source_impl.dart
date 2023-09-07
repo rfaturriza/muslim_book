@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:quranku/features/quran/data/models/detail_juz_model.codegen.dart';
@@ -19,8 +21,12 @@ class QuranRemoteDataSourceImpl implements QuranRemoteDataSource {
     try {
       final result = await dio.get(endpoint);
       return SurahResponseModel.fromJson(result.data);
+    } on SocketException catch (e) {
+      throw ServerException(e);
     } on DioException catch (e) {
-      throw ServerException(message: e.message);
+      throw ServerException(e);
+    } catch (e) {
+      throw ServerException(e as Exception);
     }
   }
 
@@ -30,8 +36,12 @@ class QuranRemoteDataSourceImpl implements QuranRemoteDataSource {
     try {
       final result = await dio.get(endpoint);
       return DetailSurahResponseModel.fromJson(result.data);
+    } on SocketException catch (e) {
+      throw ServerException(e);
     } on DioException catch (e) {
-      throw ServerException(message: e.message);
+      throw ServerException(e);
+    } catch (e) {
+      throw ServerException(e as Exception);
     }
   }
 
@@ -41,8 +51,12 @@ class QuranRemoteDataSourceImpl implements QuranRemoteDataSource {
     try {
       final result = await dio.get(endpoint);
       return DetailJuzResponseModel.fromJson(result.data);
+    } on SocketException catch (e) {
+      throw ServerException(e);
     } on DioException catch (e) {
-      throw ServerException(message: e.message);
+      throw ServerException(e);
+    } catch (e) {
+      throw ServerException(e as Exception);
     }
   }
 }

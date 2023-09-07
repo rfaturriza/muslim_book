@@ -56,5 +56,12 @@
   "errorGettingVerseBookmarks": "Verse Bookmarks failed to get",
   "instructionQibla": "Align both arrow head\nDo not put device close to metal object.\nCalibrate everytime you use it.",
   "qibla": "Qibla",
-  "audioNotAvailable": "Audio not available"
+  "audioNotAvailable": "Audio not available",
+  "connectionTimeoutException": "Oops! The connection timed out. Please check your internet connection and try again.",
+  "sendTimeoutException": "Oops! The request took too long to send. Please try again later.",
+  "receiveTimeoutException": "Oops! We couldn't receive a response in time. Please check your connection and try again.",
+  "badResponseException": "Oops! Something went wrong with the server's response. Please try again later.",
+  "cancelException": "Request cancelled. If this was unintentional, please try again.",
+  "badCertificateException": "Oops! There is an issue with the security certificate. Please contact support for assistance.",
+  "unknownErrorException": "Oops! An unknown error occurred. Please try again later."
 }

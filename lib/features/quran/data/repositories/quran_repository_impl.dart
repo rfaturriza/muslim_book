@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:quranku/features/quran/domain/entities/detail_juz.codegen.dart';
 import 'package:quranku/features/quran/domain/entities/detail_surah.codegen.dart';
@@ -21,8 +20,8 @@ class QuranRepositoryImpl implements QuranRepository {
     try {
       final detailSurah = await remoteDataSource.getDetailSurah(surahNumber);
       return Right(detailSurah.data?.toEntity());
-    } on ServerException {
-      return const Left(ServerFailure());
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
     }
   }
 
@@ -31,10 +30,8 @@ class QuranRepositoryImpl implements QuranRepository {
     try {
       final allSurah = await remoteDataSource.getAllSurah();
       return Right(allSurah.data?.map((e) => e.toEntity()).toList());
-    } on DioException catch (e) {
-      return Left(ServerFailure(message: e.response?.statusMessage));
-    } on ServerException {
-      return const Left(ServerFailure());
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
     }
   }
 
@@ -43,8 +40,8 @@ class QuranRepositoryImpl implements QuranRepository {
     try {
       final detailJuz = await remoteDataSource.getDetailJuz(juzNumber);
       return Right(detailJuz.data?.toEntity());
-    } on ServerException {
-      return const Left(ServerFailure());
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
     }
   }
 }

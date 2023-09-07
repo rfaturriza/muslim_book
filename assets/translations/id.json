@@ -56,5 +56,12 @@
   "errorGettingVerseBookmarks": "Gagal mendapatkan penanda ayat",
   "instructionQibla": "Sejajarkan kedua kepala panah\nJangan letakkan perangkat dekat dengan benda logam.\nKalibrasi setiap kali Anda menggunakannya.",
   "qibla": "Kiblat",
-  "audioNotAvailable": "Audio tidak tersedia"
+  "audioNotAvailable": "Audio tidak tersedia",
+  "connectionTimeoutException": "Ups! Koneksi telah habis waktu. Silakan periksa koneksi internet Anda dan coba lagi.",
+  "sendTimeoutException": "Ups! Permintaan mengirim terlalu lama. Silakan coba lagi nanti.",
+  "receiveTimeoutException": "Ups! Kami tidak dapat menerima respons tepat waktu. Mohon periksa koneksi Anda dan coba lagi.",
+  "badResponseException": "Ups! Ada masalah dengan respons dari server. Silakan coba lagi nanti.",
+  "cancelException": "Permintaan dibatalkan. Jika ini tidak disengaja, silakan coba lagi.",
+  "badCertificateException": "Ups! Ada masalah dengan sertifikat keamanan. Silakan hubungi dukungan untuk bantuan.",
+  "unknownErrorException": "Ups! Terjadi kesalahan yang tidak diketahui. Silakan coba lagi nanti."
 }
