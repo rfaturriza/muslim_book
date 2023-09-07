@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quranku/core/components/error_screen.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/extension/dartz_ext.dart';
 import 'package:quranku/core/utils/extension/string_ext.dart';
@@ -10,18 +11,22 @@ import 'package:quranku/generated/locale_keys.g.dart';
 
 import '../../../../core/components/loading_screen.dart';
 import '../../domain/entities/juz.codegen.dart';
+import '../bloc/audioVerse/audio_verse_bloc.dart';
 import '../bloc/detailJuz/detail_juz_bloc.dart';
 import 'components/app_bar_detail_screen.dart';
+import 'components/bottom_nav_player.dart';
 
 class DetailJuzScreen extends StatelessWidget {
   final JuzConstant? juz;
   final int? jumpToVerse;
 
-  const DetailJuzScreen({Key? key, this.juz, this.jumpToVerse}) : super(key: key);
+  const DetailJuzScreen({Key? key, this.juz, this.jumpToVerse})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final juzDetailBloc = context.read<JuzDetailBloc>();
+    final audioBloc = context.watch<AudioVerseBloc>();
     return Scaffold(
       body: BlocConsumer<JuzDetailBloc, JuzDetailState>(
         listener: (context, state) {
@@ -51,10 +56,18 @@ class DetailJuzScreen extends StatelessWidget {
           } else if (state.deleteVerseBookmarkResult?.isLeft() ?? false) {
             final message = state.deleteVerseBookmarkResult?.asLeft().message;
             context.showErrorToast(message ?? emptyString);
+          } else if (state.detailJuzResult?.isRight() ?? false) {
+            final verses = state.detailJuzResult?.asRight()?.verses;
+            context.read<AudioVerseBloc>().add(
+                  AudioVerseEvent.setListAudioVerse(
+                      listAudioVerses: verses?.map((e) => e.audio).toList()),
+                );
           }
         },
         builder: (context, state) {
-          final detailJuz = state.detailJuzResult?.asRight();
+          final detailJuz = (state.detailJuzResult?.isRight() ?? false)
+              ? state.detailJuzResult?.asRight()
+              : null;
           return NestedScrollView(
             floatHeaderSlivers: true,
             headerSliverBuilder:
@@ -87,9 +100,10 @@ class DetailJuzScreen extends StatelessWidget {
                   return const LoadingScreen();
                 } else if (state.detailJuzResult?.isRight() ?? false) {
                   final verses = detailJuz?.verses;
-                  final toVerse =  (){
+                  final toVerse = () {
                     if (jumpToVerse != null && verses != null) {
-                      return (jumpToVerse ?? 0) - (verses.first.number?.inQuran ?? 0);
+                      return (jumpToVerse ?? 0) -
+                          (verses.first.number?.inQuran ?? 0);
                     }
                   }();
 
@@ -101,7 +115,15 @@ class DetailJuzScreen extends StatelessWidget {
                   );
                 } else if (state.detailJuzResult?.isLeft() ?? false) {
                   final message = state.detailJuzResult?.asLeft().message;
-                  return Center(child: Text('$message'));
+                  return ErrorScreen(
+                    message: message,
+                    onRefresh: () {
+                      if (juz == null) return;
+                      juzDetailBloc.add(
+                        FetchJuzDetailEvent(juzNumber: juz?.number),
+                      );
+                    },
+                  );
                 }
 
                 return Container();
@@ -110,6 +132,9 @@ class DetailJuzScreen extends StatelessWidget {
           );
         },
       ),
+      bottomNavigationBar: (audioBloc.state.isShowBottomNavPlayer)
+          ? const BottomNavPlayer()
+          : null,
     );
   }
 }

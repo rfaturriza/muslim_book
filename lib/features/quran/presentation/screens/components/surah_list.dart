@@ -11,6 +11,7 @@ import '../../../../../core/utils/extension/string_ext.dart';
 import '../../../../../generated/locale_keys.g.dart';
 import '../../../../../injection.dart';
 import '../../../domain/entities/surah.codegen.dart';
+import '../../bloc/audioVerse/audio_verse_bloc.dart';
 import '../detail_surah_screen.dart';
 import 'list_tile_surah.dart';
 
@@ -89,7 +90,7 @@ class SurahList extends StatelessWidget {
                       emptyString,
                   revelation: surahData.revelation,
                   numberOfVerses:
-                      surahData.numberOfVerses?.toString() ?? emptyString,
+                  surahData.numberOfVerses?.toString() ?? emptyString,
                   trailingText: surahData.name?.short ?? emptyString,
                 );
               },
@@ -100,15 +101,22 @@ class SurahList extends StatelessWidget {
     );
   }
 
-  static void onTapSurah(BuildContext context, Surah? surah, {int? jumpToVerse}) {
+  static void onTapSurah(BuildContext context, Surah? surah,
+      {int? jumpToVerse}) {
     context.navigateTo(
-      BlocProvider<SurahDetailBloc>(
-        create: (_) => sl<SurahDetailBloc>()
-          ..add(
-            FetchSurahDetailEvent(surahNumber: surah?.number),
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<SurahDetailBloc>(
+            create: (context) =>
+            sl<SurahDetailBloc>()
+              ..add(FetchSurahDetailEvent(surahNumber: surah?.number)),
           ),
+          BlocProvider<AudioVerseBloc>(
+            create: (context) => sl<AudioVerseBloc>(),
+          ),
+        ],
         child: DetailSurahScreen(
-          surahName: surah?.name?.transliteration?.asLocale(context),
+          surah: surah,
           jumpToVerse: jumpToVerse,
         ),
       ),

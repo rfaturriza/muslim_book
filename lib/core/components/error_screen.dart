@@ -1,8 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:quranku/core/components/spacer.dart';
+import 'package:quranku/core/utils/themes/color.dart';
+import 'package:quranku/generated/locale_keys.g.dart';
 
 class ErrorScreen extends StatelessWidget {
-  final String message;
+  final String? message;
   final void Function()? onRefresh;
 
   const ErrorScreen({
@@ -19,7 +22,7 @@ class ErrorScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            message,
+            message ?? LocaleKeys.defaultErrorMessage.tr(),
             textAlign: TextAlign.center,
           ),
           // icon Refresh
@@ -28,6 +31,7 @@ class ErrorScreen extends StatelessWidget {
             IconButton(
               onPressed: onRefresh,
               icon: const Icon(Icons.refresh),
+              color: defaultColor.shade50,
             ),
           ]
         ],
