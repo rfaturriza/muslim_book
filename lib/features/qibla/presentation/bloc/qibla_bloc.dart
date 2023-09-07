@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qiblah/flutter_qiblah.dart';
@@ -51,12 +52,18 @@ class QiblaBloc extends Bloc<QiblaEvent, QiblaState> {
 
   void _onStreamLocationEvent(
       StreamLocationEvent event, Emitter<QiblaState> emit) async {
-    emit(state.copyWith(locationStatusResult: event.locationStatus));
+    emit(state.copyWith(
+      locationStatusResult: event.locationStatus,
+      isLoading: false,
+    ));
   }
 
   void _onStreamQiblaEvent(
       StreamQiblaEvent event, Emitter<QiblaState> emit) async {
-    emit(state.copyWith(qiblaDirectionResult: event.qiblaDirection));
+    emit(state.copyWith(
+      qiblaDirectionResult: event.qiblaDirection,
+      isLoading: false,
+    ));
   }
 
   @override
