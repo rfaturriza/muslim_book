@@ -3,16 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/extension/string_ext.dart';
+import 'package:quranku/features/quran/domain/entities/juz.codegen.dart';
 import 'package:quranku/features/quran/presentation/bloc/detailJuz/detail_juz_bloc.dart';
 import 'package:quranku/features/quran/presentation/bloc/juz/juz_cubit.dart';
 import 'package:quranku/features/quran/presentation/screens/components/list_tile_juz.dart';
-import 'package:quranku/features/quran/domain/entities/juz.codegen.dart';
 import 'package:quranku/features/quran/presentation/screens/detail_juz_screen.dart';
 
 import '../../../../../core/components/search_box.dart';
 import '../../../../../core/utils/themes/color.dart';
 import '../../../../../generated/locale_keys.g.dart';
 import '../../../../../injection.dart';
+import '../../bloc/audioVerse/audio_verse_bloc.dart';
 
 class JuzList extends StatelessWidget {
   const JuzList({Key? key}) : super(key: key);
@@ -90,13 +91,19 @@ class JuzList extends StatelessWidget {
     );
   }
 
-  static void onTapJuz(BuildContext context, JuzConstant? juz, {int? jumpToVerse}) {
+  static void onTapJuz(BuildContext context, JuzConstant? juz,
+      {int? jumpToVerse}) {
     context.navigateTo(
-      BlocProvider<JuzDetailBloc>(
-        create: (_) => sl<JuzDetailBloc>()
-          ..add(
-            FetchJuzDetailEvent(juzNumber: juz?.number ?? 0),
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<JuzDetailBloc>(
+            create: (_) => sl<JuzDetailBloc>()
+              ..add(FetchJuzDetailEvent(juzNumber: juz?.number ?? 0)),
           ),
+          BlocProvider<AudioVerseBloc>(
+            create: (context) => sl<AudioVerseBloc>(),
+          ),
+        ],
         child: DetailJuzScreen(juz: juz, jumpToVerse: jumpToVerse),
       ),
     );

@@ -3,7 +3,7 @@ part of 'detail_juz_bloc.dart';
 @freezed
 class JuzDetailEvent with _$JuzDetailEvent {
   const factory JuzDetailEvent.fetchJuzDetail({
-    required int juzNumber,
+    required int? juzNumber,
   }) = FetchJuzDetailEvent;
 
   const factory JuzDetailEvent.onPressedBookmark({

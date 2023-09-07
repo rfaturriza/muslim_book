@@ -60,6 +60,13 @@ class SurahDetailBloc extends Bloc<SurahDetailEvent, SurahDetailState> {
     final failureOrSurah = await getDetailSurah(
       Params(number: event.surahNumber ?? 1),
     );
+    if (failureOrSurah.isLeft()) {
+      emit(state.copyWith(
+        isLoading: false,
+        detailSurahResult: failureOrSurah,
+      ));
+      return;
+    }
     final failureOrVerseBookmark = await getListVerseBookmark(NoParams());
     final Either<Failure, DetailSurah?> addVerseBookmarked =
         failureOrVerseBookmark.fold(

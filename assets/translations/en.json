@@ -54,5 +54,7 @@
   "errorGettingJuzBookmarks": "Juz Bookmarks failed to get",
   "errorGettingSurahBookmarks": "Surah Bookmarks failed to get",
   "errorGettingVerseBookmarks": "Verse Bookmarks failed to get",
-  "instructionQibla": "Align both arrow head\nDo not put device close to metal object.\nCalibrate everytime you use it."
+  "instructionQibla": "Align both arrow head\nDo not put device close to metal object.\nCalibrate everytime you use it.",
+  "qibla": "Qibla",
+  "audioNotAvailable": "Audio not available"
 }

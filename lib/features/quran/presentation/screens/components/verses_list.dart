@@ -16,6 +16,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../../../../../core/utils/extension/string_ext.dart';
 import '../../../../../core/utils/themes/color.dart';
 import '../../../domain/entities/detail_surah.codegen.dart';
+import '../../bloc/audioVerse/audio_verse_bloc.dart';
 import '../../bloc/detailSurah/detail_surah_bloc.dart';
 import 'number_pin.dart';
 
@@ -59,11 +60,11 @@ class _VersesListState extends State<VersesList> {
 
   Future<void> _getWidgetInfo(_) async {
     if (widget.toVerses != null) {
-      final toVerse = (){
+      final toVerse = () {
         if (widget.preBismillah?.isNotEmpty == true) {
           return widget.toVerses ?? 0;
         }
-        if(widget.clickFrom == ClickFrom.juz){
+        if (widget.clickFrom == ClickFrom.juz) {
           return widget.toVerses ?? 0;
         }
         return (widget.toVerses ?? 0) - 1;
@@ -80,39 +81,55 @@ class _VersesListState extends State<VersesList> {
   @override
   Widget build(BuildContext context) {
     final isPreBismillah = widget.preBismillah?.isNotEmpty == true;
-    return ScrollablePositionedList.separated(
-      itemScrollController: _itemScrollController,
-      itemCount: () {
-        if (isPreBismillah) {
-          return widget.listVerses.length + 1;
+    return BlocListener<AudioVerseBloc, AudioVerseState>(
+      listener: (context, state) {
+        if (state.audioVersePlaying != null) {
+          final index = widget.listVerses.map((e) => e.audio)
+              .toList()
+              .indexOf(state.audioVersePlaying);
+          if (index != -1) {
+            _itemScrollController.scrollTo(
+              index: index,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOutCubic,
+            );
+          }
         }
-        return widget.listVerses.length;
-      }(),
-      separatorBuilder: (BuildContext context, int index) {
-        if (isPreBismillah && index == 0) {
-          return const Divider(color: Colors.transparent);
-        }
-        return Divider(color: secondaryColor.shade500, thickness: 0.1);
       },
-      itemBuilder: (context, index) {
-        if (index == 0 && isPreBismillah) {
-          return Text(
-            widget.preBismillah ?? emptyString,
-            textAlign: TextAlign.center,
-            style: context.textTheme.headlineMedium?.copyWith(
-              fontFamily: FontConst.lpmqIsepMisbah,
-            ),
+      child: ScrollablePositionedList.separated(
+        itemScrollController: _itemScrollController,
+        itemCount: () {
+          if (isPreBismillah) {
+            return widget.listVerses.length + 1;
+          }
+          return widget.listVerses.length;
+        }(),
+        separatorBuilder: (BuildContext context, int index) {
+          if (isPreBismillah && index == 0) {
+            return const Divider(color: Colors.transparent);
+          }
+          return Divider(color: secondaryColor.shade500, thickness: 0.1);
+        },
+        itemBuilder: (context, index) {
+          if (index == 0 && isPreBismillah) {
+            return Text(
+              widget.preBismillah ?? emptyString,
+              textAlign: TextAlign.center,
+              style: context.textTheme.headlineMedium?.copyWith(
+                fontFamily: FontConst.lpmqIsepMisbah,
+              ),
+            );
+          }
+          final indexVerses = isPreBismillah ? index - 1 : index;
+          final verses = widget.listVerses[indexVerses];
+          return ListTileVerses(
+            verses: verses,
+            clickFrom: widget.clickFrom,
+            juz: widget.juz,
+            surah: widget.surah,
           );
-        }
-        final indexVerses = isPreBismillah ? index - 1 : index;
-        final verses = widget.listVerses[indexVerses];
-        return ListTileVerses(
-          verses: verses,
-          clickFrom: widget.clickFrom,
-          juz: widget.juz,
-          surah: widget.surah,
-        );
-      },
+        },
+      ),
     );
   }
 }
@@ -133,73 +150,103 @@ class ListTileVerses extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ListTile(
-          leading: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    final audioVerseBloc = context.read<AudioVerseBloc>();
+    return BlocBuilder<AudioVerseBloc, AudioVerseState>(
+      buildWhen: (previous, current) {
+        return previous.audioVersePlaying != current.audioVersePlaying;
+      },
+      builder: (context, state) {
+        final isVersePlaying = state.audioVersePlaying == verses.audio;
+        return Container(
+          color: isVersePlaying
+              ? secondaryColor.shade500.withOpacity(0.2)
+              : Colors.transparent,
+          child: Column(
             children: [
-              SizedBox(
-                width: 32,
-                height: 32,
-                child: FittedBox(
-                  child: NumberPin(
-                    number: verses.number?.inSurah.toString() ?? emptyString,
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                leading: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: 32,
+                      height: 32,
+                      child: FittedBox(
+                        child: NumberPin(
+                          number:
+                          verses.number?.inSurah.toString() ?? emptyString,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: VersePopupMenuButton(
+                        isBookmarked: verses.isBookmarked,
+                        onPlayPressed: () {
+                          audioVerseBloc
+                              .add(PlayAudioVerse(audioVerse: verses.audio));
+                        },
+                        onBookmarkPressed: () {
+                          _onPressedBookmark(
+                              context, verses, clickFrom, juz, surah);
+                        },
+                      ),
+                    )
+                  ],
+                ),
+                title: Text(
+                  verses.text?.arab ?? emptyString,
+                  textAlign: TextAlign.right,
+                  style: context.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontFamily: FontConst.lpmqIsepMisbah,
                   ),
                 ),
               ),
-              Expanded(
-                child: VersePopupMenuButton(
-                  isBookmarked: verses.isBookmarked,
-                  onBookmarkPressed: () {
-                    if (clickFrom == ClickFrom.surah) {
-                      final surahDetailBloc = context.read<SurahDetailBloc>();
-                      if (surah == null) return;
-                      surahDetailBloc.add(
-                        SurahDetailEvent.onPressedVerseBookmark(
-                          bookmark: VerseBookmark(
-                            surahName: surah!.name!,
-                            surahNumber: surah!.number!,
-                            versesNumber: verses.number!,
-                          ),
-                          isBookmarked: verses.isBookmarked ?? false,
-                        ),
-                      );
-                    } else {
-                      final juzDetailBloc = context.read<JuzDetailBloc>();
-                      juzDetailBloc.add(
-                        JuzDetailEvent.onPressedVerseBookmark(
-                          bookmark: VerseBookmark(
-                            juz: JuzConstant(
-                              name: juz?.name ?? emptyString,
-                              number: juz?.number ?? 0,
-                              description: juz?.description ?? emptyString,
-                            ),
-                            versesNumber: verses.number!,
-                          ),
-                          isBookmarked: verses.isBookmarked ?? false,
-                        ),
-                      );
-                    }
-                  },
-                ),
-              )
+              const VSpacer(height: 8),
+              TransliterationVerses(verses: verses),
+              const VSpacer(height: 8),
+              TranslationVerses(verses: verses),
+              const VSpacer(height: 8),
             ],
           ),
-          title: Text(
-            verses.text?.arab ?? emptyString,
-            textAlign: TextAlign.right,
-            style: context.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              fontFamily: FontConst.lpmqIsepMisbah,
-            ),
-          ),
+        );
+      },
+    );
+  }
+}
+
+void _onPressedBookmark(BuildContext context,
+    Verses verses,
+    ClickFrom clickFrom,
+    JuzConstant? juz,
+    DetailSurah? surah,) {
+  if (clickFrom == ClickFrom.surah) {
+    final surahDetailBloc = context.read<SurahDetailBloc>();
+    if (surah == null) return;
+    surahDetailBloc.add(
+      SurahDetailEvent.onPressedVerseBookmark(
+        bookmark: VerseBookmark(
+          surahName: surah.name!,
+          surahNumber: surah.number!,
+          versesNumber: verses.number!,
         ),
-        const VSpacer(height: 8),
-        TransliterationVerses(verses: verses),
-        const VSpacer(height: 8),
-        TranslationVerses(verses: verses),
-      ],
+        isBookmarked: verses.isBookmarked ?? false,
+      ),
+    );
+  } else {
+    final juzDetailBloc = context.read<JuzDetailBloc>();
+    juzDetailBloc.add(
+      JuzDetailEvent.onPressedVerseBookmark(
+        bookmark: VerseBookmark(
+          juz: JuzConstant(
+            name: juz?.name ?? emptyString,
+            number: juz?.number ?? 0,
+            description: juz?.description ?? emptyString,
+          ),
+          versesNumber: verses.number!,
+        ),
+        isBookmarked: verses.isBookmarked ?? false,
+      ),
     );
   }
 }

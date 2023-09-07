@@ -49,6 +49,13 @@ class JuzDetailBloc extends Bloc<JuzDetailEvent, JuzDetailState> {
   }
 
   void _onJuzFetchDetail(FetchJuzDetailEvent event, emit) async {
+    if (event.juzNumber == null) {
+      emit(state.copyWith(
+        detailJuzResult: left(
+          const GeneralFailure(message: 'Juz Empty'),
+        ),
+      ));
+    }
     emit(state.copyWith(isLoading: true));
     final failureOrJuzBookmark = await getListJuzBookmark(NoParams());
     final isBookmarked = failureOrJuzBookmark.fold(
@@ -57,7 +64,14 @@ class JuzDetailBloc extends Bloc<JuzDetailEvent, JuzDetailState> {
         (element) => element.number == event.juzNumber,
       ),
     );
-    final failureOrJuz = await getDetailJuz(Params(number: event.juzNumber));
+    final failureOrJuz = await getDetailJuz(Params(number: event.juzNumber!));
+    if (failureOrJuz.isLeft()) {
+      emit(state.copyWith(
+        isLoading: false,
+        detailJuzResult: failureOrJuz,
+      ));
+      return;
+    }
     final failureOrVerseBookmark = await getListVerseBookmark(NoParams());
     final Either<Failure, DetailJuz?> addVerseBookmarked =
         failureOrVerseBookmark.fold(
@@ -152,7 +166,8 @@ class JuzDetailBloc extends Bloc<JuzDetailEvent, JuzDetailState> {
         state.copyWith(
           deleteVerseBookmarkResult: deleteResult.fold(
             (l) => left(l),
-            (r) => right(event.bookmark?.versesNumber.inSurah.toString() ?? emptyString),
+            (r) => right(
+                event.bookmark?.versesNumber.inSurah.toString() ?? emptyString),
           ),
           saveVerseBookmarkResult: null,
           detailJuzResult: stateUpdateBookmark,
@@ -176,7 +191,8 @@ class JuzDetailBloc extends Bloc<JuzDetailEvent, JuzDetailState> {
       state.copyWith(
         saveVerseBookmarkResult: saveResult.fold(
           (l) => left(l),
-          (r) => right(event.bookmark?.versesNumber.inSurah.toString() ?? emptyString),
+          (r) => right(
+              event.bookmark?.versesNumber.inSurah.toString() ?? emptyString),
         ),
         deleteBookmarkResult: null,
         detailJuzResult: stateUpdateBookmark,
