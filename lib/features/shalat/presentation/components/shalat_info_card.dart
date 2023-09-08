@@ -2,11 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
+import 'package:quranku/core/utils/extension/dartz_ext.dart';
 import 'package:quranku/core/utils/extension/string_ext.dart';
 
 import '../../../../core/constants/asset_constants.dart';
 import '../bloc/shalat/shalat_bloc.dart';
-import '../mapper/helper_time_shalat.dart';
+import '../helper/helper_time_shalat.dart';
 
 class ShalatInfoCard extends StatelessWidget {
   const ShalatInfoCard({super.key});
@@ -31,19 +32,23 @@ class ShalatInfoCard extends StatelessWidget {
         ),
       ),
       child: BlocBuilder<ShalatBloc, ShalatState>(
-        bloc: context.read<ShalatBloc>(),
         builder: (context, state) {
           final shalatName = HelperTimeShalat.getShalatNameByTime(
-            state.scheduleByDay?.schedule,
+            state.scheduleByDay?.getOrElse(() => null)?.schedule,
           );
           final shalatTime = HelperTimeShalat.getShalatTimeByShalatName(
-            state.scheduleByDay?.schedule,
+            state.scheduleByDay?.getOrElse(() => null)?.schedule,
             shalatName,
           );
 
           final place = state.geoLocation?.region?.isEmpty == true
               ? state.geoLocation?.city
               : state.geoLocation?.region;
+          if (state.isLoading) {
+            return const Center(
+              child: LinearProgressIndicator()
+            );
+          }
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             child: Row(
@@ -51,24 +56,44 @@ class ShalatInfoCard extends StatelessWidget {
               children: [
                 Column(
                   children: [
-                    Text(
-                      shalatName.capitalize(),
-                      style: context.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
+                    if (state.scheduleByDay?.isRight() == true) ...[
+                      Text(
+                        shalatName.capitalize(),
+                        style: context.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    Text(
-                      shalatTime ?? '-',
-                      style: context.textTheme.titleMedium,
-                    ),
+                      Text(
+                        shalatTime ?? '-',
+                        style: context.textTheme.titleMedium,
+                      ),
+                    ],
+                    if (state.scheduleByDay?.isLeft() == true) ...[
+                      IconButton(
+                        onPressed: () {
+                          context
+                              .read<ShalatBloc>()
+                              .add(const GetShalatScheduleByDayEvent());
+                        },
+                        icon: const Icon(Icons.refresh),
+                      ),
+                    ],
                   ],
                 ),
-                Text(
-                  place ?? '-',
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+                if (state.scheduleByDay?.isLeft() == true) ...[
+                  Text(
+                    state.scheduleByDay?.asLeft().message ?? emptyString,
+                    style: context.textTheme.titleMedium,
                   ),
-                ),
+                ],
+                if (state.scheduleByDay?.isRight() == true) ...[
+                  Text(
+                    place ?? '-',
+                    style: context.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ]
               ],
             ),
           );

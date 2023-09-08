@@ -63,5 +63,8 @@
   "badResponseException": "Ups! Ada masalah dengan respons dari server. Silakan coba lagi nanti.",
   "cancelException": "Permintaan dibatalkan. Jika ini tidak disengaja, silakan coba lagi.",
   "badCertificateException": "Ups! Ada masalah dengan sertifikat keamanan. Silakan hubungi dukungan untuk bantuan.",
-  "unknownErrorException": "Ups! Terjadi kesalahan yang tidak diketahui. Silakan coba lagi nanti."
+  "unknownErrorException": "Ups! Terjadi kesalahan yang tidak diketahui. Silakan coba lagi nanti.",
+  "connectedSuccessfully": "Terhubung dengan sukses",
+  "locationNotFound": "Lokasi tidak ditemukan"
+
 }

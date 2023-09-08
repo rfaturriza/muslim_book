@@ -63,5 +63,7 @@
   "badResponseException": "Oops! Something went wrong with the server's response. Please try again later.",
   "cancelException": "Request cancelled. If this was unintentional, please try again.",
   "badCertificateException": "Oops! There is an issue with the security certificate. Please contact support for assistance.",
-  "unknownErrorException": "Oops! An unknown error occurred. Please try again later."
+  "unknownErrorException": "Oops! An unknown error occurred. Please try again later.",
+  "connectedSuccessfully": "Connected successfully",
+  "locationNotFound": "Location not found"
 }

@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quranku/core/components/error_screen.dart';
 import 'package:quranku/core/components/search_box.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/themes/color.dart';
@@ -69,8 +70,11 @@ class SurahList extends StatelessWidget {
                 if (state is SurahLoadingState) {
                   return const LinearProgressIndicator();
                 } else if (state is SurahErrorState) {
-                  return Center(
-                    child: Text(state.message ?? emptyString),
+                  return ErrorScreen(
+                    message: state.message,
+                    onRefresh: () {
+                      surahBloc.add(const SurahFetchEvent());
+                    },
                   );
                 }
                 if (listSurah == null || listSurah.isEmpty) {
@@ -90,7 +94,7 @@ class SurahList extends StatelessWidget {
                       emptyString,
                   revelation: surahData.revelation,
                   numberOfVerses:
-                  surahData.numberOfVerses?.toString() ?? emptyString,
+                      surahData.numberOfVerses?.toString() ?? emptyString,
                   trailingText: surahData.name?.short ?? emptyString,
                 );
               },
@@ -107,8 +111,7 @@ class SurahList extends StatelessWidget {
       MultiBlocProvider(
         providers: [
           BlocProvider<SurahDetailBloc>(
-            create: (context) =>
-            sl<SurahDetailBloc>()
+            create: (context) => sl<SurahDetailBloc>()
               ..add(FetchSurahDetailEvent(surahNumber: surah?.number)),
           ),
           BlocProvider<AudioVerseBloc>(

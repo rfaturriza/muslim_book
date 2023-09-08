@@ -19,16 +19,14 @@ class GetShalatCityIdByCityEvent extends ShalatEvent {
 }
 
 class GetShalatScheduleByDayEvent extends ShalatEvent {
-  final String city;
-  final int day;
+  final int? day;
 
   const GetShalatScheduleByDayEvent({
-    required this.city,
-    required this.day,
+    this.day,
   });
 
   @override
-  List<Object?> get props => [city, day];
+  List<Object?> get props => [day];
 }
 
 class GetShalatScheduleByMonthEvent extends ShalatEvent {
