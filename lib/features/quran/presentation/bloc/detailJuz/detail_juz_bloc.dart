@@ -154,12 +154,18 @@ class JuzDetailBloc extends Bloc<JuzDetailEvent, JuzDetailState> {
         DeleteVerseBookmarkParams(event.bookmark!),
       );
 
-      final Either<Failure, DetailJuz?>? stateUpdateBookmark =
-          state.detailJuzResult?.fold((failure) => left(failure), (detailJuz) {
-        final updatedVerses = detailJuz?.verses
-            ?.map((e) => e.copyWith(isBookmarked: false))
-            .toList();
-        return right(detailJuz?.copyWith(verses: updatedVerses));
+      final Either<Failure, DetailJuz?>? stateUpdateBookmark = state
+          .detailJuzResult
+          ?.fold((failure) => left(failure), (detailSurah) {
+        final updatedVerses = detailSurah?.verses?.map(
+              (e) {
+            if (e.number?.inSurah == event.bookmark?.versesNumber.inSurah) {
+              return e.copyWith(isBookmarked: false);
+            }
+            return e;
+          },
+        ).toList();
+        return right(detailSurah?.copyWith(verses: updatedVerses));
       });
 
       emit(
@@ -179,13 +185,20 @@ class JuzDetailBloc extends Bloc<JuzDetailEvent, JuzDetailState> {
       AddVerseBookmarkParams(event.bookmark!),
     );
 
-    final Either<Failure, DetailJuz?>? stateUpdateBookmark =
-        state.detailJuzResult?.fold((failure) => left(failure), (detailJuz) {
-      final updatedVerses = detailJuz?.verses
-          ?.map((e) => e.copyWith(isBookmarked: true))
-          .toList();
-      return right(detailJuz?.copyWith(verses: updatedVerses));
+    final Either<Failure, DetailJuz?>? stateUpdateBookmark = state
+        .detailJuzResult
+        ?.fold((failure) => left(failure), (detailSurah) {
+      final updatedVerses = detailSurah?.verses?.map(
+            (e) {
+          if (e.number?.inSurah == event.bookmark?.versesNumber.inSurah) {
+            return e.copyWith(isBookmarked: true);
+          }
+          return e;
+        },
+      ).toList();
+      return right(detailSurah?.copyWith(verses: updatedVerses));
     });
+
 
     emit(
       state.copyWith(

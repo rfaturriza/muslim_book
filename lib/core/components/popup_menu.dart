@@ -9,10 +9,15 @@ class PopupMenuHorizontal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  PopupMenuButton(
+      padding: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(5),
+        side: BorderSide(
+          color: secondaryColor.shade700,
+          width: 3,
+        ),
       ),
-      offset: const Offset(10, 30),
+      offset: const Offset(42, -10),
       color: secondaryColor.shade500,
       icon: const Icon(
         Icons.more_horiz,
