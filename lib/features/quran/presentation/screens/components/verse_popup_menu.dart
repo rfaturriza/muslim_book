@@ -44,16 +44,6 @@ class VersePopupMenuButton extends StatelessWidget {
             color: secondaryColor.shade900,
           ),
         ),
-        IconButton(
-          onPressed: () {
-            onSharePressed?.call();
-            context.navigateBack();
-          },
-          icon: Icon(
-            Icons.ios_share,
-            color: secondaryColor.shade900,
-          ),
-        ),
       ],
     );
   }

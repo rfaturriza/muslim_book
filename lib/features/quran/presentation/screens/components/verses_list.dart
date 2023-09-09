@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,14 +18,13 @@ import '../../bloc/audioVerse/audio_verse_bloc.dart';
 import '../../bloc/detailSurah/detail_surah_bloc.dart';
 import 'number_pin.dart';
 
-enum ClickFrom {
+enum ViewMode {
   juz,
   surah,
-  bookmark,
 }
 
 class VersesList extends StatefulWidget {
-  final ClickFrom clickFrom;
+  final ViewMode view;
   final String? preBismillah;
   final JuzConstant? juz;
   final DetailSurah? surah;
@@ -38,7 +35,7 @@ class VersesList extends StatefulWidget {
     super.key,
     required this.listVerses,
     this.preBismillah,
-    required this.clickFrom,
+    required this.view,
     this.juz,
     this.surah,
     this.toVerses,
@@ -49,22 +46,22 @@ class VersesList extends StatefulWidget {
 }
 
 class _VersesListState extends State<VersesList> {
-  late ItemScrollController _itemScrollController;
+  final _itemScrollController = ItemScrollController();
+  final _itemPositionsListener = ItemPositionsListener.create();
 
   @override
   void initState() {
     super.initState();
-    _itemScrollController = ItemScrollController();
-    WidgetsBinding.instance.addPostFrameCallback(_getWidgetInfo);
+    WidgetsBinding.instance.addPostFrameCallback(_scrollTo);
   }
 
-  Future<void> _getWidgetInfo(_) async {
+  void _scrollTo(_) async {
     if (widget.toVerses != null) {
       final toVerse = () {
         if (widget.preBismillah?.isNotEmpty == true) {
           return widget.toVerses ?? 0;
         }
-        if (widget.clickFrom == ClickFrom.juz) {
+        if (widget.view == ViewMode.juz) {
           return widget.toVerses ?? 0;
         }
         return (widget.toVerses ?? 0) - 1;
@@ -78,64 +75,89 @@ class _VersesListState extends State<VersesList> {
     }
   }
 
+  void _autoScrollPlayingAudio(AudioVerseState state) async {
+    final index = widget.listVerses
+        .map((e) => e.audio)
+        .toList()
+        .indexOf(state.audioVersePlaying);
+    if (index != -1) {
+      final indices = _itemPositionsListener.itemPositions.value
+          .where((item) {
+            final isTopVisible = item.itemLeadingEdge >= 0;
+            final isBottomVisible = item.itemTrailingEdge <= 1.03;
+            return isTopVisible && isBottomVisible;
+          })
+          .map((e) => e.index)
+          .toList();
+      final lastItem = indices.last;
+      if (lastItem != widget.listVerses.length - 1) {
+        _itemScrollController.scrollTo(
+          index: index,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOutCubic,
+        );
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _itemPositionsListener.itemPositions.removeListener(() {});
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final isPreBismillah = widget.preBismillah?.isNotEmpty == true;
     return BlocListener<AudioVerseBloc, AudioVerseState>(
       listener: (context, state) {
         if (state.audioVersePlaying != null) {
-          final index = widget.listVerses.map((e) => e.audio)
-              .toList()
-              .indexOf(state.audioVersePlaying);
-          if (index != -1) {
-            _itemScrollController.scrollTo(
-              index: index,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOutCubic,
-            );
-          }
+          _autoScrollPlayingAudio(state);
         }
       },
-      child: ScrollablePositionedList.separated(
-        itemScrollController: _itemScrollController,
-        itemCount: () {
-          if (isPreBismillah) {
-            return widget.listVerses.length + 1;
-          }
-          return widget.listVerses.length;
-        }(),
-        separatorBuilder: (BuildContext context, int index) {
-          if (isPreBismillah && index == 0) {
-            return const Divider(color: Colors.transparent);
-          }
-          return Divider(color: secondaryColor.shade500, thickness: 0.1);
-        },
-        itemBuilder: (context, index) {
-          if (index == 0 && isPreBismillah) {
-            return Text(
-              widget.preBismillah ?? emptyString,
-              textAlign: TextAlign.center,
-              style: context.textTheme.headlineMedium?.copyWith(
-                fontFamily: FontConst.lpmqIsepMisbah,
-              ),
+      child: SafeArea(
+        child: ScrollablePositionedList.separated(
+          itemScrollController: _itemScrollController,
+          itemPositionsListener: _itemPositionsListener,
+          itemCount: () {
+            if (isPreBismillah) {
+              return widget.listVerses.length + 1;
+            }
+            return widget.listVerses.length;
+          }(),
+          separatorBuilder: (BuildContext context, int index) {
+            if (isPreBismillah && index == 0) {
+              return const Divider(color: Colors.transparent);
+            }
+            return Divider(color: secondaryColor.shade500, thickness: 0.1);
+          },
+          itemBuilder: (context, index) {
+            if (index == 0 && isPreBismillah) {
+              return Text(
+                widget.preBismillah ?? emptyString,
+                textAlign: TextAlign.center,
+                style: context.textTheme.headlineMedium?.copyWith(
+                  fontFamily: FontConst.lpmqIsepMisbah,
+                ),
+              );
+            }
+            final indexVerses = isPreBismillah ? index - 1 : index;
+            final verses = widget.listVerses[indexVerses];
+            return ListTileVerses(
+              verses: verses,
+              clickFrom: widget.view,
+              juz: widget.juz,
+              surah: widget.surah,
             );
-          }
-          final indexVerses = isPreBismillah ? index - 1 : index;
-          final verses = widget.listVerses[indexVerses];
-          return ListTileVerses(
-            verses: verses,
-            clickFrom: widget.clickFrom,
-            juz: widget.juz,
-            surah: widget.surah,
-          );
-        },
+          },
+        ),
       ),
     );
   }
 }
 
 class ListTileVerses extends StatelessWidget {
-  final ClickFrom clickFrom;
+  final ViewMode clickFrom;
   final Verses verses;
   final JuzConstant? juz;
   final DetailSurah? surah;
@@ -164,7 +186,8 @@ class ListTileVerses extends StatelessWidget {
           child: Column(
             children: [
               ListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                 leading: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -174,7 +197,7 @@ class ListTileVerses extends StatelessWidget {
                       child: FittedBox(
                         child: NumberPin(
                           number:
-                          verses.number?.inSurah.toString() ?? emptyString,
+                              verses.number?.inSurah.toString() ?? emptyString,
                         ),
                       ),
                     ),
@@ -215,12 +238,14 @@ class ListTileVerses extends StatelessWidget {
   }
 }
 
-void _onPressedBookmark(BuildContext context,
-    Verses verses,
-    ClickFrom clickFrom,
-    JuzConstant? juz,
-    DetailSurah? surah,) {
-  if (clickFrom == ClickFrom.surah) {
+void _onPressedBookmark(
+  BuildContext context,
+  Verses verses,
+  ViewMode clickFrom,
+  JuzConstant? juz,
+  DetailSurah? surah,
+) {
+  if (clickFrom == ViewMode.surah) {
     final surahDetailBloc = context.read<SurahDetailBloc>();
     if (surah == null) return;
     surahDetailBloc.add(

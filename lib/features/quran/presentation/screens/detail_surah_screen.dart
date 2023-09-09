@@ -111,7 +111,7 @@ class DetailSurahScreen extends StatelessWidget {
 
                   return VersesList(
                     toVerses: jumpToVerse,
-                    clickFrom: ClickFrom.surah,
+                    view: ViewMode.surah,
                     listVerses: verses ?? [],
                     surah: detailSurah,
                     preBismillah: detailSurah?.preBismillah?.text?.arab,
