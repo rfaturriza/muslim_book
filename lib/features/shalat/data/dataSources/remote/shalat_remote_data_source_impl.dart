@@ -20,7 +20,7 @@ class ShalatRemoteDataSourceImpl implements ShalatRemoteDataSource {
       final result = await dio.get(endpoint);
       return Right(ShalatLocationResponseModel.fromJson(result.data));
     } on DioException catch (e) {
-      throw Left(ServerFailure(message: e.message));
+      return Left(ServerFailure(message: e.message));
     }
   }
 
@@ -38,7 +38,7 @@ class ShalatRemoteDataSourceImpl implements ShalatRemoteDataSource {
       final result = await dio.get(endpoint);
       return Right(ScheduleResponseByDayModel.fromJson(result.data));
     } on DioException catch (e) {
-      throw Left(ServerFailure(message: e.message));
+      return Left(ServerFailure(message: e.message));
     }
   }
 
@@ -53,7 +53,7 @@ class ShalatRemoteDataSourceImpl implements ShalatRemoteDataSource {
       final result = await dio.get(endpoint);
       return Right(ScheduleResponseByMonthModel.fromJson(result.data));
     } on DioException catch (e) {
-      throw Left(ServerFailure(message: e.message));
+      return Left(ServerFailure(message: e.message));
     }
   }
 }

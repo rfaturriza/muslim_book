@@ -102,12 +102,38 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
   ) async {
     emit(state.copyWith(isLoading: true));
     final geoLocation = await getCurrentLocation(NoParams());
+    if(geoLocation.isLeft()){
+      emit(
+        state.copyWith(
+          isLoading: false,
+          scheduleByDay: left(
+            GeneralFailure(
+              message: LocaleKeys.locationNotFound.tr(),
+            ),
+          ),
+        )
+      );
+      return;
+    }
     final city = geoLocation.fold((failure) => null,
             (data) => getCityNameWithoutPrefix(data?.city)) ??
         emptyString;
     final resultCityID = await getCityId(
       GetShalatCityIdByCityParams(city: city),
     );
+    if(resultCityID.isLeft()){
+      emit(
+        state.copyWith(
+          isLoading: false,
+          scheduleByDay: left(
+            GeneralFailure(
+              message: LocaleKeys.locationNotFound.tr(),
+            ),
+          ),
+        )
+      );
+      return;
+    }
     final cityID = resultCityID.fold(
           (failure) => null,
           (data) => data.first.id,

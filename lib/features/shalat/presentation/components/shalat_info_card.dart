@@ -69,13 +69,15 @@ class ShalatInfoCard extends StatelessWidget {
                       ),
                     ],
                     if (state.scheduleByDay?.isLeft() == true) ...[
-                      IconButton(
-                        onPressed: () {
-                          context
-                              .read<ShalatBloc>()
-                              .add(const GetShalatScheduleByDayEvent());
-                        },
-                        icon: const Icon(Icons.refresh),
+                      Expanded(
+                        child: IconButton(
+                          onPressed: () {
+                            context
+                                .read<ShalatBloc>()
+                                .add(const GetShalatScheduleByDayEvent());
+                          },
+                          icon: const Icon(Icons.refresh),
+                        ),
                       ),
                     ],
                   ],

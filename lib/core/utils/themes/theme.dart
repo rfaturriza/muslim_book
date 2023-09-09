@@ -14,6 +14,7 @@ final themeData = ThemeData(
     backgroundColor: backgroundColor,
     errorColor: errorColor[400],
   ),
+  iconTheme: IconThemeData(color: defaultColor.shade50),
   dividerColor: secondaryColor[500],
   visualDensity: VisualDensity.adaptivePlatformDensity,
   fontFamily: FontConst.lato,
