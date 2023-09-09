@@ -41,9 +41,9 @@ class ShalatInfoCard extends StatelessWidget {
             shalatName,
           );
 
-          final place = state.geoLocation?.region?.isEmpty == true
-              ? state.geoLocation?.city
-              : state.geoLocation?.region;
+          final place = state.geoLocation?.regions?.isEmpty == true
+              ? state.geoLocation?.cities?.first
+              : state.geoLocation?.regions?.first;
           if (state.isLoading) {
             return const Center(
               child: LinearProgressIndicator()

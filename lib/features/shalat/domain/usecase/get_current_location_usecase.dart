@@ -48,8 +48,8 @@ class GetCurrentLocationUseCase extends UseCase<GeoLocation, NoParams> {
     );
 
     return GeoLocation(
-      city: placemarks.first.administrativeArea,
-      region: placemarks.first.subAdministrativeArea,
+      cities: placemarks.map((e) => e.administrativeArea).toList(),
+      regions: placemarks.map((e) => e.subAdministrativeArea).toList(),
       country: placemarks.first.country,
       coordinate: Coordinate(
         lat: resultLocator.latitude,

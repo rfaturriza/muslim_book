@@ -6,8 +6,8 @@ part 'geolocation.codegen.freezed.dart';
 @freezed
 class GeoLocation with _$GeoLocation {
   const factory GeoLocation({
-    String? city,
-    String? region,
+    List<String?>? cities,
+    List<String?>? regions,
     String? country,
     Coordinate? coordinate,
     String? url,

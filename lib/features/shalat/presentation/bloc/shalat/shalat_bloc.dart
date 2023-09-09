@@ -20,6 +20,7 @@ import '../../../../qibla/domain/usecases/stream_permission_location_usecase.dar
 import '../../../domain/entities/schedule.codegen.dart';
 import '../../../domain/entities/shalat_location.codegen.dart';
 import '../../../domain/usecase/get_current_location_usecase.dart';
+import '../../../domain/usecase/get_shalat_cityid_by_citiesname_usecase.dart';
 import '../../../domain/usecase/get_shalat_cityid_by_cityname_usecase.dart';
 import '../../../domain/usecase/get_shalat_schedule_by_day_usecase.dart';
 import '../../../domain/usecase/get_shalat_schedule_by_month_usecase.dart';
@@ -37,6 +38,7 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
   final GetShalatScheduleByMonthUseCase getScheduleByMonth;
   final GetCurrentLocationUseCase getCurrentLocation;
   final StreamPermissionLocationUseCase streamPermissionLocation;
+  final GetShalatCityIdByCitiesUseCase getCityIdByCities;
 
   StreamSubscription<Either<Failure, LocationStatus>>?
       _streamPermissionLocation;
@@ -47,6 +49,7 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
     required this.getScheduleByMonth,
     required this.getCurrentLocation,
     required this.streamPermissionLocation,
+    required this.getCityIdByCities,
   }) : super(const ShalatState()) {
     _onStreamPermissionLocation();
 
@@ -112,19 +115,19 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
       ));
       return;
     }
-    final city = getCityNameWithoutPrefix(
-      geoLocation.getOrElse(() => null)?.city,
+    final cities = geoLocation.getOrElse(() => null)?.cities?.map((e) {
+      return getCityNameWithoutPrefix(e);
+    }).toList() ?? [];
+    final regions = geoLocation.getOrElse(() => null)?.regions?.map((e) {
+      return getCityNameWithoutPrefix(e);
+    }).toList() ?? [];
+
+
+    final resultCityID = await getCityIdByCities(
+      GetShalatCityIdByCitiesParams(cities: cities + regions),
     );
-    final region = getCityNameWithoutPrefix(
-      geoLocation.getOrElse(() => null)?.region,
-    );
-    final resultCityID = await getCityId(
-      GetShalatCityIdByCityParams(city: city),
-    );
-    final resultCityIDRegion = await getCityId(
-      GetShalatCityIdByCityParams(city: region),
-    );
-    if (resultCityID.isLeft() && resultCityIDRegion.isLeft()) {
+
+    if (resultCityID.isLeft()) {
       emit(state.copyWith(
         isLoading: false,
         scheduleByDay: left(
@@ -135,11 +138,7 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
       ));
       return;
     }
-    final cityIDRegion = resultCityIDRegion.fold(
-          (failure) => null,
-          (data) => data.first.id,
-        ) ??
-        emptyString;
+
     final cityID = resultCityID.fold(
           (failure) => null,
           (data) => data.first.id,
@@ -147,7 +146,7 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
         emptyString;
     final resultSchedule = await getScheduleByDay(
       GetShalatScheduleByDayParams(
-        cityID: cityIDRegion.isNotEmpty ? cityIDRegion : cityID,
+        cityID: cityID,
         day: event.day ?? DateTime.now().day,
       ),
     );
