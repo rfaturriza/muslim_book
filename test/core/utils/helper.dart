@@ -12,5 +12,13 @@ void main() {
       // assert
       expect(result, "jakarta");
     });
+    test('should return city name without country For Kota Tangerang Selatan', () {
+      // arrange
+      const city = "Kota Tangerang Selatan";
+      // act
+      final result = getCityNameWithoutPrefix(city);
+      // assert
+      expect(result, "tangerang selatan");
+    });
   });
 }

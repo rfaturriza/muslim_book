@@ -81,19 +81,17 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
     final result = await getCityId(
       GetShalatCityIdByCityParams(city: event.city),
     );
-    emit(
-      state.copyWith(
-        isLoading: false,
-        location: result.fold(
-          (failure) => left(
-            GeneralFailure(
-              message: failure.message ?? LocaleKeys.locationNotFound.tr(),
-            ),
+    emit(state.copyWith(
+      isLoading: false,
+      location: result.fold(
+        (failure) => left(
+          GeneralFailure(
+            message: failure.message ?? LocaleKeys.locationNotFound.tr(),
           ),
-          (data) => right(data.first),
         ),
-      )
-    );
+        (data) => right(data.first),
+      ),
+    ));
   }
 
   void _onShalatScheduleByDayFetch(
@@ -102,38 +100,46 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
   ) async {
     emit(state.copyWith(isLoading: true));
     final geoLocation = await getCurrentLocation(NoParams());
-    if(geoLocation.isLeft()){
-      emit(
-        state.copyWith(
-          isLoading: false,
-          scheduleByDay: left(
-            GeneralFailure(
-              message: LocaleKeys.locationNotFound.tr(),
-            ),
+
+    if (geoLocation.isLeft()) {
+      emit(state.copyWith(
+        isLoading: false,
+        scheduleByDay: left(
+          GeneralFailure(
+            message: LocaleKeys.locationNotFound.tr(),
           ),
-        )
-      );
+        ),
+      ));
       return;
     }
-    final city = geoLocation.fold((failure) => null,
-            (data) => getCityNameWithoutPrefix(data?.city)) ??
-        emptyString;
+    final city = getCityNameWithoutPrefix(
+      geoLocation.getOrElse(() => null)?.city,
+    );
+    final region = getCityNameWithoutPrefix(
+      geoLocation.getOrElse(() => null)?.region,
+    );
     final resultCityID = await getCityId(
       GetShalatCityIdByCityParams(city: city),
     );
-    if(resultCityID.isLeft()){
-      emit(
-        state.copyWith(
-          isLoading: false,
-          scheduleByDay: left(
-            GeneralFailure(
-              message: LocaleKeys.locationNotFound.tr(),
-            ),
+    final resultCityIDRegion = await getCityId(
+      GetShalatCityIdByCityParams(city: region),
+    );
+    if (resultCityID.isLeft() && resultCityIDRegion.isLeft()) {
+      emit(state.copyWith(
+        isLoading: false,
+        scheduleByDay: left(
+          GeneralFailure(
+            message: LocaleKeys.locationNotFound.tr(),
           ),
-        )
-      );
+        ),
+      ));
       return;
     }
+    final cityIDRegion = resultCityIDRegion.fold(
+          (failure) => null,
+          (data) => data.first.id,
+        ) ??
+        emptyString;
     final cityID = resultCityID.fold(
           (failure) => null,
           (data) => data.first.id,
@@ -141,7 +147,7 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
         emptyString;
     final resultSchedule = await getScheduleByDay(
       GetShalatScheduleByDayParams(
-        cityID: cityID,
+        cityID: cityIDRegion.isNotEmpty ? cityIDRegion : cityID,
         day: event.day ?? DateTime.now().day,
       ),
     );

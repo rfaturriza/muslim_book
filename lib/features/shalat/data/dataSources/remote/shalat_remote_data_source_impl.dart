@@ -18,6 +18,9 @@ class ShalatRemoteDataSourceImpl implements ShalatRemoteDataSource {
     final endpoint = 'v1/sholat/kota/cari/$city';
     try {
       final result = await dio.get(endpoint);
+      if(result.data['status'] == false) {
+        return Left(ServerFailure(message: result.data['message']));
+      }
       return Right(ShalatLocationResponseModel.fromJson(result.data));
     } on DioException catch (e) {
       return Left(ServerFailure(message: e.message));
