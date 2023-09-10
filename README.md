@@ -1,6 +1,6 @@
-# Aplikasi Quran
+# Muslim Book
 
-Aplikasi Quran is a Flutter project designed to provide a modern and user-friendly Quran application for users to read and explore the Quranic text. Please note that this project is a **work in progress**, and contributions are welcome.
+Muslim Book is a Flutter project designed to provide a modern and user-friendly Quran application for users to read and explore the Quranic text. Please note that this project is a **work in progress**, and contributions are welcome.
 
 ## Tech
 - Flutter 3.13.1
@@ -17,12 +17,12 @@ Aplikasi Quran is a Flutter project designed to provide a modern and user-friend
 - [✔] Search functionality for finding specific Surah.
 - [✔] Search functionality for finding specific Surah.
 - [✔] Display Shalat time by location.
-- [In Progress] Bookmark and save favorite verses.
+- [✔] Bookmark and save favorite verses.
+- [✔] Audio recitations of Quranic verses.
+- [✔] User-friendly and responsive design.
 - [In Progress] Night mode for comfortable reading at night.
 - [In Progress] Setting for changing font size, font type, language, etc.
-- [ ] Display Quranic text with tajweed.
-- [ ] Audio recitations of Quranic verses.
-- [ ] User-friendly and responsive design.
+- [In Progress] Display Quranic text with tajweed.
 
 ## Installation
 To run this Flutter project on your local machine, follow these steps:
