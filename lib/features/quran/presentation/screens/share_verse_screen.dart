@@ -245,7 +245,7 @@ class _SettingPreviewBottomSheet extends StatelessWidget {
               children: [
                 const Padding(
                   padding: EdgeInsets.all(16.0),
-                  child: Icon(Icons.abc),
+                  child: Icon(Icons.text_format),
                 ),
                 Expanded(
                   child: BlocBuilder<ShareVerseBloc, ShareVerseState>(
@@ -256,7 +256,7 @@ class _SettingPreviewBottomSheet extends StatelessWidget {
                       return Slider(
                         value: state.fontSize,
                         min: 0,
-                        max: 100,
+                        max: 30,
                         onChanged: (value) {
                           shareBloc.add(
                             ShareVerseEvent.onChangeFontSize(value),
