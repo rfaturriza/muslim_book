@@ -20,6 +20,10 @@ extension ContextExt on BuildContext {
 
   double get bottomPadding => padding.bottom;
 
+  bool get isLandscape => MediaQuery.of(this).orientation == Orientation.landscape;
+
+  bool get isPortrait => MediaQuery.of(this).orientation == Orientation.portrait;
+
   dismissKeyboard() {
     FocusScope.of(this).requestFocus(FocusNode());
   }

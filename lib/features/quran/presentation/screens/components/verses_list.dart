@@ -8,14 +8,17 @@ import 'package:quranku/features/bookmark/domain/entities/verse_bookmark.codegen
 import 'package:quranku/features/quran/domain/entities/juz.codegen.dart';
 import 'package:quranku/features/quran/domain/entities/verses.codegen.dart';
 import 'package:quranku/features/quran/presentation/bloc/detailJuz/detail_juz_bloc.dart';
+import 'package:quranku/features/quran/presentation/bloc/shareVerse/share_verse_bloc.dart';
 import 'package:quranku/features/quran/presentation/screens/components/verse_popup_menu.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../../../../../core/utils/extension/string_ext.dart';
 import '../../../../../core/utils/themes/color.dart';
+import '../../../../../injection.dart';
 import '../../../domain/entities/detail_surah.codegen.dart';
 import '../../bloc/audioVerse/audio_verse_bloc.dart';
 import '../../bloc/detailSurah/detail_surah_bloc.dart';
+import '../share_verse_screen.dart';
 import 'number_pin.dart';
 
 enum ViewMode {
@@ -83,10 +86,10 @@ class _VersesListState extends State<VersesList> {
     if (index != -1) {
       final indices = _itemPositionsListener.itemPositions.value
           .where((item) {
-            final isTopVisible = item.itemLeadingEdge >= 0;
-            final isBottomVisible = item.itemTrailingEdge <= 1.03;
-            return isTopVisible && isBottomVisible;
-          })
+        final isTopVisible = item.itemLeadingEdge >= 0;
+        final isBottomVisible = item.itemTrailingEdge <= 1.03;
+        return isTopVisible && isBottomVisible;
+      })
           .map((e) => e.index)
           .toList();
       final lastItem = indices.last;
@@ -187,7 +190,7 @@ class ListTileVerses extends StatelessWidget {
             children: [
               ListTile(
                 contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                 leading: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -197,7 +200,7 @@ class ListTileVerses extends StatelessWidget {
                       child: FittedBox(
                         child: NumberPin(
                           number:
-                              verses.number?.inSurah.toString() ?? emptyString,
+                          verses.number?.inSurah.toString() ?? emptyString,
                         ),
                       ),
                     ),
@@ -211,6 +214,20 @@ class ListTileVerses extends StatelessWidget {
                         onBookmarkPressed: () {
                           _onPressedBookmark(
                               context, verses, clickFrom, juz, surah);
+                        },
+                        onSharePressed: () {
+                          context.navigateTo(
+                            BlocProvider(
+                              create: (context) => sl<ShareVerseBloc>()..add(
+                                ShareVerseEvent.onInit(
+                                  verse: verses,
+                                  juz: juz,
+                                  surah: surah,
+                                ),
+                              ),
+                              child: const ShareVerseScreen(),
+                            ),
+                          );
                         },
                       ),
                     )
@@ -238,13 +255,11 @@ class ListTileVerses extends StatelessWidget {
   }
 }
 
-void _onPressedBookmark(
-  BuildContext context,
-  Verses verses,
-  ViewMode clickFrom,
-  JuzConstant? juz,
-  DetailSurah? surah,
-) {
+void _onPressedBookmark(BuildContext context,
+    Verses verses,
+    ViewMode clickFrom,
+    JuzConstant? juz,
+    DetailSurah? surah,) {
   if (clickFrom == ViewMode.surah) {
     final surahDetailBloc = context.read<SurahDetailBloc>();
     if (surah == null) return;
