@@ -65,6 +65,10 @@
   "badCertificateException": "Ups! Ada masalah dengan sertifikat keamanan. Silakan hubungi dukungan untuk bantuan.",
   "unknownErrorException": "Ups! Terjadi kesalahan yang tidak diketahui. Silakan coba lagi nanti.",
   "connectedSuccessfully": "Terhubung dengan sukses",
-  "locationNotFound": "Lokasi tidak ditemukan"
-
+  "locationNotFound": "Lokasi tidak ditemukan",
+  "permissionTitle": "Izin",
+  "defaultPermissionMessage": "Aplikasi ini membutuhkan izin untuk melanjutkan",
+  "cancel": "Batal",
+  "next": "Lanjutkan",
+  "permissionMessageLocation": "Aplikasi ini membutuhkan izin lokasi untuk menentukan waktu shalat dan arah kiblat"
 }

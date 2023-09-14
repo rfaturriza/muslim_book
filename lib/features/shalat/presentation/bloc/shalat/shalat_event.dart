@@ -1,43 +1,21 @@
 part of 'shalat_bloc.dart';
 
-abstract class ShalatEvent extends Equatable {
-  const ShalatEvent();
+@freezed
+class ShalatEvent with _$ShalatEvent {
+  const factory ShalatEvent.getShalatCityIdByCityEvent({
+    required String city,
+  }) = GetShalatCityIdByCityEvent;
 
-  @override
-  List<Object?> get props => [];
-}
+  const factory ShalatEvent.getShalatScheduleByDayEvent({
+    int? day,
+  }) = GetShalatScheduleByDayEvent;
 
-class GetShalatCityIdByCityEvent extends ShalatEvent {
-  final String city;
+  const factory ShalatEvent.getShalatScheduleByMonthEvent({
+    required String cityID,
+    required int month,
+  }) = GetShalatScheduleByMonthEvent;
 
-  const GetShalatCityIdByCityEvent({
-    required this.city,
-  });
-
-  @override
-  List<Object?> get props => [city];
-}
-
-class GetShalatScheduleByDayEvent extends ShalatEvent {
-  final int? day;
-
-  const GetShalatScheduleByDayEvent({
-    this.day,
-  });
-
-  @override
-  List<Object?> get props => [day];
-}
-
-class GetShalatScheduleByMonthEvent extends ShalatEvent {
-  final String cityID;
-  final int month;
-
-  const GetShalatScheduleByMonthEvent({
-    required this.cityID,
-    required this.month,
-  });
-
-  @override
-  List<Object?> get props => [cityID, month];
+  const factory ShalatEvent.streamPermissionLocationEvent(
+    Either<Failure, LocationStatus>? locationStatus,
+  ) = StreamPermissionLocationEvent;
 }

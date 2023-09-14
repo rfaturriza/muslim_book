@@ -1,9 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:quranku/core/components/dialog.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/extension/dartz_ext.dart';
+import 'package:quranku/core/utils/extension/extension.dart';
 import 'package:quranku/core/utils/extension/string_ext.dart';
+import 'package:quranku/generated/locale_keys.g.dart';
 
 import '../../../../core/constants/asset_constants.dart';
 import '../bloc/shalat/shalat_bloc.dart';
@@ -45,9 +50,7 @@ class ShalatInfoCard extends StatelessWidget {
               ? state.geoLocation?.cities?.first
               : state.geoLocation?.regions?.first;
           if (state.isLoading) {
-            return const Center(
-              child: LinearProgressIndicator()
-            );
+            return const Center(child: LinearProgressIndicator());
           }
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
@@ -68,13 +71,33 @@ class ShalatInfoCard extends StatelessWidget {
                         style: context.textTheme.titleMedium,
                       ),
                     ],
-                    if (state.scheduleByDay?.isLeft() == true) ...[
+                    if (state.scheduleByDay?.isLeft() == true ||
+                        state.locationStatus?.status.isNotGranted == true) ...[
                       Expanded(
                         child: IconButton(
                           onPressed: () {
-                            context
-                                .read<ShalatBloc>()
-                                .add(const GetShalatScheduleByDayEvent());
+                            final isDenied = state.locationStatus?.status.isNotGranted ?? false;
+                            if (isDenied) {
+                              AppDialog.showPermissionDialog(
+                                context,
+                                content:
+                                    LocaleKeys.permissionMessageLocation.tr(),
+                                onOk: () async {
+                                  final p =
+                                      await Geolocator.requestPermission();
+                                  if (p == LocationPermission.always ||
+                                      p == LocationPermission.whileInUse) {
+                                    context.read<ShalatBloc>().add(
+                                          const GetShalatScheduleByDayEvent(),
+                                        );
+                                  }
+                                },
+                              );
+                            } else {
+                              context.read<ShalatBloc>().add(
+                                    const GetShalatScheduleByDayEvent(),
+                                  );
+                            }
                           },
                           icon: const Icon(Icons.refresh),
                         ),
@@ -82,10 +105,21 @@ class ShalatInfoCard extends StatelessWidget {
                     ],
                   ],
                 ),
-                if (state.scheduleByDay?.isLeft() == true) ...[
-                  Text(
-                    state.scheduleByDay?.asLeft().message ?? emptyString,
-                    style: context.textTheme.titleMedium,
+                if (state.scheduleByDay?.isLeft() == true ||
+                    state.locationStatus?.status.isNotGranted == true) ...[
+                  Builder(
+                    builder: (context) {
+                      final isDenied = state.locationStatus?.status.isNotGranted ?? false;
+                      final message = isDenied
+                          ? LocaleKeys.errorLocationDenied.tr()
+                          : state.scheduleByDay?.asLeft().message ?? emptyString;
+                      return Text(
+                        message,
+                        style: context.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    }
                   ),
                 ],
                 if (state.scheduleByDay?.isRight() == true) ...[
