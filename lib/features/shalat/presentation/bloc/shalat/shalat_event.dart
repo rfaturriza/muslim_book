@@ -15,7 +15,7 @@ class ShalatEvent with _$ShalatEvent {
     required int month,
   }) = GetShalatScheduleByMonthEvent;
 
-  const factory ShalatEvent.streamPermissionLocationEvent(
-    Either<Failure, LocationStatus>? locationStatus,
-  ) = StreamPermissionLocationEvent;
+  const factory ShalatEvent.onChangedLocationStatusEvent({
+    LocationStatus? status,
+  }) = _OnChangedLocationStatusEvent;
 }

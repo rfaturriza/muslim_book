@@ -8,6 +8,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:injectable/injectable.dart';
 import 'package:quranku/core/utils/extension/dartz_ext.dart';
+import 'package:quranku/core/utils/extension/extension.dart';
 import 'package:quranku/core/utils/extension/string_ext.dart';
 import 'package:quranku/core/utils/helper.dart';
 import 'package:quranku/features/shalat/domain/entities/geolocation.codegen.dart';
@@ -55,20 +56,18 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
     on<GetShalatCityIdByCityEvent>(_onShalatCityIdFetch);
     on<GetShalatScheduleByDayEvent>(_onShalatScheduleByDayFetch);
     on<GetShalatScheduleByMonthEvent>(_onShalatScheduleByMonthFetch);
-    on<StreamPermissionLocationEvent>(_onStreamLocationEvent);
+    on<_OnChangedLocationStatusEvent>(_onChangedLocationStatus);
   }
 
   void _onStreamPermissionLocation() {
     _streamPermissionLocation = streamPermissionLocation(NoParams()).listen(
       (event) {
-        add(ShalatEvent.streamPermissionLocationEvent(event));
         final isSuccess = event.isRight();
         if (isSuccess) {
           final locationStatus = event.asRight();
+          add(_OnChangedLocationStatusEvent(status: locationStatus));
           final isServiceEnabled = locationStatus.enabled;
-          final isPermissionGranted =
-              locationStatus.status == LocationPermission.always ||
-                  locationStatus.status == LocationPermission.whileInUse;
+          final isPermissionGranted = locationStatus.status.isGranted;
           if (isServiceEnabled && isPermissionGranted) {
             add(GetShalatScheduleByDayEvent(day: DateTime.now().day));
           }
@@ -77,15 +76,14 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
     );
   }
 
-  void _onStreamLocationEvent(
-    StreamPermissionLocationEvent event,
+  void _onChangedLocationStatus(
+    _OnChangedLocationStatusEvent event,
     Emitter<ShalatState> emit,
-  ) async {
-    final isSuccess = event.locationStatus?.isRight() == true;
-    final data = isSuccess ? event.locationStatus?.asRight() : null;
-    emit(state.copyWith(
-      locationStatus: data,
-    ));
+  ) {
+    emit(state.copyWith(locationStatus: event.status));
+    if (event.status?.enabled == true && event.status?.status.isGranted == true) {
+      add(const GetShalatScheduleByDayEvent());
+    }
   }
 
   void _onShalatCityIdFetch(
