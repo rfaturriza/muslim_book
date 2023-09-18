@@ -2,6 +2,12 @@
 
 Muslim Book is a Flutter project designed to provide a modern and user-friendly Quran application for users to read and explore the Quranic text. Please note that this project is a **work in progress**, and contributions are welcome.
 
+## Screenshots
+
+| Home | Time Prayer | Save, Play, Share | Qibla | Bookmark |
+|----------|----------|----------|----------|----------|
+| ![image](https://github.com/rfaturriza/muslim_book/assets/56538058/28c0eb53-ce00-46f9-a1e8-a7d097db1377)| ![image](https://github.com/rfaturriza/muslim_book/assets/56538058/9fe12933-8e16-4e1c-9941-f845df99cf1a)| ![image](https://github.com/rfaturriza/muslim_book/assets/56538058/b60d98ed-46fc-4af5-a551-8ddc27b4618b)| ![image](https://github.com/rfaturriza/muslim_book/assets/56538058/4bdff21c-caee-4d3e-a39b-9b71e36f693e)| ![image](https://github.com/rfaturriza/muslim_book/assets/56538058/4b618793-768b-4d2c-8564-0f15286951b4)|
+
 ## Tech
 - Flutter 3.13.1
 - Clean Architecture
