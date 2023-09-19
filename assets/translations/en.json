@@ -65,5 +65,10 @@
   "badCertificateException": "Oops! There is an issue with the security certificate. Please contact support for assistance.",
   "unknownErrorException": "Oops! An unknown error occurred. Please try again later.",
   "connectedSuccessfully": "Connected successfully",
-  "locationNotFound": "Location not found"
+  "locationNotFound": "Location not found",
+  "permissionTitle": "Permission",
+  "defaultPermissionMessage": "Please grant the required permissions to continue using the app.",
+  "cancel": "Cancel",
+  "next": "Next",
+  "permissionMessageLocation": "Muslim Book collects location data to enable location trackers to determine prayer times according to the user's location. Even when the app is closed and then used again, the location information will be updated automatically."
 }

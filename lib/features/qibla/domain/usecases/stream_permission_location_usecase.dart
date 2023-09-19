@@ -32,20 +32,7 @@ class StreamPermissionLocationUseCase
     }
 
     permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Left(
-          GeneralFailure(message: LocaleKeys.errorLocationDenied.tr()),
-        );
-      }
-    }
 
-    if (permission == LocationPermission.deniedForever) {
-      return Left(
-          GeneralFailure(message: LocaleKeys.errorLocationPermanentDenied.tr()),
-      );
-    }
     return Right(LocationStatus(serviceEnabled, permission));
   }
 }

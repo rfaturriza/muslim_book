@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:dartz/dartz.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qiblah/flutter_qiblah.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:injectable/injectable.dart';
 import 'package:quranku/core/utils/extension/dartz_ext.dart';
+import 'package:quranku/core/utils/extension/extension.dart';
 import 'package:quranku/core/utils/extension/string_ext.dart';
 import 'package:quranku/core/utils/helper.dart';
 import 'package:quranku/features/shalat/domain/entities/geolocation.codegen.dart';
@@ -56,6 +56,7 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
     on<GetShalatCityIdByCityEvent>(_onShalatCityIdFetch);
     on<GetShalatScheduleByDayEvent>(_onShalatScheduleByDayFetch);
     on<GetShalatScheduleByMonthEvent>(_onShalatScheduleByMonthFetch);
+    on<_OnChangedLocationStatusEvent>(_onChangedLocationStatus);
   }
 
   void _onStreamPermissionLocation() {
@@ -64,16 +65,25 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
         final isSuccess = event.isRight();
         if (isSuccess) {
           final locationStatus = event.asRight();
+          add(_OnChangedLocationStatusEvent(status: locationStatus));
           final isServiceEnabled = locationStatus.enabled;
-          final isPermissionGranted =
-              locationStatus.status == LocationPermission.always ||
-                  locationStatus.status == LocationPermission.whileInUse;
+          final isPermissionGranted = locationStatus.status.isGranted;
           if (isServiceEnabled && isPermissionGranted) {
             add(GetShalatScheduleByDayEvent(day: DateTime.now().day));
           }
         }
       },
     );
+  }
+
+  void _onChangedLocationStatus(
+    _OnChangedLocationStatusEvent event,
+    Emitter<ShalatState> emit,
+  ) {
+    emit(state.copyWith(locationStatus: event.status));
+    if (event.status?.enabled == true && event.status?.status.isGranted == true) {
+      add(const GetShalatScheduleByDayEvent());
+    }
   }
 
   void _onShalatCityIdFetch(
@@ -103,6 +113,12 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
   ) async {
     emit(state.copyWith(isLoading: true));
     final geoLocation = await getCurrentLocation(NoParams());
+    final service = await Geolocator.isLocationServiceEnabled();
+    final status = await Geolocator.checkPermission();
+
+    emit(state.copyWith(
+      locationStatus: LocationStatus(service, status),
+    ));
 
     if (geoLocation.isLeft()) {
       emit(state.copyWith(
@@ -116,12 +132,13 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
       return;
     }
     final cities = geoLocation.getOrElse(() => null)?.cities?.map((e) {
-      return getCityNameWithoutPrefix(e);
-    }).toList() ?? [];
+          return getCityNameWithoutPrefix(e);
+        }).toList() ??
+        [];
     final regions = geoLocation.getOrElse(() => null)?.regions?.map((e) {
-      return getCityNameWithoutPrefix(e);
-    }).toList() ?? [];
-
+          return getCityNameWithoutPrefix(e);
+        }).toList() ??
+        [];
 
     final resultCityID = await getCityIdByCities(
       GetShalatCityIdByCitiesParams(cities: cities + regions),
@@ -174,6 +191,12 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
     final result = await getScheduleByMonth(
       GetShalatScheduleByMonthParams(city: event.cityID, month: event.month),
     );
+    final service = await Geolocator.isLocationServiceEnabled();
+    final status = await Geolocator.checkPermission();
+
+    emit(state.copyWith(
+      locationStatus: LocationStatus(service, status),
+    ));
     emit(
       state.copyWith(
         isLoading: false,
