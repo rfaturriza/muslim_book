@@ -116,6 +116,7 @@ class _VersesListState extends State<VersesList> {
         }
       },
       child: SafeArea(
+        top: false,
         child: ScrollablePositionedList.separated(
           itemScrollController: _itemScrollController,
           itemPositionsListener: _itemPositionsListener,
