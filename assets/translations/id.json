@@ -70,5 +70,10 @@
   "defaultPermissionMessage": "Aplikasi ini membutuhkan izin untuk melanjutkan",
   "cancel": "Batal",
   "next": "Lanjutkan",
-  "permissionMessageLocation": "Muslim Book mengumpulkan data lokasi untuk mengaktifkan pelacak lokasi guna menentukan waktu sholat sesuai dengan lokasi pengguna. Bahkan ketika aplikasi ditutup dan kemudian digunakan kembali, informasi lokasi akan diperbarui secara otomatis."
+  "permissionMessageLocation": "Muslim Book mengumpulkan data lokasi untuk mengaktifkan pelacak lokasi guna menentukan waktu sholat sesuai dengan lokasi pengguna. Bahkan ketika aplikasi ditutup dan kemudian digunakan kembali, informasi lokasi akan diperbarui secara otomatis.",
+  "arabic": "Arab",
+  "english": "Inggris",
+  "indonesia": "Indonesia",
+  "latin": "Latin",
+  "translation": "Terjemahan"
 }

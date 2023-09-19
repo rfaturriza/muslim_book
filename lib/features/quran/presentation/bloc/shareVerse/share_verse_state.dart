@@ -7,6 +7,7 @@ class ShareVerseState with _$ShareVerseState {
     JuzConstant? juz,
     DetailSurah? surah,
     @Default(false) bool isLoading,
+    String? randomImageUrl,
     Color? backgroundColor,
     @Default(10) double fontSize,
     @Default(true) bool isArabicVisible,

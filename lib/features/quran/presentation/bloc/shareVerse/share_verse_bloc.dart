@@ -12,9 +12,11 @@ import '../../../domain/entities/detail_surah.codegen.dart';
 import '../../../domain/entities/juz.codegen.dart';
 import '../../../domain/entities/verses.codegen.dart';
 
-part 'share_verse_event.dart';
-part 'share_verse_state.dart';
 part 'share_verse_bloc.freezed.dart';
+
+part 'share_verse_event.dart';
+
+part 'share_verse_state.dart';
 
 @injectable
 class ShareVerseBloc extends Bloc<ShareVerseEvent, ShareVerseState> {
@@ -25,6 +27,7 @@ class ShareVerseBloc extends Bloc<ShareVerseEvent, ShareVerseState> {
     ]);
     on<_OnInit>(_onInit);
     on<_OnChangeBackgroundColor>(_onChangeBackgroundColor);
+    on<_OnChangeRandomImageUrl>(_onChangeRandomImageUrl);
     on<_OnChangeFontSize>(_onChangeFontSize);
     on<_OnToggleArabicVisibility>(_onToggleArabicVisibility);
     on<_OnToggleLatinVisibility>(_onToggleLatinVisibility);
@@ -33,9 +36,9 @@ class ShareVerseBloc extends Bloc<ShareVerseEvent, ShareVerseState> {
   }
 
   void _onInit(
-      _OnInit event,
-      Emitter<ShareVerseState> emit,
-      ) {
+    _OnInit event,
+    Emitter<ShareVerseState> emit,
+  ) {
     emit(state.copyWith(
       verse: event.verse,
       juz: event.juz,
@@ -44,44 +47,61 @@ class ShareVerseBloc extends Bloc<ShareVerseEvent, ShareVerseState> {
   }
 
   void _onChangeBackgroundColor(
-      _OnChangeBackgroundColor event,
-      Emitter<ShareVerseState> emit,
-      ) {
+    _OnChangeBackgroundColor event,
+    Emitter<ShareVerseState> emit,
+  ) {
     emit(state.copyWith(backgroundColor: event.color));
   }
 
+  void _onChangeRandomImageUrl(
+    _OnChangeRandomImageUrl event,
+    Emitter<ShareVerseState> emit,
+  ) {
+    final randomString = DateTime.now().millisecondsSinceEpoch.toString();
+    if (state.backgroundColor != null) {
+      emit(state.copyWith(
+        backgroundColor: null,
+      ));
+      return;
+    }
+    emit(state.copyWith(
+      randomImageUrl: randomString,
+      backgroundColor: null,
+    ));
+  }
+
   void _onChangeFontSize(
-      _OnChangeFontSize event,
-      Emitter<ShareVerseState> emit,
-      ) {
+    _OnChangeFontSize event,
+    Emitter<ShareVerseState> emit,
+  ) {
     emit(state.copyWith(fontSize: event.fontSize));
   }
 
   void _onToggleArabicVisibility(
-      _OnToggleArabicVisibility event,
-      Emitter<ShareVerseState> emit,
-      ) {
+    _OnToggleArabicVisibility event,
+    Emitter<ShareVerseState> emit,
+  ) {
     emit(state.copyWith(isArabicVisible: event.value ?? false));
   }
 
   void _onToggleLatinVisibility(
-      _OnToggleLatinVisibility event,
-      Emitter<ShareVerseState> emit,
-      ) {
+    _OnToggleLatinVisibility event,
+    Emitter<ShareVerseState> emit,
+  ) {
     emit(state.copyWith(isLatinVisible: event.value ?? false));
   }
 
   void _onToggleTranslationVisibility(
-      _OnToggleTranslationVisibility event,
-      Emitter<ShareVerseState> emit,
-      ) {
+    _OnToggleTranslationVisibility event,
+    Emitter<ShareVerseState> emit,
+  ) {
     emit(state.copyWith(isTranslationVisible: event.value ?? false));
   }
 
   void _onSharePressed(
-      _OnSharePressed event,
-      Emitter<ShareVerseState> emit,
-      ) async {
+    _OnSharePressed event,
+    Emitter<ShareVerseState> emit,
+  ) async {
     emit(state.copyWith(isLoading: true));
     final boundary = event.boundary;
     final image = await boundary?.toImage(pixelRatio: 3.0);

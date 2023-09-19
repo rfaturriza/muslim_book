@@ -11,6 +11,9 @@ class ShareVerseEvent with _$ShareVerseEvent {
   const factory ShareVerseEvent.onChangeBackgroundColor(Color color) =
       _OnChangeBackgroundColor;
 
+  const factory ShareVerseEvent.onChangeRandomImageUrl() =
+      _OnChangeRandomImageUrl;
+
   const factory ShareVerseEvent.onChangeFontSize(double fontSize) =
       _OnChangeFontSize;
 
