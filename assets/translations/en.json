@@ -70,5 +70,10 @@
   "defaultPermissionMessage": "Please grant the required permissions to continue using the app.",
   "cancel": "Cancel",
   "next": "Next",
-  "permissionMessageLocation": "Muslim Book collects location data to enable location trackers to determine prayer times according to the user's location. Even when the app is closed and then used again, the location information will be updated automatically."
+  "permissionMessageLocation": "Muslim Book collects location data to enable location trackers to determine prayer times according to the user's location. Even when the app is closed and then used again, the location information will be updated automatically.",
+  "arabic": "Arabic",
+  "english": "English",
+  "indonesia": "Indonesia",
+  "latin": "Latin",
+  "translation": "Translation"
 }
