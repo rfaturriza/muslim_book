@@ -33,13 +33,12 @@ jobs:
         with:
           flutter-version: '3.13.1'
 
-      - name: Install Ruby
+      - name: Setup Ruby, Bundler, and Gemfile dependencies
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.1.2'
-
-      - name: Install Fastlane
-        run: cd android && bundle install && cd ..
+          ruby-version: '3.2.2'
+          bundler-cache: true
+          working-directory: android
 
       - name: Install packages
         run: flutter pub get
@@ -62,9 +61,10 @@ jobs:
           KEYSTORE_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEYSTORE_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           KEYSTORE_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          PLAY_STORE_CONFIG_JSON: ${{ secrets.GPLAY_SERVICE_ACCOUNT_KEY_JSON }}
         working-directory: android
 
       - name: Execute Fastlane
         run: bundle exec fastlane ${{ github.event.inputs.lane || 'beta' }}
+        env:
+          PLAY_STORE_CONFIG_JSON: ${{ secrets.GPLAY_SERVICE_ACCOUNT_KEY_JSON }}
         working-directory: android
