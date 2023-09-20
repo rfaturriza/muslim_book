@@ -9,7 +9,7 @@ on:
         default: "beta"
         type: choice
         options:
-          - internal_beta
+          - internal
           - beta
           - promote_to_production
           - production
@@ -50,13 +50,6 @@ jobs:
       - name: Run easy_localization
         run: flutter pub run easy_localization:generate -f keys -o locale_keys.g.dart --source-dir assets/translations
 
-      - name: Decode Service Account Key JSON File
-        uses: timheuer/base64-to-file@v1
-        id: service_account_json_file
-        with:
-          fileName: "serviceAccount.json"
-          encodedString: ${{ secrets.GPLAY_SERVICE_ACCOUNT_KEY_JSON }}
-
       - name: Configure Keystore
         run: |
           echo "$PLAY_STORE_UPLOAD_KEY" | base64 --decode > app/upload-keystore.jks
@@ -65,11 +58,11 @@ jobs:
           echo "storePassword=$KEYSTORE_STORE_PASSWORD" >> key.properties
           echo "keyPassword=$KEYSTORE_KEY_PASSWORD" >> key.properties
         env:
-          PLAY_STORE_UPLOAD_KEY: ${{ secrets.PLAY_STORE_UPLOAD_KEY }}
-          KEYSTORE_KEY_ALIAS: ${{ secrets.KEYSTORE_KEY_ALIAS }}
-          KEYSTORE_KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
-          KEYSTORE_STORE_PASSWORD: ${{ secrets.KEYSTORE_STORE_PASSWORD }}
-          PLAY_STORE_CONFIG_JSON: ${{ steps.service_account_json_file.outputs.filePath }}
+          PLAY_STORE_UPLOAD_KEY: ${{ secrets.KEYSTORE_FILE }}
+          KEYSTORE_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEYSTORE_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEYSTORE_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          PLAY_STORE_CONFIG_JSON: ${{ secrets.GPLAY_SERVICE_ACCOUNT_KEY_JSON }}
         working-directory: android
 
       - name: Execute Fastlane

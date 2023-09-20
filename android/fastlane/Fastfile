@@ -10,18 +10,22 @@ platform :android do
   lane :internal do
     sh "flutter build appbundle -v --no-deferred-components"
     upload_to_play_store(
+      root_url: "https://androidpublisher.googleapis.com/",
       track: 'internal',
       aab: '../build/app/outputs/bundle/release/app-release.aab',
       json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
       )
   end
 
-  desc "Submit a new beta build to Google Play"
+  desc "Promote internal track to beta"
   lane :beta do
-    sh "flutter build appbundle -v --no-deferred-components"
     upload_to_play_store(
-      track: 'beta',
-      aab: '../build/app/outputs/bundle/release/app-release.aab',
+      root_url: "https://androidpublisher.googleapis.com/",
+      track: 'internal',
+      track_promote_to: 'beta',
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
       json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
       )
   end
@@ -29,9 +33,12 @@ platform :android do
   desc "Promote beta track to prod"
   lane :promote_to_production do
     upload_to_play_store(
+      root_url: "https://androidpublisher.googleapis.com/",
       track: 'beta',
       track_promote_to: 'production',
       skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
       json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
       )
   end
