@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quranku/core/components/spacer.dart';
@@ -8,14 +7,17 @@ import 'package:quranku/features/bookmark/domain/entities/verse_bookmark.codegen
 import 'package:quranku/features/quran/domain/entities/juz.codegen.dart';
 import 'package:quranku/features/quran/domain/entities/verses.codegen.dart';
 import 'package:quranku/features/quran/presentation/bloc/detailJuz/detail_juz_bloc.dart';
+import 'package:quranku/features/quran/presentation/bloc/shareVerse/share_verse_bloc.dart';
 import 'package:quranku/features/quran/presentation/screens/components/verse_popup_menu.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../../../../../core/utils/extension/string_ext.dart';
 import '../../../../../core/utils/themes/color.dart';
+import '../../../../../injection.dart';
 import '../../../domain/entities/detail_surah.codegen.dart';
 import '../../bloc/audioVerse/audio_verse_bloc.dart';
 import '../../bloc/detailSurah/detail_surah_bloc.dart';
+import '../share_verse_screen.dart';
 import 'number_pin.dart';
 
 enum ViewMode {
@@ -116,6 +118,7 @@ class _VersesListState extends State<VersesList> {
         }
       },
       child: SafeArea(
+        top: false,
         child: ScrollablePositionedList.separated(
           itemScrollController: _itemScrollController,
           itemPositionsListener: _itemPositionsListener,
@@ -212,6 +215,21 @@ class ListTileVerses extends StatelessWidget {
                           _onPressedBookmark(
                               context, verses, clickFrom, juz, surah);
                         },
+                        onSharePressed: () {
+                          context.navigateTo(
+                            BlocProvider(
+                              create: (context) => sl<ShareVerseBloc>()
+                                ..add(
+                                  ShareVerseEvent.onInit(
+                                    verse: verses,
+                                    juz: juz,
+                                    surah: surah,
+                                  ),
+                                ),
+                              child: const ShareVerseScreen(),
+                            ),
+                          );
+                        },
                       ),
                     )
                   ],
@@ -226,9 +244,16 @@ class ListTileVerses extends StatelessWidget {
                 ),
               ),
               const VSpacer(height: 8),
-              TransliterationVerses(verses: verses),
+              ListTileTransliteration(
+                text: verses.text?.transliteration?.asLocale(context) ??
+                    emptyString,
+                number: verses.number?.inSurah.toString() ?? emptyString,
+              ),
               const VSpacer(height: 8),
-              TranslationVerses(verses: verses),
+              ListTileTranslation(
+                text: verses.translation?.asLocale(context) ?? emptyString,
+                number: verses.number?.inSurah.toString() ?? emptyString,
+              ),
               const VSpacer(height: 8),
             ],
           ),
@@ -273,57 +298,6 @@ void _onPressedBookmark(
         isBookmarked: verses.isBookmarked ?? false,
       ),
     );
-  }
-}
-
-class TranslationVerses extends StatelessWidget {
-  final Verses verses;
-
-  const TranslationVerses({super.key, required this.verses});
-
-  @override
-  Widget build(BuildContext context) {
-    final locale = context.locale;
-    final isIndonesia = locale == const Locale('id');
-    final isEnglish = locale == const Locale('en');
-    if (isEnglish && verses.translation?.en?.isNotEmpty == true) {
-      return ListTileTranslation(
-        text: verses.translation?.en ?? emptyString,
-        number: verses.number?.inSurah.toString() ?? emptyString,
-      );
-    } else if (isIndonesia && verses.translation?.id?.isNotEmpty == true) {
-      return ListTileTranslation(
-        text: verses.translation?.id ?? emptyString,
-        number: verses.number?.inSurah.toString() ?? emptyString,
-      );
-    }
-    return const Placeholder();
-  }
-}
-
-class TransliterationVerses extends StatelessWidget {
-  final Verses verses;
-
-  const TransliterationVerses({super.key, required this.verses});
-
-  @override
-  Widget build(BuildContext context) {
-    final locale = context.locale;
-    final isIndonesia = locale == const Locale('id');
-    final isEnglish = locale == const Locale('en');
-    if (isEnglish && verses.text?.transliteration?.en?.isNotEmpty == true) {
-      return ListTileTransliteration(
-        text: verses.text?.transliteration?.en ?? emptyString,
-        number: verses.number?.inSurah.toString() ?? emptyString,
-      );
-    } else if (isIndonesia &&
-        verses.text?.transliteration?.id?.isNotEmpty == true) {
-      return ListTileTransliteration(
-        text: verses.text?.transliteration?.id ?? emptyString,
-        number: verses.number?.inSurah.toString() ?? emptyString,
-      );
-    }
-    return const SizedBox();
   }
 }
 
