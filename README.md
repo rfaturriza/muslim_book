@@ -16,19 +16,24 @@ Muslim Book is a Flutter project designed to provide a modern and user-friendly 
 - Bloc
 - Dio
 - Get It & Injectable
+- Github action CI
+- Fastlane CD
 
 ## Features
 - [✔] Display Quranic (Surah and Juz mode) text with translations.
 - [✔] Localization in English and Bahasa Indonesia.
 - [✔] Search functionality for finding specific Surah.
-- [✔] Search functionality for finding specific Surah.
+- [✔] Search functionality for finding specific Juz.
 - [✔] Display Shalat time by location.
 - [✔] Bookmark and save favorite verses.
 - [✔] Audio recitations of Quranic verses.
 - [✔] User-friendly and responsive design.
-- [In Progress] Night mode for comfortable reading at night.
+- [✔] Share your favorite verses with your friends on Instagram, WhatsApp, etc.
+- [In Progress] Display detail Shalat time in calendar/permonth.
 - [In Progress] Setting for changing font size, font type, language, etc.
-- [In Progress] Display Quranic text with tajweed.
+- [Upcoming] Light and Dark mode for more comfortable reading.
+- [Upcoming] Display Quranic text with tajweed.
+- [Upcoming] Localization more languages.
 
 ## Installation
 To run this Flutter project on your local machine, follow these steps:
@@ -60,7 +65,7 @@ To run this Flutter project on your local machine, follow these steps:
     flutter run
     
 ## Contributing
-We welcome contributions from the community to help improve and expand the Aplikasi Quran project. If you'd like to contribute, please follow these guidelines:
+We welcome contributions from the community to help improve and expand the Muslim Book project. If you'd like to contribute, please follow these guidelines:
 
 Fork the repository and create a new branch for your feature or bug fix.
 
@@ -79,4 +84,4 @@ This project is licensed under the MIT License - see the LICENSE.md file for det
 If you have any questions or suggestions regarding the project, feel free to reach out to us:
 
 Email: rfaturriza@gmail.com
-We appreciate your interest in contributing to the Aplikasi Quran project!
+We appreciate your interest in contributing to the Muslim Book project!
