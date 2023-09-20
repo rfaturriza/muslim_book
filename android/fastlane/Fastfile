@@ -1,5 +1,7 @@
 default_platform(:android)
 
+ENV['SUPPLY_UPLOAD_MAX_RETRIES'] = '5'
+
 platform :android do
   desc "Runs all the tests"
   lane :test do
