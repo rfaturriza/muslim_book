@@ -18,7 +18,7 @@ platform :android do
   end
 
   desc "Promote internal track to beta"
-  lane :beta do
+  lane :promote_to_beta do
     upload_to_play_store(
       root_url: "https://androidpublisher.googleapis.com/",
       track: 'internal',
