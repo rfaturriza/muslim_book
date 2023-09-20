@@ -28,7 +28,7 @@ class Language with _$Language {
     if (locale.languageCode == 'en') {
       return en ?? emptyString;
     } else if (locale.languageCode == 'id') {
-      return id ?? emptyString;
+      return id ?? en ?? emptyString;
     } else {
       return arab ?? emptyString;
     }

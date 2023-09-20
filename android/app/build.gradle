@@ -28,12 +28,18 @@ if (flutterCompileSdkVersion == null) {
 
 def flutterMinSdkVersion = localProperties.getProperty('flutter.minSdkVersion')
 if (flutterMinSdkVersion == null) {
-    flutteMinSdkVersion = '23'
+    flutterMinSdkVersion = '23'
 }
 
 def flutterTargetSdkVersion = localProperties.getProperty('flutter.targetSdkVersion')
 if (flutterTargetSdkVersion == null) {
-    flutterTargetSdkVersion = '30'
+    flutterTargetSdkVersion = '33'
+}
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
 apply plugin: 'com.android.application'
@@ -65,6 +71,15 @@ android {
         versionName flutterVersionName
     }
 
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
@@ -75,7 +90,7 @@ android {
             resValue "string", "app_name", "Muslim Book (Profile)"
         }
         release {
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             resValue "string", "app_name", "Muslim Book"
         }
     }
