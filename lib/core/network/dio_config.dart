@@ -1,21 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 
-// final dio = Dio(baseOptions);
-//
-// const baseUrlQuran = 'https://rizz-quran-api.vercel.app/';
-// const baseUrlShalat = 'https://api.myquran.com/';
-//
-// final baseOptions = BaseOptions(
-//   baseUrl: baseUrlQuran,
-//   connectTimeout: const Duration(seconds: 5),
-//   receiveTimeout: const Duration(seconds: 3),
-//   headers: {
-//     'Content-Type': 'application/json',
-//     'Accept': 'application/json',
-//   },
-// );
-
 @injectable
 class NetworkConfig {
   static const baseUrlQuran = 'https://rizz-quran-api.vercel.app/';
