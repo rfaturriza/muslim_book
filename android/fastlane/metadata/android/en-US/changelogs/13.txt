@@ -1,0 +1,3 @@
+- Bug fix: lagging when change font size on share verse screen
+
+If you like the app and the progress we're making, please show us your support by submitting a review on the Play Store.
