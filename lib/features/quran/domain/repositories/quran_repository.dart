@@ -11,4 +11,16 @@ abstract class QuranRepository {
   Future<Either<Failure, DetailSurah?>> getDetailSurah(int surahNumber);
 
   Future<Either<Failure, DetailJuz?>> getDetailJuz(int juzNumber);
+
+  Future<Either<Failure, Unit>> setCacheAllSurah(List<Surah> surah);
+
+  Future<Either<Failure, List<Surah>?>> getCacheAllSurah();
+
+  Future<Either<Failure, Unit>> setCacheDetailSurah(DetailSurah surah);
+
+  Future<Either<Failure, DetailSurah?>> getCacheDetailSurah(int surahNumber);
+
+  Future<Either<Failure, Unit>> setCacheDetailJuz(DetailJuz juz);
+
+  Future<Either<Failure, DetailJuz?>> getCacheDetailJuz(int juzNumber);
 }
