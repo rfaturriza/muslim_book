@@ -1,3 +1,5 @@
+import 'package:adhan/adhan.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:quranku/features/shalat/data/models/schedule_model.codegen.dart';
 
@@ -11,6 +13,7 @@ class ScheduleByDay with _$ScheduleByDay {
     String? area,
     Coordinate? coordinate,
     Schedule? schedule,
+    PrayerTimes? prayerTimes,
   }) = _ScheduleByDay;
 
   const ScheduleByDay._();
@@ -51,7 +54,7 @@ class Schedule with _$Schedule {
     String? date,
     String? imsak,
     String? subuh,
-    String? terbit,
+    String? syuruq,
     String? dhuha,
     String? dzuhur,
     String? ashar,
@@ -65,12 +68,24 @@ class Schedule with _$Schedule {
     date: date,
     imsak: imsak,
     subuh: subuh,
-    terbit: terbit,
+    syuruq: syuruq,
     dhuha: dhuha,
     dzuhur: dzuhur,
     ashar: ashar,
     maghrib: maghrib,
     isya: isya,
+  );
+
+  factory Schedule.fromPrayerTimes(PrayerTimes prayerTimes) => Schedule(
+    date: DateTime.now().timeZoneName,
+    imsak: "${DateFormat.Hm().format(prayerTimes.fajr)} ${prayerTimes.fajr.timeZoneName}",
+    subuh: "${DateFormat.Hm().format(prayerTimes.fajr)} ${prayerTimes.fajr.timeZoneName}",
+    syuruq: "${DateFormat.Hm().format(prayerTimes.sunrise)} ${prayerTimes.sunrise.timeZoneName}",
+    dhuha: "${DateFormat.Hm().format(prayerTimes.sunrise)} ${prayerTimes.sunrise.timeZoneName}",
+    dzuhur: "${DateFormat.Hm().format(prayerTimes.dhuhr)} ${prayerTimes.dhuhr.timeZoneName}",
+    ashar: "${DateFormat.Hm().format(prayerTimes.asr)} ${prayerTimes.asr.timeZoneName}",
+    maghrib: "${DateFormat.Hm().format(prayerTimes.maghrib)} ${prayerTimes.maghrib.timeZoneName}",
+    isya: "${DateFormat.Hm().format(prayerTimes.isha)} ${prayerTimes.isha.timeZoneName}",
   );
 }
 
