@@ -16,6 +16,15 @@ PODS:
     - Flutter
   - geolocator_apple (1.2.0):
     - Flutter
+  - midtrans_sdk (0.4.0):
+    - Flutter
+    - MidtransKit (= 1.20.1)
+  - MidtransCoreKit (1.20.1)
+  - MidtransKit (1.20.1):
+    - MidtransCoreKit (= 1.20.1)
+    - MidtransKit/UI (= 1.20.1)
+  - MidtransKit/UI (1.20.1):
+    - MidtransCoreKit (= 1.20.1)
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -37,6 +46,7 @@ DEPENDENCIES:
   - flutter_qiblah (from `.symlinks/plugins/flutter_qiblah/ios`)
   - geocoding_ios (from `.symlinks/plugins/geocoding_ios/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
+  - midtrans_sdk (from `.symlinks/plugins/midtrans_sdk/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
@@ -45,6 +55,8 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - FMDB
+    - MidtransCoreKit
+    - MidtransKit
     - ReachabilitySwift
 
 EXTERNAL SOURCES:
@@ -62,6 +74,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/geocoding_ios/ios"
   geolocator_apple:
     :path: ".symlinks/plugins/geolocator_apple/ios"
+  midtrans_sdk:
+    :path: ".symlinks/plugins/midtrans_sdk/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   share_plus:
@@ -80,6 +94,9 @@ SPEC CHECKSUMS:
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   geocoding_ios: a389ea40f6f548de6e63006a2e31bf66ff80769a
   geolocator_apple: cc556e6844d508c95df1e87e3ea6fa4e58c50401
+  midtrans_sdk: 230c0590efa08a68b82dc024a391b22a3292c6db
+  MidtransCoreKit: 2503bd419c78445c59360b81afc2733dee226c8c
+  MidtransKit: f230a539a9b57bd314a91d78044ceee95fb76751
   path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   share_plus: 599aa54e4ea31d4b4c0e9c911bcc26c55e791028

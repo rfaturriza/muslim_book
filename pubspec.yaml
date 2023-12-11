@@ -2,7 +2,7 @@ name: quranku
 description: Aplikasi quran mobile
 publish_to: "none"
 
-version: 1.1.1+13
+version: 1.2.4+17
 
 environment:
   sdk: ">=2.19.6 <3.2.0"
@@ -35,6 +35,10 @@ dependencies:
   flutter_qiblah: ^2.2.0
   audioplayers: ^5.1.0
   share_plus: ^7.1.0
+  flutter_dotenv: ^5.1.0
+  midtrans_sdk: ^0.4.0
+  formz: ^0.6.1
+  in_app_purchase: ^3.1.11
 
 dev_dependencies:
   flutter_test:
@@ -44,10 +48,12 @@ dev_dependencies:
   injectable_generator:
   freezed: ^2.4.0
   json_serializable: ^6.7.1
+
 flutter:
   uses-material-design: true
 
   assets:
+    - .env
     - assets/translations/
     - assets/lottie/
     - assets/svg/
