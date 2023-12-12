@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:quranku/core/network/networkInfo/network_info_bloc.dart';
@@ -18,6 +19,11 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = context.locale;
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+    );
+
     return MultiBlocProvider(
       providers: [
         BlocProvider<NetworkInfoBloc>(
@@ -30,7 +36,7 @@ class App extends StatelessWidget {
           create: (context) => sl<JuzBloc>(),
         ),
         BlocProvider<ShalatBloc>(
-          create: (context) => sl<ShalatBloc>(),
+          create: (context) => sl<ShalatBloc>()..add(ShalatEvent.init(locale)),
         ),
       ],
       child: OKToast(
