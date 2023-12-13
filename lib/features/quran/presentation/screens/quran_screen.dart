@@ -26,6 +26,7 @@ class QuranScreen extends StatelessWidget {
       },
     );
     final controller = ScrollController();
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       drawer: const DrawerQuranScreen(),
@@ -44,9 +45,10 @@ class QuranScreen extends StatelessWidget {
                     (BuildContext context, bool innerBoxIsScrolled) {
                   return [
                     SliverPersistentHeader(
-                        key: const ValueKey('appbar'),
-                        pinned: true,
-                        delegate: BarHeaderPersistentDelegate(appBar)),
+                      key: const ValueKey('appbar'),
+                      pinned: true,
+                      delegate: BarHeaderPersistentDelegate(appBar),
+                    ),
                     const SliverAppBar(
                       leading: SizedBox(),
                       backgroundColor: Colors.transparent,

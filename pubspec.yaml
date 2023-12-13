@@ -35,6 +35,7 @@ dependencies:
   flutter_qiblah: ^2.2.0
   audioplayers: ^5.1.0
   share_plus: ^7.1.0
+  adhan: ^2.0.0+1
   flutter_dotenv: ^5.1.0
   midtrans_sdk: ^0.4.0
   formz: ^0.6.1
@@ -50,7 +51,6 @@ dev_dependencies:
   injectable_generator:
   freezed: ^2.4.0
   json_serializable: ^6.7.1
-
 flutter:
   uses-material-design: true
 
