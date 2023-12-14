@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'app.dart';
@@ -13,7 +14,8 @@ void main() async {
   await EasyLocalization.ensureInitialized();
   await Hive.initFlutter();
   await configureDependencies();
-  if(kDebugMode){
+  await dotenv.load(fileName: ".env");
+  if (kDebugMode) {
     Bloc.observer = AppBlocObserver();
   }
   runApp(

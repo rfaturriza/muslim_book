@@ -1,4 +1,5 @@
 {
+  "appName": "Muslim Book",
   "defaultErrorMessage": "Mohon maaf, Terjadi kesalahan silahkan coba lagi",
   "loading": "Memuat",
   "noData": "Tidak ada data",
@@ -75,5 +76,23 @@
   "english": "Inggris",
   "indonesia": "Indonesia",
   "latin": "Latin",
-  "translation": "Terjemahan"
+  "translation": "Terjemahan",
+  "settings": "Pengaturan",
+  "language": "Bahasa",
+  "fontSize": "Ukuran font",
+  "fontStyle": "Gaya font",
+  "privacyPolicy": "Kebijakan Privasi",
+  "aboutApp": "Tentang Aplikasi",
+  "detailPage": "Halaman Detail",
+  "supportUs": "Dukung Kami",
+  "muslimBookIsOpenSource": "@:appName adalah aplikasi open source",
+  "version": "Versi {}",
+  "thankYouForYourSupport": "Terima kasih atas dukungan Anda",
+  "donate": "Donasi",
+  "donateDescription": "Dukungan Anda akan membantu kami untuk terus mengembangkan aplikasi ini",
+  "donationFailedMessage": "Donasi kamu gagal",
+  "donationInProgressMessage": "Donasi kamu sedang diproses",
+  "amountDonation": "Jumlah",
+  "enterAmountDonation": "Masukkan jumlah donasi",
+  "sincerelyDonation": "Donasi seikhlasnya"
 }
