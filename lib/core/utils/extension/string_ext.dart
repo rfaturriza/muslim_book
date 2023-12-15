@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:quranku/generated/locale_keys.g.dart';
 
 extension StringExt on String {
@@ -7,6 +9,14 @@ extension StringExt on String {
 
   bool get isNotGrantedPermissionLocation {
     return this == LocaleKeys.errorLocationDenied || this == LocaleKeys.errorLocationPermanentDenied;
+  }
+
+  String toBase64() {
+    return base64.encode(utf8.encode(this));
+  }
+
+  String fromBase64() {
+    return utf8.decode(base64.decode(this));
   }
 }
 

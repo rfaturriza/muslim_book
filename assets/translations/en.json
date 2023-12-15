@@ -1,4 +1,5 @@
 {
+  "appName": "Muslim Book",
   "defaultErrorMessage": "I'm sorry, an error occurred, please try again",
   "loading": "Loading",
   "noData": "No data",
@@ -75,5 +76,23 @@
   "english": "English",
   "indonesia": "Indonesia",
   "latin": "Latin",
-  "translation": "Translation"
+  "translation": "Translation",
+  "settings": "Settings",
+  "language": "Language",
+  "fontSize": "Font Size",
+  "fontStyle": "Font Style",
+  "privacyPolicy": "Privacy Policy",
+  "aboutApp": "About App",
+  "detailPage": "Detail Page",
+  "supportUs": "Support Us",
+  "muslimBookIsOpenSource": "@:appName is open source",
+  "version": "Version {}",
+  "thankYouForYourSupport": "Thank you for your support",
+  "donate": "Donate",
+  "donateDescription": "Donate to support the development of this application",
+  "donationFailedMessage": "Your donation is failed",
+  "donationInProgressMessage": "Your donation is in progress",
+  "amountDonation": "Amount of donation",
+  "enterAmountDonation": "Enter amount of donation",
+  "sincerelyDonation": "Sincerely donation via Saweria"
 }

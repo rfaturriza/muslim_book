@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:dartz/dartz.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:equatable/equatable.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:injectable/injectable.dart';
@@ -11,18 +14,22 @@ import '../../../../generated/locale_keys.g.dart';
 import '../entities/schedule.codegen.dart';
 
 @injectable
-class GetCurrentLocationUseCase extends UseCase<GeoLocation, NoParams> {
+class GetCurrentLocationUseCase
+    extends UseCase<GeoLocation, GetCurrentLocationParams> {
   @override
-  Future<Either<Failure, GeoLocation?>> call(NoParams params) async {
+  Future<Either<Failure, GeoLocation?>> call(
+      GetCurrentLocationParams params) async {
     try {
-      final result = await _determinePosition();
+      final result = await _determinePosition(locale: params.locale);
       return Right(result);
     } catch (e) {
       return Left(GeneralFailure(message: e.toString()));
     }
   }
 
-  Future<GeoLocation> _determinePosition() async {
+  Future<GeoLocation> _determinePosition({
+    required Locale locale,
+  }) async {
     bool serviceEnabled;
     LocationPermission permission;
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -41,10 +48,21 @@ class GetCurrentLocationUseCase extends UseCase<GeoLocation, NoParams> {
     if (permission == LocationPermission.deniedForever) {
       return Future.error(LocaleKeys.errorLocationPermanentDenied.tr());
     }
-    final resultLocator =  await Geolocator.getCurrentPosition();
+    final resultLocator = await Geolocator.getCurrentPosition();
+    final languageCode = locale.languageCode;
+    final countryCode = () {
+      if (locale.countryCode != null) {
+        return locale.countryCode;
+      }
+      if (locale.languageCode.toUpperCase() == "EN") {
+        return "US";
+      }
+      return locale.languageCode.toUpperCase();
+    }();
     final placemarks = await placemarkFromCoordinates(
       resultLocator.latitude,
       resultLocator.longitude,
+      localeIdentifier: "$languageCode$countryCode",
     );
 
     return GeoLocation(
@@ -52,13 +70,21 @@ class GetCurrentLocationUseCase extends UseCase<GeoLocation, NoParams> {
       regions: placemarks.map((e) => e.subAdministrativeArea).toList(),
       country: placemarks.first.country,
       coordinate: Coordinate(
-        lat: resultLocator.latitude,
-        lon: resultLocator.longitude,
-        latitude: resultLocator.latitude.toString(),
-        longitude: resultLocator.longitude.toString()
-      ),
-      url: "https://www.google.com/maps/search/?api=1&query=${resultLocator.latitude},${resultLocator.longitude}",
+          lat: resultLocator.latitude,
+          lon: resultLocator.longitude,
+          latitude: resultLocator.latitude.toString(),
+          longitude: resultLocator.longitude.toString()),
+      url:
+          "https://www.google.com/maps/search/?api=1&query=${resultLocator.latitude},${resultLocator.longitude}",
     );
   }
+}
 
+class GetCurrentLocationParams extends Equatable {
+  final Locale locale;
+
+  const GetCurrentLocationParams({required this.locale});
+
+  @override
+  List<Object?> get props => [locale];
 }

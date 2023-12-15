@@ -18,7 +18,7 @@ class HelperTimeShalat {
     if (schedule == null) return '-';
     final String? timeImsak = schedule.imsak;
     final String? timeSubuh = schedule.subuh;
-    final String? timeTerbit = schedule.terbit;
+    final String? timeTerbit = schedule.syuruq;
     final String? timeDhuha = schedule.dhuha;
     final String? timeDzuhur = schedule.dzuhur;
     final String? timeAshar = schedule.ashar;
@@ -30,9 +30,10 @@ class HelperTimeShalat {
       if (time == null) {
         throw ArgumentError("Time cannot be null");
       }
-
-      final hour = int.parse(time.split(':')[0]);
-      final minute = int.parse(time.split(':')[1]);
+      final hourAndMinute = (time.contains(' ')) ? time.split(' ')[0] : time;
+      final splitTime = hourAndMinute.split(RegExp(r'[.:]'));
+      final hour = int.parse(splitTime[0]);
+      final minute = int.parse(splitTime[1]);
       final dateTimeNow = DateTime.now();
       final format = DateFormat('yyyy-MM-dd HH:mm');
 
@@ -76,7 +77,7 @@ class HelperTimeShalat {
       case 'subuh':
         return schedule.subuh;
       case 'terbit':
-        return schedule.terbit;
+        return schedule.syuruq;
       case 'dhuha':
         return schedule.dhuha;
       case 'dzuhur':
