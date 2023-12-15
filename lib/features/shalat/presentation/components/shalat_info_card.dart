@@ -60,17 +60,15 @@ class ShalatInfoCard extends StatelessWidget {
         ),
         child: BlocBuilder<ShalatBloc, ShalatState>(
           builder: (context, state) {
-            final shalatName = HelperTimeShalat.getShalatNameByTime(
-              state.scheduleByDay?.getOrElse(() => null)?.schedule,
+            final shalat = HelperTimeShalat.getShalatNameByTime(
+              state.scheduleByDay?.asRight()?.schedule,
             );
             final shalatTime = HelperTimeShalat.getShalatTimeByShalatName(
-              state.scheduleByDay?.getOrElse(() => null)?.schedule,
-              shalatName,
+              state.scheduleByDay?.asRight()?.schedule,
+              shalat,
             );
 
-            final place = state.geoLocation?.regions?.isEmpty == true
-                ? state.geoLocation?.cities?.first
-                : state.geoLocation?.regions?.first;
+            final place = state.geoLocation?.place ?? '-';
             if (state.isLoading) {
               return const Center(child: LinearProgressIndicator());
             }
@@ -79,50 +77,66 @@ class ShalatInfoCard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    children: [
-                      if (state.scheduleByDay?.isRight() == true) ...[
-                        Text(
-                          shalatName.capitalize(),
-                          style: context.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      children: [
+                        if (state.scheduleByDay?.isRight() == true) ...[
+                          Text(
+                            shalat.capitalize(),
+                            style: context.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        Text(
-                          shalatTime ?? '-',
-                          style: context.textTheme.titleMedium,
-                        ),
-                      ],
-                      if (state.scheduleByDay?.isLeft() == true) ...[
-                        Expanded(
-                          child: IconButton(
-                            onPressed: () {
-                              context.read<ShalatBloc>().add(
-                                    const GetShalatScheduleByDayEvent(),
-                                  );
-                            },
-                            icon: const Icon(Icons.refresh),
+                          Text(
+                            shalatTime ?? '-',
+                            style: context.textTheme.titleMedium,
                           ),
-                        ),
+                        ],
+                        if (state.scheduleByDay?.isLeft() == true) ...[
+                          Expanded(
+                            child: IconButton(
+                              onPressed: () {
+                                context.read<ShalatBloc>().add(
+                                      const ShalatEvent
+                                          .getShalatScheduleByDayEvent(),
+                                    );
+                              },
+                              icon: const Icon(Icons.refresh),
+                            ),
+                          ),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
-                  if (state.scheduleByDay?.isLeft() == true) ...[
-                    Text(
-                      state.scheduleByDay?.asLeft().message ?? emptyString,
-                      style: context.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        if (state.scheduleByDay?.isLeft() == true) ...[
+                          Text(
+                            state.scheduleByDay?.asLeft().message ??
+                                emptyString,
+                            style: context.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                        if (state.scheduleByDay?.isRight() == true) ...[
+                          Text(
+                            place,
+                            style: context.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.end,
+                            overflow: TextOverflow.clip,
+                          ),
+                        ]
+                      ],
                     ),
-                  ],
-                  if (state.scheduleByDay?.isRight() == true) ...[
-                    Text(
-                      place ?? '-',
-                      style: context.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ]
+                  ),
                 ],
               ),
             );

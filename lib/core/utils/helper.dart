@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/services.dart';
 import 'package:quranku/core/utils/extension/string_ext.dart';
 
 String getCityNameWithoutPrefix(String? city) {
@@ -12,4 +14,25 @@ String getCityNameWithoutPrefix(String? city) {
     }
   }
   return city.toLowerCase();
+}
+
+class CurrencyInputFormatter extends TextInputFormatter {
+
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+
+    if(newValue.selection.baseOffset == 0){
+      return newValue;
+    }
+
+    double value = double.parse(newValue.text);
+
+    final formatter = NumberFormat.simpleCurrency(locale: "id_ID");
+
+    String newText = formatter.format(value/100);
+
+    return newValue.copyWith(
+        text: newText,
+        selection: TextSelection.collapsed(offset: newText.length));
+  }
 }

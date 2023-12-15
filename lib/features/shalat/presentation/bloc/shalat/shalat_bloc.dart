@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:ui';
 
+import 'package:adhan/adhan.dart';
 import 'package:dartz/dartz.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,8 +11,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:injectable/injectable.dart';
 import 'package:quranku/core/utils/extension/dartz_ext.dart';
 import 'package:quranku/core/utils/extension/extension.dart';
-import 'package:quranku/core/utils/extension/string_ext.dart';
-import 'package:quranku/core/utils/helper.dart';
 import 'package:quranku/features/shalat/domain/entities/geolocation.codegen.dart';
 
 import '../../../../../core/error/failures.dart';
@@ -53,6 +53,7 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
   }) : super(const ShalatState()) {
     _onStreamPermissionLocation();
 
+    on<_Init>(_onInit);
     on<GetShalatCityIdByCityEvent>(_onShalatCityIdFetch);
     on<GetShalatScheduleByDayEvent>(_onShalatScheduleByDayFetch);
     on<GetShalatScheduleByMonthEvent>(_onShalatScheduleByMonthFetch);
@@ -69,11 +70,20 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
           final isServiceEnabled = locationStatus.enabled;
           final isPermissionGranted = locationStatus.status.isGranted;
           if (isServiceEnabled && isPermissionGranted) {
-            add(GetShalatScheduleByDayEvent(day: DateTime.now().day));
+            add(GetShalatScheduleByDayEvent(
+              day: DateTime.now().day,
+            ));
           }
         }
       },
     );
+  }
+
+  void _onInit(
+    _Init event,
+    Emitter<ShalatState> emit,
+  ) async {
+    emit(state.copyWith(locale: event.locale ?? const Locale('en', 'US')));
   }
 
   void _onChangedLocationStatus(
@@ -81,7 +91,8 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
     Emitter<ShalatState> emit,
   ) {
     emit(state.copyWith(locationStatus: event.status));
-    if (event.status?.enabled == true && event.status?.status.isGranted == true) {
+    if (event.status?.enabled == true &&
+        event.status?.status.isGranted == true) {
       add(const GetShalatScheduleByDayEvent());
     }
   }
@@ -112,7 +123,9 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
     Emitter<ShalatState> emit,
   ) async {
     emit(state.copyWith(isLoading: true));
-    final geoLocation = await getCurrentLocation(NoParams());
+    final geoLocation = await getCurrentLocation(
+      GetCurrentLocationParams(locale: state.locale),
+    );
     final service = await Geolocator.isLocationServiceEnabled();
     final status = await Geolocator.checkPermission();
 
@@ -131,53 +144,26 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
       ));
       return;
     }
-    final cities = geoLocation.getOrElse(() => null)?.cities?.map((e) {
-          return getCityNameWithoutPrefix(e);
-        }).toList() ??
-        [];
-    final regions = geoLocation.getOrElse(() => null)?.regions?.map((e) {
-          return getCityNameWithoutPrefix(e);
-        }).toList() ??
-        [];
-
-    final resultCityID = await getCityIdByCities(
-      GetShalatCityIdByCitiesParams(cities: cities + regions),
+    final coordinate = Coordinates(
+      geoLocation.asRight()?.coordinate?.lat ?? 0,
+      geoLocation.asRight()?.coordinate?.lon ?? 0,
+      validate: true,
     );
-
-    if (resultCityID.isLeft()) {
-      emit(state.copyWith(
-        isLoading: false,
-        scheduleByDay: left(
-          GeneralFailure(
-            message: LocaleKeys.locationNotFound.tr(),
-          ),
-        ),
-      ));
-      return;
-    }
-
-    final cityID = resultCityID.fold(
-          (failure) => null,
-          (data) => data.first.id,
-        ) ??
-        emptyString;
-    final resultSchedule = await getScheduleByDay(
-      GetShalatScheduleByDayParams(
-        cityID: cityID,
-        day: event.day ?? DateTime.now().day,
-      ),
+    final params = CalculationMethod.umm_al_qura.getParameters();
+    params.madhab = Madhab.shafi;
+    final prayerTimes = PrayerTimes.today(coordinate, params);
+    final Either<Failure, ScheduleByDay> resultSchedule = right(
+      ScheduleByDay(
+          location: geoLocation.asRight()?.country,
+          area: geoLocation.asRight()?.regions?.first,
+          coordinate: geoLocation.asRight()?.coordinate,
+          prayerTimes: prayerTimes,
+          schedule: Schedule.fromPrayerTimes(prayerTimes)),
     );
     emit(
       state.copyWith(
         isLoading: false,
-        scheduleByDay: resultSchedule.fold(
-          (failure) => left(
-            GeneralFailure(
-              message: failure.message ?? LocaleKeys.locationNotFound.tr(),
-            ),
-          ),
-          (data) => right(data),
-        ),
+        scheduleByDay: resultSchedule,
         geoLocation: geoLocation.getOrElse(() => null),
       ),
     );

@@ -10,6 +10,7 @@ import 'package:quranku/features/shalat/presentation/components/shalat_info_card
 
 import '../../../../generated/locale_keys.g.dart';
 import 'components/surah_list.dart';
+import 'drawer_quran_screen.dart';
 
 class QuranScreen extends StatelessWidget {
   const QuranScreen({Key? key}) : super(key: key);
@@ -25,9 +26,10 @@ class QuranScreen extends StatelessWidget {
       },
     );
     final controller = ScrollController();
+
     return Scaffold(
       extendBodyBehindAppBar: true,
-      // appBar: appbar,
+      drawer: const DrawerQuranScreen(),
       body: Stack(
         children: [
           const BackgroundGradient(isShowBottom: false),
@@ -43,10 +45,12 @@ class QuranScreen extends StatelessWidget {
                     (BuildContext context, bool innerBoxIsScrolled) {
                   return [
                     SliverPersistentHeader(
-                        key: const ValueKey('appbar'),
-                        pinned: true,
-                        delegate: BarHeaderPersistentDelegate(appBar)),
+                      key: const ValueKey('appbar'),
+                      pinned: true,
+                      delegate: BarHeaderPersistentDelegate(appBar),
+                    ),
                     const SliverAppBar(
+                      leading: SizedBox(),
                       backgroundColor: Colors.transparent,
                       expandedHeight: 100.0,
                       pinned: false,

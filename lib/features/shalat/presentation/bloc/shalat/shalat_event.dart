@@ -2,6 +2,10 @@ part of 'shalat_bloc.dart';
 
 @freezed
 class ShalatEvent with _$ShalatEvent {
+  const factory ShalatEvent.init(
+    Locale? locale,
+  ) = _Init;
+
   const factory ShalatEvent.getShalatCityIdByCityEvent({
     required String city,
   }) = GetShalatCityIdByCityEvent;
