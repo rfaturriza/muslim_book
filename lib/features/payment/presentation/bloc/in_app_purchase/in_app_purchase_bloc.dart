@@ -90,18 +90,11 @@ class InAppPurchaseBloc extends Bloc<InAppPurchaseEvent, InAppPurchaseState> {
   ) async {
     final purchaseDetails = event.purchaseDetails;
     if (purchaseDetails.isNotEmpty) {
-      final PurchaseDetails purchaseDetail = purchaseDetails.first;
-      if (purchaseDetail.status == PurchaseStatus.purchased) {
-        emit(state.copyWith(
-          purchaseStatus: FormzSubmissionStatus.success,
-          purchases: purchaseDetails,
-        ));
-      } else if (purchaseDetail.status == PurchaseStatus.error) {
-        emit(state.copyWith(
-          purchaseStatus: FormzSubmissionStatus.failure,
-          purchases: purchaseDetails,
-        ));
-      }
+      final purchaseDetail = purchaseDetails.first;
+      emit(state.copyWith(
+        purchaseStatus: purchaseDetail.status,
+        purchases: purchaseDetails,
+      ));
     }
   }
 
@@ -109,7 +102,7 @@ class InAppPurchaseBloc extends Bloc<InAppPurchaseEvent, InAppPurchaseState> {
     _PurchaseConsumable event,
     Emitter<InAppPurchaseState> emit,
   ) async {
-    emit(state.copyWith(purchaseStatus: FormzSubmissionStatus.inProgress));
+    emit(state.copyWith(purchaseStatus: PurchaseStatus.pending));
     final PurchaseParam purchaseParam = PurchaseParam(
       productDetails: event.productDetails,
     );
@@ -122,7 +115,7 @@ class InAppPurchaseBloc extends Bloc<InAppPurchaseEvent, InAppPurchaseState> {
     _PurchaseNonConsumable event,
     Emitter<InAppPurchaseState> emit,
   ) async {
-    emit(state.copyWith(purchaseStatus: FormzSubmissionStatus.inProgress));
+    emit(state.copyWith(purchaseStatus: PurchaseStatus.pending));
     final PurchaseParam purchaseParam = PurchaseParam(
       productDetails: event.productDetails,
     );
@@ -135,7 +128,7 @@ class InAppPurchaseBloc extends Bloc<InAppPurchaseEvent, InAppPurchaseState> {
     _PurchaseSubscription event,
     Emitter<InAppPurchaseState> emit,
   ) async {
-    emit(state.copyWith(purchaseStatus: FormzSubmissionStatus.inProgress));
+    emit(state.copyWith(purchaseStatus: PurchaseStatus.pending));
     final ProductDetails productDetails = state.products.first;
     final PurchaseParam purchaseParam = PurchaseParam(
       productDetails: productDetails,

@@ -37,7 +37,6 @@ dependencies:
   share_plus: ^7.1.0
   adhan: ^2.0.0+1
   flutter_dotenv: ^5.1.0
-  midtrans_sdk: ^0.4.0
   formz: ^0.6.1
   in_app_purchase: ^3.1.11
   package_info_plus: ^4.2.0

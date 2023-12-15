@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:quranku/core/constants/url_constants.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -57,9 +58,10 @@ class DrawerQuranScreenState extends State<DrawerQuranScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          LocaleKeys.appName.tr(),
-                          style: context.textTheme.titleLarge?.apply(
+                          _packageInfo.appName,
+                          style: context.textTheme.titleLarge?.copyWith(
                             color: defaultColor.shade50,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
@@ -84,17 +86,18 @@ class DrawerQuranScreenState extends State<DrawerQuranScreen> {
             const VSpacer(),
             ButtonDrawer(
               onTap: () async {
-                final Uri url =
-                    Uri.parse('https://github.com/rfaturriza/muslim_book');
                 try {
-                  await launchUrl(url, mode: LaunchMode.externalApplication);
+                  await launchUrl(
+                    Uri.parse(UrlConst.urlGithub),
+                    mode: LaunchMode.externalApplication,
+                  );
                 } catch (e) {
                   debugPrint(e.toString());
                 }
               },
               icon: Icons.sentiment_satisfied_alt_rounded,
               title: LocaleKeys.muslimBookIsOpenSource.tr(),
-              subtitle: "https://github.com/rfaturriza/muslim_book",
+              subtitle: UrlConst.urlGithub,
             ),
             const VSpacer(),
           ],

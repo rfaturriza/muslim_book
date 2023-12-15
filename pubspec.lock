@@ -781,14 +781,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
-  midtrans_sdk:
-    dependency: "direct main"
-    description:
-      name: midtrans_sdk
-      sha256: "2e0ce5aa20f4bce2bb8eb506ad93417d1a429e220cb4d5351ee8b1f1fd9c9100"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.4.0"
   mime:
     dependency: transitive
     description:
