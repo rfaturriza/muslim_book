@@ -107,9 +107,16 @@ class InAppPurchaseBloc extends Bloc<InAppPurchaseEvent, InAppPurchaseState> {
     final PurchaseParam purchaseParam = PurchaseParam(
       productDetails: event.productDetails,
     );
-    await inAppPurchase.buyConsumable(
-      purchaseParam: purchaseParam,
-    );
+    try {
+      await inAppPurchase.restorePurchases();
+      await inAppPurchase.buyConsumable(
+        purchaseParam: purchaseParam,
+      );
+    } catch (e) {
+      emit(state.copyWith(
+        purchaseStatus: PurchaseStatus.error,
+      ));
+    }
   }
 
   void _onPurchaseNonConsumable(
