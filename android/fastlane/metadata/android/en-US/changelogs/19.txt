@@ -1,0 +1,3 @@
+-  Added a new feature to the app: now you can support us by donating in support of the app development.
+
+If you like the app and the progress we're making, please show us your support by submitting a review on the Play Store.
