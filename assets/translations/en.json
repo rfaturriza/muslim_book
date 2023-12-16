@@ -85,7 +85,7 @@
   "aboutApp": "About App",
   "detailPage": "Detail Page",
   "supportUs": "Support Us",
-  "muslimBookIsOpenSource": "@:appName is open source",
+  "muslimBookIsOpenSource": "{} is open source",
   "version": "Version {}",
   "thankYouForYourSupport": "Thank you for your support",
   "donate": "Donate",
@@ -94,5 +94,5 @@
   "donationInProgressMessage": "Your donation is in progress",
   "amountDonation": "Amount of donation",
   "enterAmountDonation": "Enter amount of donation",
-  "sincerelyDonation": "Sincerely donation via Saweria"
+  "sincerelyDonation": "Support via Saweria"
 }

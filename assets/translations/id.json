@@ -85,7 +85,7 @@
   "aboutApp": "Tentang Aplikasi",
   "detailPage": "Halaman Detail",
   "supportUs": "Dukung Kami",
-  "muslimBookIsOpenSource": "@:appName adalah aplikasi open source",
+  "muslimBookIsOpenSource": "{} adalah aplikasi open source",
   "version": "Versi {}",
   "thankYouForYourSupport": "Terima kasih atas dukungan Anda",
   "donate": "Donasi",
@@ -94,5 +94,5 @@
   "donationInProgressMessage": "Donasi kamu sedang diproses",
   "amountDonation": "Jumlah",
   "enterAmountDonation": "Masukkan jumlah donasi",
-  "sincerelyDonation": "Donasi seikhlasnya via Saweria"
+  "sincerelyDonation": "Dukung via Saweria"
 }
