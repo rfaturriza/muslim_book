@@ -50,7 +50,7 @@ class InAppPurchaseBloc extends Bloc<InAppPurchaseEvent, InAppPurchaseState> {
   }
 
   static final _variant = <String>[
-    'donate',
+    'donate_1',
     'donate_10',
     'donate_100',
   ];
@@ -73,6 +73,7 @@ class InAppPurchaseBloc extends Bloc<InAppPurchaseEvent, InAppPurchaseState> {
         ));
       }
       final products = response.productDetails;
+      products.sort((a, b) => a.id.compareTo(b.id));
       emit(state.copyWith(
         isAvailable: available,
         products: products,
