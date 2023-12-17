@@ -70,7 +70,7 @@ class _DonationPaymentScreen extends StatelessWidget {
                     onTap: () {
                       context
                           .read<InAppPurchaseBloc>()
-                          .add(InAppPurchaseEvent.purchaseNonConsumable(e));
+                          .add(InAppPurchaseEvent.purchaseConsumable(e));
                     },
                   ),
                 )

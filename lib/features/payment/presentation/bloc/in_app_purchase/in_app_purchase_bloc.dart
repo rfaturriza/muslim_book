@@ -12,7 +12,6 @@ import 'package:quranku/features/payment/domain/usecases/stream_payment_in_app_p
 import '../../../../../core/error/failures.dart';
 import '../../../../../core/usecases/usecase.dart';
 
-
 part 'in_app_purchase_bloc.freezed.dart';
 
 part 'in_app_purchase_event.dart';
@@ -60,7 +59,7 @@ class InAppPurchaseBloc extends Bloc<InAppPurchaseEvent, InAppPurchaseState> {
     Emitter<InAppPurchaseState> emit,
   ) async {
     emit(state.copyWith(initStatus: FormzSubmissionStatus.inProgress));
-    final bool available = await inAppPurchase.isAvailable();
+    final available = await inAppPurchase.isAvailable();
     if (available) {
       final response = await inAppPurchase.queryProductDetails(
         _variant.toSet(),
@@ -104,12 +103,18 @@ class InAppPurchaseBloc extends Bloc<InAppPurchaseEvent, InAppPurchaseState> {
     Emitter<InAppPurchaseState> emit,
   ) async {
     emit(state.copyWith(purchaseStatus: PurchaseStatus.pending));
-    final PurchaseParam purchaseParam = PurchaseParam(
+    final purchaseParam = PurchaseParam(
       productDetails: event.productDetails,
     );
-    await inAppPurchase.buyConsumable(
-      purchaseParam: purchaseParam,
-    );
+    try {
+      await inAppPurchase.buyConsumable(
+        purchaseParam: purchaseParam,
+      );
+    } catch (e) {
+      emit(state.copyWith(
+        purchaseStatus: PurchaseStatus.error,
+      ));
+    }
   }
 
   void _onPurchaseNonConsumable(
@@ -117,7 +122,7 @@ class InAppPurchaseBloc extends Bloc<InAppPurchaseEvent, InAppPurchaseState> {
     Emitter<InAppPurchaseState> emit,
   ) async {
     emit(state.copyWith(purchaseStatus: PurchaseStatus.pending));
-    final PurchaseParam purchaseParam = PurchaseParam(
+    final purchaseParam = PurchaseParam(
       productDetails: event.productDetails,
     );
     await inAppPurchase.buyNonConsumable(
@@ -130,8 +135,8 @@ class InAppPurchaseBloc extends Bloc<InAppPurchaseEvent, InAppPurchaseState> {
     Emitter<InAppPurchaseState> emit,
   ) async {
     emit(state.copyWith(purchaseStatus: PurchaseStatus.pending));
-    final ProductDetails productDetails = state.products.first;
-    final PurchaseParam purchaseParam = PurchaseParam(
+    final productDetails = state.products.first;
+    final purchaseParam = PurchaseParam(
       productDetails: productDetails,
     );
   }

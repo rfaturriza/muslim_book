@@ -96,7 +96,9 @@ class DrawerQuranScreenState extends State<DrawerQuranScreen> {
                 }
               },
               icon: Icons.sentiment_satisfied_alt_rounded,
-              title: LocaleKeys.muslimBookIsOpenSource.tr(),
+              title: LocaleKeys.muslimBookIsOpenSource.tr(
+                args: [_packageInfo.appName],
+              ),
               subtitle: UrlConst.urlGithub,
             ),
             const VSpacer(),
