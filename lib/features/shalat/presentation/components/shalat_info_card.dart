@@ -50,7 +50,7 @@ class ShalatInfoCard extends StatelessWidget {
             ),
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
-              Colors.black.withOpacity(0.5),
+              Colors.black.withOpacity(0.6),
               BlendMode.darken,
             ),
           ),
@@ -80,6 +80,7 @@ class ShalatInfoCard extends StatelessWidget {
                   Expanded(
                     flex: 1,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         if (state.scheduleByDay?.isRight() == true) ...[
                           Text(

@@ -52,10 +52,10 @@ class QuranScreen extends StatelessWidget {
                     const SliverAppBar(
                       leading: SizedBox(),
                       backgroundColor: Colors.transparent,
-                      expandedHeight: 100.0,
+                      expandedHeight: 120.0,
                       pinned: false,
                       flexibleSpace: ShalatInfoCard(),
-                      collapsedHeight: 100.0,
+                      collapsedHeight: 120.0,
                     ),
                     SliverPersistentHeader(
                       key: const ValueKey('tabbar'),

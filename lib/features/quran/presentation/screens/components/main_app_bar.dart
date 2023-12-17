@@ -16,7 +16,6 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       centerTitle: false,
-      backgroundColor: Colors.transparent,
       elevation: 0,
       actions: [
         IconButton(

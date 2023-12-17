@@ -45,7 +45,7 @@ class App extends StatelessWidget {
         radius: 5,
         position: ToastPosition.bottom,
         child: MaterialApp(
-          title: 'Quran App',
+          title: LocaleKeys.appName.tr(),
           debugShowCheckedModeBanner: false,
           theme: themeData,
           localizationsDelegates: context.localizationDelegates,
