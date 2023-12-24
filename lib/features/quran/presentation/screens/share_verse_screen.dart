@@ -11,7 +11,6 @@ import 'package:quranku/core/utils/themes/color.dart';
 import 'package:quranku/generated/locale_keys.g.dart';
 
 import '../../../../core/components/checkbox.dart';
-import '../../../../core/components/drag.dart';
 import '../../../../core/utils/extension/string_ext.dart';
 import '../bloc/shareVerse/share_verse_bloc.dart';
 
@@ -32,15 +31,6 @@ class ShareVerseScreen extends StatelessWidget {
               showModalBottomSheet(
                 context: context,
                 enableDrag: true,
-                useSafeArea: true,
-                backgroundColor: defaultColor.shade500,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(16),
-                    topRight: Radius.circular(16),
-                  ),
-                ),
-                barrierColor: Colors.transparent,
                 builder: (_) => BlocProvider.value(
                   value: context.read<ShareVerseBloc>(),
                   child: const _SettingPreviewBottomSheet(),
@@ -201,7 +191,6 @@ class _SettingPreviewBottomSheet extends StatelessWidget {
         ),
         child: Wrap(
           children: [
-            DragContainer(),
             _RowListColorSetting(),
             VSpacer(),
             _SettingFont(),

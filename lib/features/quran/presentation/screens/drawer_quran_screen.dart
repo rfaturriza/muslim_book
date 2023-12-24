@@ -44,7 +44,6 @@ class DrawerQuranScreenState extends State<DrawerQuranScreen> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: context.theme.colorScheme.background,
       child: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
