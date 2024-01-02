@@ -58,4 +58,20 @@ final themeData = ThemeData(
       ),
     ),
   ),
+  listTileTheme: ListTileThemeData(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    dense: true,
+    visualDensity: VisualDensity.compact,
+    titleTextStyle: textTheme.titleMedium?.copyWith(
+      color: defaultColor.shade50,
+      fontWeight: FontWeight.w500,
+    ),
+    subtitleTextStyle: textTheme.titleSmall?.copyWith(
+      color: defaultColor.shade100,
+      fontWeight: FontWeight.w500,
+    ),
+  ),
 );

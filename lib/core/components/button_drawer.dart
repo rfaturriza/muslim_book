@@ -8,6 +8,7 @@ class ButtonDrawer extends StatelessWidget {
   final String title;
   final String? subtitle;
   final VoidCallback onTap;
+  final bool withDecoration;
 
   const ButtonDrawer({
     Key? key,
@@ -15,23 +16,33 @@ class ButtonDrawer extends StatelessWidget {
     required this.title,
     this.subtitle,
     required this.onTap,
+    this.withDecoration = true,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       clipBehavior: Clip.antiAlias,
-      decoration: ShapeDecoration(
-        gradient: LinearGradient(
-          //from right top corner to left bottom corner
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [primaryColor.shade500, primaryColor.shade500.withOpacity(0)],
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(100),
-        ),
-      ),
+      decoration: withDecoration
+          ? ShapeDecoration(
+              gradient: LinearGradient(
+                //from right top corner to left bottom corner
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [
+                  primaryColor.shade500,
+                  primaryColor.shade500.withOpacity(0)
+                ],
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100),
+              ),
+            )
+          : ShapeDecoration(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100),
+              ),
+            ),
       child: ListTile(
         style: ListTileStyle.drawer,
         shape: const RoundedRectangleBorder(

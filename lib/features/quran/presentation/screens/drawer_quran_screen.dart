@@ -10,36 +10,10 @@ import '../../../../core/components/spacer.dart';
 import '../../../../core/utils/themes/color.dart';
 import '../../../../generated/locale_keys.g.dart';
 import '../../../payment/presentation/screens/donation_screen.dart';
+import '../../../setting/presentation/screens/language_setting_screen.dart';
 
-class DrawerQuranScreen extends StatefulWidget {
+class DrawerQuranScreen extends StatelessWidget {
   const DrawerQuranScreen({super.key});
-
-  @override
-  State<DrawerQuranScreen> createState() => DrawerQuranScreenState();
-}
-
-class DrawerQuranScreenState extends State<DrawerQuranScreen> {
-  PackageInfo _packageInfo = PackageInfo(
-    appName: '-',
-    packageName: '-',
-    version: '-',
-    buildNumber: '-',
-    buildSignature: '-',
-    installerStore: '-',
-  );
-
-  @override
-  void initState() {
-    super.initState();
-    _initPackageInfo();
-  }
-
-  Future<void> _initPackageInfo() async {
-    final info = await PackageInfo.fromPlatform();
-    setState(() {
-      _packageInfo = info;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,26 +25,15 @@ class DrawerQuranScreenState extends State<DrawerQuranScreen> {
             Expanded(
               child: ListView(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          _packageInfo.appName,
-                          style: context.textTheme.titleLarge?.copyWith(
-                            color: defaultColor.shade50,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          LocaleKeys.version.tr(args: [_packageInfo.version]),
-                          style: context.textTheme.bodyMedium?.apply(
-                            color: defaultColor.shade50,
-                          ),
-                        ),
-                      ],
-                    ),
+                  const _AppInfo(),
+                  const VSpacer(),
+                  ButtonDrawer(
+                    icon: Icons.language,
+                    title: LocaleKeys.language.tr(),
+                    onTap: () {
+                      context.navigateTo(const LanguageSettingScreen());
+                    },
+                    withDecoration: false,
                   ),
                 ],
               ),
@@ -96,13 +59,69 @@ class DrawerQuranScreenState extends State<DrawerQuranScreen> {
               },
               icon: Icons.sentiment_satisfied_alt_rounded,
               title: LocaleKeys.muslimBookIsOpenSource.tr(
-                args: [_packageInfo.appName],
+                args: [LocaleKeys.appName.tr()],
               ),
               subtitle: UrlConst.urlGithub,
             ),
             const VSpacer(),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _AppInfo extends StatefulWidget {
+  const _AppInfo();
+
+  @override
+  State<_AppInfo> createState() => _AppInfoState();
+}
+
+class _AppInfoState extends State<_AppInfo> {
+  PackageInfo _packageInfo = PackageInfo(
+    appName: '-',
+    packageName: '-',
+    version: '-',
+    buildNumber: '-',
+    buildSignature: '-',
+    installerStore: '-',
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _initPackageInfo();
+  }
+
+  Future<void> _initPackageInfo() async {
+    final info = await PackageInfo.fromPlatform();
+    setState(() {
+      _packageInfo = info;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _packageInfo.appName,
+            style: context.textTheme.titleLarge?.copyWith(
+              color: defaultColor.shade50,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            LocaleKeys.version.tr(args: [_packageInfo.version]),
+            style: context.textTheme.bodyMedium?.apply(
+              color: defaultColor.shade50,
+            ),
+          ),
+        ],
       ),
     );
   }

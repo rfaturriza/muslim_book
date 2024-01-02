@@ -60,13 +60,24 @@ class ShalatInfoCard extends StatelessWidget {
         ),
         child: BlocBuilder<ShalatBloc, ShalatState>(
           builder: (context, state) {
-            final shalat = HelperTimeShalat.getShalatNameByTime(
-              state.scheduleByDay?.asRight()?.schedule,
-            );
-            final shalatTime = HelperTimeShalat.getShalatTimeByShalatName(
-              state.scheduleByDay?.asRight()?.schedule,
-              shalat,
-            );
+            final shalat = () {
+              if (state.scheduleByDay?.isRight() == true) {
+                return HelperTimeShalat.getShalatNameByTime(
+                  state.scheduleByDay?.asRight()?.schedule,
+                );
+              }
+              return emptyString;
+            }();
+
+            final shalatTime = () {
+              if (state.scheduleByDay?.isRight() == true) {
+                return HelperTimeShalat.getShalatTimeByShalatName(
+                  state.scheduleByDay?.asRight()?.schedule,
+                  shalat,
+                );
+              }
+              return emptyString;
+            }();
 
             final place = state.geoLocation?.place ?? '-';
             if (state.isLoading) {

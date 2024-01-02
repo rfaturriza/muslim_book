@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:quranku/core/network/networkInfo/network_info_bloc.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
@@ -48,7 +49,10 @@ class App extends StatelessWidget {
           title: LocaleKeys.appName.tr(),
           debugShowCheckedModeBanner: false,
           theme: themeData,
-          localizationsDelegates: context.localizationDelegates,
+          localizationsDelegates: [
+            for (var delegate in context.localizationDelegates) delegate,
+            const LocaleNamesLocalizationsDelegate(),
+          ],
           supportedLocales: context.supportedLocales,
           locale: context.locale,
           home: const ScaffoldConnection(),
