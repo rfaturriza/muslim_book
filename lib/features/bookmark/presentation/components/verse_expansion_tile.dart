@@ -90,7 +90,8 @@ class VerseBookmarkListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final name = () {
       if (surahName != null) {
-        return surahName!.transliteration?.asLocale(context) ?? emptyString;
+        return surahName!.transliteration?.asLocale(context.locale) ??
+            emptyString;
       } else if (juzName != null) {
         return juzName ?? emptyString;
       } else {
