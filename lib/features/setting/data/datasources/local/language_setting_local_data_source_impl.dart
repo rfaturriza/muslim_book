@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:dartz/dartz.dart';
@@ -18,10 +19,35 @@ class LanguageSettingLocalDataSourceImpl
   });
 
   @override
-  Future<Either<Failure, Locale>> getLatinLanguageSetting() async {
+  Future<Either<Failure, Locale?>> getLatinLanguageSetting() async {
     try {
       var box = await hive.openBox(HiveConst.languageBox);
-      final localeString = await box.get(HiveConst.latinLanguageKey);
+      final String? localeString = await box.get(HiveConst.latinLanguageKey);
+      if (localeString == null) {
+        return right(null);
+      }
+      final localeSplit = localeString.split('_');
+      final result = Locale(localeSplit[0], localeSplit[1]);
+      return right(result);
+    } catch (e) {
+      log(e.toString());
+      return left(
+        CacheFailure(
+          message: e.toString(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, Locale?>> getPrayerLanguageSetting() async {
+    try {
+      var box = await hive.openBox(HiveConst.languageBox);
+      final String? localeString =
+          await box.get(HiveConst.prayerTimeLanguageKey);
+      if (localeString == null) {
+        return right(null);
+      }
       final localeSplit = localeString.split('_');
       final result = Locale(localeSplit[0], localeSplit[1]);
       return right(result);
@@ -35,27 +61,13 @@ class LanguageSettingLocalDataSourceImpl
   }
 
   @override
-  Future<Either<Failure, Locale>> getPrayerLanguageSetting() async {
+  Future<Either<Failure, Locale?>> getQuranLanguageSetting() async {
     try {
       var box = await hive.openBox(HiveConst.languageBox);
-      final localeString = await box.get(HiveConst.prayerTimeLanguageKey);
-      final localeSplit = localeString.split('_');
-      final result = Locale(localeSplit[0], localeSplit[1]);
-      return right(result);
-    } catch (e) {
-      return left(
-        CacheFailure(
-          message: e.toString(),
-        ),
-      );
-    }
-  }
-
-  @override
-  Future<Either<Failure, Locale>> getQuranLanguageSetting() async {
-    try {
-      var box = await hive.openBox(HiveConst.languageBox);
-      final localeString = await box.get(HiveConst.quranLanguageKey);
+      final String? localeString = await box.get(HiveConst.quranLanguageKey);
+      if (localeString == null) {
+        return right(null);
+      }
       final localeSplit = localeString.split('_');
       final result = Locale(localeSplit[0], localeSplit[1]);
       return right(result);

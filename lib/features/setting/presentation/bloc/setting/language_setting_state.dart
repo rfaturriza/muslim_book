@@ -3,8 +3,12 @@ part of 'language_setting_bloc.dart';
 @freezed
 class LanguageSettingState with _$LanguageSettingState {
   const factory LanguageSettingState({
-    Locale? localeLatin,
-    Locale? localePrayerTime,
-    Locale? localeQuran,
+    Locale? languageLatin,
+    Locale? languagePrayerTime,
+    Locale? languageQuran,
+    @Default(FormzSubmissionStatus.initial) FormzSubmissionStatus statusLatin,
+    @Default(FormzSubmissionStatus.initial)
+    FormzSubmissionStatus statusPrayerTime,
+    @Default(FormzSubmissionStatus.initial) FormzSubmissionStatus statusQuran,
   }) = _SettingState;
 }

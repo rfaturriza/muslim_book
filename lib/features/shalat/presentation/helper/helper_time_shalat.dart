@@ -1,20 +1,141 @@
+import 'dart:ui';
+
 import 'package:easy_localization/easy_localization.dart';
 
 import '../../domain/entities/schedule.codegen.dart';
 
 class HelperTimeShalat {
-  static List<String> shalatNameList = [
-    'imsak',
-    'subuh',
-    'terbit',
-    'dhuha',
-    'dzuhur',
-    'ashar',
-    'maghrib',
-    'isya'
-  ];
+  static List<String> prayerNameByLocale(Locale? locale) {
+    switch (locale?.languageCode) {
+      case 'en':
+        return [
+          'Imsak',
+          'Fajr',
+          'Sunrise',
+          'Dhuha',
+          'Dhuhr',
+          'Asr',
+          'Maghrib',
+          'Isha',
+        ];
+      case 'id':
+        return [
+          'Imsak',
+          'Subuh',
+          'Terbit',
+          'Dhuha',
+          'Dzuhur',
+          'Ashar',
+          'Maghrib',
+          'Isya',
+        ];
+      case 'ar':
+        return [
+          'الإمساك',
+          'الفجر',
+          'الشروق',
+          'الضحى',
+          'الظهر',
+          'العصر',
+          'المغرب',
+          'العشاء',
+        ];
 
-  static String getShalatNameByTime(Schedule? schedule) {
+      case 'az':
+        return [
+          'İmsaq',
+          'Fəcr',
+          'Günəş',
+          'Döhr',
+          'Əsr',
+          'Məğrib',
+          'Axşam',
+        ];
+      case 'ms':
+        return [
+          'Imsak',
+          'Subuh',
+          'Terbit',
+          'Dhuha',
+          'Zohor',
+          'Asar',
+          'Maghrib',
+          'Isyak',
+        ];
+      case 'da':
+        return [
+          'Imsak',
+          'Fajr',
+          'Sunrise',
+          'Dhuha',
+          'Dhuhr',
+          'Asr',
+          'Maghrib',
+          'Isha',
+        ];
+
+      case 'de':
+        return [
+          'Imsak',
+          'Fadschr',
+          'Sunrise',
+          'Dhuha',
+          'Dhuhr',
+          'Asr',
+          'Maghrib',
+          'Isha',
+        ];
+      case 'fr':
+        return [
+          'Imsak',
+          'Sobh',
+          'Sunrise',
+          'Dhuha',
+          'Dhuhr',
+          'Asr',
+          'Maghrib',
+          'Isha',
+        ];
+      case 'tr':
+        return [
+          'Imsak',
+          'Sabah',
+          'Sunrise',
+          'Dhuha',
+          'Öğle',
+          'İkindi',
+          'Akşam',
+          'Yatsı',
+        ];
+      case 'ru':
+        return [
+          'Imsak',
+          'Фаджр',
+          'Sunrise',
+          'Dhuha',
+          'Зухр',
+          'Аср',
+          'Магриб',
+          'Иша',
+        ];
+      default:
+        return [
+          'Imsak',
+          'Subuh',
+          'Terbit',
+          'Dhuha',
+          'Dzuhur',
+          'Ashar',
+          'Maghrib',
+          'Isya'
+        ];
+    }
+  }
+
+  static String getShalatNameByTime(
+    Schedule? schedule,
+    Locale? locale,
+  ) {
     if (schedule == null) return '-';
     final String? timeImsak = schedule.imsak;
     final String? timeSubuh = schedule.subuh;
@@ -43,53 +164,59 @@ class HelperTimeShalat {
     }
 
     if (timeImsak != null && dateTimeNow.isBefore(parseTime(timeImsak))) {
-      return shalatNameList[0];
+      return prayerNameByLocale(locale)[0];
     } else if (timeSubuh != null &&
         dateTimeNow.isBefore(parseTime(timeSubuh))) {
-      return shalatNameList[1];
+      return prayerNameByLocale(locale)[1];
     } else if (timeTerbit != null &&
         dateTimeNow.isBefore(parseTime(timeTerbit))) {
-      return shalatNameList[2];
+      return prayerNameByLocale(locale)[2];
     } else if (timeDhuha != null &&
         dateTimeNow.isBefore(parseTime(timeDhuha))) {
-      return shalatNameList[3];
+      return prayerNameByLocale(locale)[3];
     } else if (timeDzuhur != null &&
         dateTimeNow.isBefore(parseTime(timeDzuhur))) {
-      return shalatNameList[4];
+      return prayerNameByLocale(locale)[4];
     } else if (timeAshar != null &&
         dateTimeNow.isBefore(parseTime(timeAshar))) {
-      return shalatNameList[5];
+      return prayerNameByLocale(locale)[5];
     } else if (timeMaghrib != null &&
         dateTimeNow.isBefore(parseTime(timeMaghrib))) {
-      return shalatNameList[6];
+      return prayerNameByLocale(locale)[6];
     } else if (timeIsya != null && dateTimeNow.isBefore(parseTime(timeIsya))) {
-      return shalatNameList[7];
+      return prayerNameByLocale(locale)[7];
     } else {
-      return shalatNameList[0];
+      return prayerNameByLocale(locale)[0];
     }
   }
 
-  static String? getShalatTimeByShalatName(Schedule? schedule, String shalatName) {
+  static String? getShalatTimeByShalatName(
+    Schedule? schedule,
+    String shalatName,
+    Locale? locale,
+  ) {
     if (schedule == null) return '-';
-    switch (shalatName) {
-      case 'imsak':
-        return schedule.imsak;
-      case 'subuh':
-        return schedule.subuh;
-      case 'terbit':
-        return schedule.syuruq;
-      case 'dhuha':
-        return schedule.dhuha;
-      case 'dzuhur':
-        return schedule.dzuhur;
-      case 'ashar':
-        return schedule.ashar;
-      case 'maghrib':
-        return schedule.maghrib;
-      case 'isya':
-        return schedule.isya;
-      default:
-        return '-';
+    final prayerByLocale =
+        prayerNameByLocale(locale).map((e) => e.toLowerCase()).toList();
+    final currentPrayer = shalatName.toLowerCase();
+    if (currentPrayer == prayerByLocale[0]) {
+      return schedule.imsak;
+    } else if (currentPrayer == prayerByLocale[1]) {
+      return schedule.subuh;
+    } else if (currentPrayer == prayerByLocale[2]) {
+      return schedule.syuruq;
+    } else if (currentPrayer == prayerByLocale[3]) {
+      return schedule.dhuha;
+    } else if (currentPrayer == prayerByLocale[4]) {
+      return schedule.dzuhur;
+    } else if (currentPrayer == prayerByLocale[5]) {
+      return schedule.ashar;
+    } else if (currentPrayer == prayerByLocale[6]) {
+      return schedule.maghrib;
+    } else if (currentPrayer == prayerByLocale[7]) {
+      return schedule.isya;
+    } else {
+      return '-';
     }
   }
 }

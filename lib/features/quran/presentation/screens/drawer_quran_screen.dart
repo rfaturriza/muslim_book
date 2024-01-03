@@ -24,49 +24,102 @@ class DrawerQuranScreen extends StatelessWidget {
           children: [
             Expanded(
               child: ListView(
-                children: [
-                  const _AppInfo(),
-                  const VSpacer(),
-                  ButtonDrawer(
-                    icon: Icons.language,
-                    title: LocaleKeys.language.tr(),
-                    onTap: () {
-                      context.navigateTo(const LanguageSettingScreen());
-                    },
-                    withDecoration: false,
-                  ),
+                children: const [
+                  _Header(),
+                  _ListItemMenu(),
                 ],
               ),
             ),
-            ButtonDrawer(
-              onTap: () {
-                context.navigateTo(const DonationPaymentScreen());
-              },
-              icon: Icons.volunteer_activism,
-              title: LocaleKeys.supportUs.tr(),
-            ),
-            const VSpacer(),
-            ButtonDrawer(
-              onTap: () async {
-                try {
-                  await launchUrl(
-                    Uri.parse(UrlConst.urlGithub),
-                    mode: LaunchMode.externalApplication,
-                  );
-                } catch (e) {
-                  debugPrint(e.toString());
-                }
-              },
-              icon: Icons.sentiment_satisfied_alt_rounded,
-              title: LocaleKeys.muslimBookIsOpenSource.tr(
-                args: [LocaleKeys.appName.tr()],
-              ),
-              subtitle: UrlConst.urlGithub,
-            ),
-            const VSpacer(),
+            const _Footer(),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  const _Header();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _AppInfo(),
+        VSpacer(),
+      ],
+    );
+  }
+}
+
+class _ListItemMenu extends StatelessWidget {
+  const _ListItemMenu();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+          ),
+          child: Text(
+            LocaleKeys.setting.tr(),
+            style: context.textTheme.titleSmall?.copyWith(
+              color: secondaryColor.shade500,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        ButtonDrawer(
+          icon: Icons.language,
+          title: LocaleKeys.language.tr(),
+          onTap: () {
+            context.navigateTo(const LanguageSettingScreen());
+          },
+          withDecoration: false,
+        ),
+      ],
+    );
+  }
+}
+
+class _Footer extends StatelessWidget {
+  const _Footer();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ButtonDrawer(
+          onTap: () {
+            context.navigateTo(const DonationPaymentScreen());
+          },
+          icon: Icons.volunteer_activism,
+          title: LocaleKeys.supportUs.tr(),
+        ),
+        const VSpacer(),
+        ButtonDrawer(
+          onTap: () async {
+            try {
+              await launchUrl(
+                Uri.parse(UrlConst.urlGithub),
+                mode: LaunchMode.externalApplication,
+              );
+            } catch (e) {
+              debugPrint(e.toString());
+            }
+          },
+          icon: Icons.sentiment_satisfied_alt_rounded,
+          title: LocaleKeys.muslimBookIsOpenSource.tr(
+            args: [LocaleKeys.appName.tr()],
+          ),
+          subtitle: UrlConst.urlGithub,
+        ),
+        const VSpacer(),
+      ],
     );
   }
 }
@@ -104,20 +157,20 @@ class _AppInfoState extends State<_AppInfo> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             _packageInfo.appName,
-            style: context.textTheme.titleLarge?.copyWith(
+            style: context.textTheme.titleMedium?.copyWith(
               color: defaultColor.shade50,
               fontWeight: FontWeight.bold,
             ),
           ),
           Text(
             LocaleKeys.version.tr(args: [_packageInfo.version]),
-            style: context.textTheme.bodyMedium?.apply(
+            style: context.textTheme.bodySmall?.apply(
               color: defaultColor.shade50,
             ),
           ),

@@ -16,7 +16,7 @@ class LanguageSettingRepositoryImpl implements LanguageSettingRepository {
   });
 
   @override
-  Future<Either<Failure, Locale>> getQuranLanguageSetting() async {
+  Future<Either<Failure, Locale?>> getQuranLanguageSetting() async {
     final result = await localDataSource.getQuranLanguageSetting();
     return result.fold(
       (l) => Left(l),
@@ -36,7 +36,7 @@ class LanguageSettingRepositoryImpl implements LanguageSettingRepository {
   }
 
   @override
-  Future<Either<Failure, Locale>> getLatinLanguageSetting() async {
+  Future<Either<Failure, Locale?>> getLatinLanguageSetting() async {
     final result = await localDataSource.getLatinLanguageSetting();
     return result.fold(
       (l) => Left(l),
@@ -56,7 +56,7 @@ class LanguageSettingRepositoryImpl implements LanguageSettingRepository {
   }
 
   @override
-  Future<Either<Failure, Locale>> getPrayerLanguageSetting() async {
+  Future<Either<Failure, Locale?>> getPrayerLanguageSetting() async {
     final result = await localDataSource.getPrayerLanguageSetting();
     return result.fold(
       (l) => Left(l),

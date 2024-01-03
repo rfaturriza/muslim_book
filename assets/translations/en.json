@@ -77,7 +77,7 @@
   "indonesia": "Indonesia",
   "latin": "Latin",
   "translation": "Translation",
-  "settings": "Settings",
+  "setting": "Setting",
   "language": "Language",
   "fontSize": "Font Size",
   "fontStyle": "Font Style",
@@ -94,5 +94,10 @@
   "donationInProgressMessage": "Your donation is in progress",
   "amountDonation": "Amount of donation",
   "enterAmountDonation": "Enter amount of donation",
-  "sincerelyDonation": "Support via Saweria"
+  "sincerelyDonation": "Support via Saweria",
+  "applicationLanguage": "Application Language",
+  "deviceLanguage": "Device Language",
+  "quranTranslation": "Quran Translation",
+  "latinTranslation": "Latin Translation",
+  "prayTimeLanguage": "Pray Time Language"
 }
