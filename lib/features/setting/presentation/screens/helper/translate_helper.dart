@@ -31,6 +31,10 @@ class TranslateAvailable {
   List<Pair<Locale, String>> get quran {
     return [
       Pair(
+        context.deviceLocale,
+        LocaleKeys.deviceLanguage.tr(),
+      ),
+      Pair(
         const Locale('en'),
         LocaleNames.of(context)?.nameOf('en') ?? emptyString,
       ),
@@ -43,6 +47,10 @@ class TranslateAvailable {
 
   List<Pair<Locale, String>> get latin {
     return [
+      Pair(
+        context.deviceLocale,
+        LocaleKeys.deviceLanguage.tr(),
+      ),
       Pair(
         const Locale('en'),
         LocaleNames.of(context)?.nameOf('en') ?? emptyString,
