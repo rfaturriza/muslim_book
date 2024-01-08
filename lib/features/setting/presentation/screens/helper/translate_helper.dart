@@ -84,7 +84,7 @@ class TranslateAvailable {
         Locale('da'),
         "Fajr, Dhuhr, Asr, Maghrib, Isha'a",
       ),
-      // Deutschlan TODO: Check this
+      // Deutsch-land
       const Pair(
         Locale('de'),
         "Fadschr, Zuhr, Asr, Maghrib, Isha",
