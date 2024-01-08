@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:dio/dio.dart';
+import 'package:hive/hive.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:injectable/injectable.dart';
 import 'package:quranku/core/network/dio_config.dart';
@@ -19,4 +20,7 @@ abstract class AppModule {
 
   @injectable
   InAppPurchase get inAppPurchase => InAppPurchase.instance;
+
+  @injectable
+  HiveInterface get hive => Hive;
 }

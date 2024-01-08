@@ -72,4 +72,6 @@ final textTheme = TextTheme(
     fontWeight: FontWeight.w400,
     letterSpacing: 1.5,
   ),
+).apply(
+  fontFamily: 'Lato',
 );

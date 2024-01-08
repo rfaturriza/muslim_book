@@ -77,7 +77,7 @@
   "indonesia": "Indonesia",
   "latin": "Latin",
   "translation": "Terjemahan",
-  "settings": "Pengaturan",
+  "setting": "Pengaturan",
   "language": "Bahasa",
   "fontSize": "Ukuran font",
   "fontStyle": "Gaya font",
@@ -94,5 +94,10 @@
   "donationInProgressMessage": "Donasi kamu sedang diproses",
   "amountDonation": "Jumlah",
   "enterAmountDonation": "Masukkan jumlah donasi",
-  "sincerelyDonation": "Dukung via Saweria"
+  "sincerelyDonation": "Dukung via Saweria",
+  "applicationLanguage": "Bahasa Aplikasi",
+  "deviceLanguage": "Bahasa Perangkat",
+  "quranTranslation": "Terjemahan Al-Quran",
+  "latinTranslation": "Terjemahan Latin",
+  "prayTimeLanguage": "Bahasa Waktu Sholat"
 }

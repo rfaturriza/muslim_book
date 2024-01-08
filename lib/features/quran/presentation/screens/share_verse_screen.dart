@@ -12,6 +12,7 @@ import 'package:quranku/generated/locale_keys.g.dart';
 
 import '../../../../core/components/checkbox.dart';
 import '../../../../core/utils/extension/string_ext.dart';
+import '../../../setting/presentation/bloc/setting/language_setting_bloc.dart';
 import '../bloc/shareVerse/share_verse_bloc.dart';
 
 class ShareVerseScreen extends StatelessWidget {
@@ -115,26 +116,43 @@ class _CanvasPreview extends StatelessWidget {
                       const VSpacer(),
                     ],
                     if (state.isLatinVisible) ...[
-                      Text(
-                        verse?.text?.transliteration?.asLocale(context) ??
-                            emptyString,
-                        style: context.textTheme.bodySmall?.copyWith(
-                          fontSize: fontSize / 1.2,
-                          color: primaryColor.shade100,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.center,
+                      BlocBuilder<LanguageSettingBloc, LanguageSettingState>(
+                        buildWhen: (p, c) => p.languageLatin != c.languageLatin,
+                        builder: (context, languageSettingState) {
+                          return Text(
+                            verse?.text?.transliteration?.asLocale(
+                                  languageSettingState.languageLatin ??
+                                      context.locale,
+                                ) ??
+                                emptyString,
+                            style: context.textTheme.bodySmall?.copyWith(
+                              fontSize: fontSize / 1.2,
+                              color: primaryColor.shade100,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.center,
+                          );
+                        },
                       ),
                       const VSpacer(),
                     ],
                     if (state.isTranslationVisible) ...[
-                      Text(
-                        verse?.translation?.asLocale(context) ?? emptyString,
-                        style: context.textTheme.bodySmall?.copyWith(
-                          fontSize: fontSize,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.center,
+                      BlocBuilder<LanguageSettingBloc, LanguageSettingState>(
+                        buildWhen: (p, c) => p.languageQuran != c.languageQuran,
+                        builder: (context, languageSettingState) {
+                          return Text(
+                            verse?.translation?.asLocale(
+                                  languageSettingState.languageQuran ??
+                                      context.locale,
+                                ) ??
+                                emptyString,
+                            style: context.textTheme.bodySmall?.copyWith(
+                              fontSize: fontSize,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.center,
+                          );
+                        },
                       ),
                       const VSpacer(),
                     ],
@@ -153,16 +171,24 @@ class _CanvasPreview extends StatelessWidget {
                       const VSpacer(),
                     ],
                     if (state.surah != null) ...[
-                      Text(
-                        '(QS. '
-                        '${state.surah?.name?.transliteration?.asLocale(context) ?? emptyString} '
-                        ': ${LocaleKeys.verses.tr().capitalize()} '
-                        '${state.verse?.number?.inSurah ?? emptyString})',
-                        style: context.textTheme.bodySmall?.copyWith(
-                          fontSize: fontSize / 1.2,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.center,
+                      BlocBuilder<LanguageSettingBloc, LanguageSettingState>(
+                        buildWhen: (p, c) => p.languageLatin != c.languageLatin,
+                        builder: (context, languageSettingState) {
+                          return Text(
+                            '(QS. '
+                            '${state.surah?.name?.transliteration?.asLocale(
+                                  languageSettingState.languageLatin ??
+                                      context.locale,
+                                ) ?? emptyString} '
+                            ': ${LocaleKeys.verses.tr().capitalize()} '
+                            '${state.verse?.number?.inSurah ?? emptyString})',
+                            style: context.textTheme.bodySmall?.copyWith(
+                              fontSize: fontSize / 1.2,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.center,
+                          );
+                        },
                       ),
                       const VSpacer(),
                     ],

@@ -90,7 +90,8 @@ class SurahList extends StatelessWidget {
                 return ListTileSurah(
                   onTapSurah: () => onTapSurah(context, surahData),
                   number: surahData.number?.toString() ?? emptyString,
-                  name: surahData.name?.transliteration?.asLocale(context) ??
+                  name: surahData.name?.transliteration
+                          ?.asLocale(context.locale) ??
                       emptyString,
                   revelation: surahData.revelation,
                   numberOfVerses:
