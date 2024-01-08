@@ -66,7 +66,7 @@ class HelperTimeShalat {
         return [
           'Imsak',
           'Fajr',
-          'Sunrise',
+          'Solopgang',
           'Dhuha',
           'Dhuhr',
           'Asr',
@@ -78,7 +78,7 @@ class HelperTimeShalat {
         return [
           'Imsak',
           'Fadschr',
-          'Sunrise',
+          'Sonnenaufgang',
           'Dhuha',
           'Dhuhr',
           'Asr',
@@ -89,7 +89,7 @@ class HelperTimeShalat {
         return [
           'Imsak',
           'Sobh',
-          'Sunrise',
+          'Lever du soleil',
           'Dhuha',
           'Dhuhr',
           'Asr',
@@ -100,7 +100,7 @@ class HelperTimeShalat {
         return [
           'Imsak',
           'Sabah',
-          'Sunrise',
+          'gündoğumu',
           'Dhuha',
           'Öğle',
           'İkindi',
@@ -111,8 +111,8 @@ class HelperTimeShalat {
         return [
           'Imsak',
           'Фаджр',
-          'Sunrise',
-          'Dhuha',
+          'Восход',
+          'Духа',
           'Зухр',
           'Аср',
           'Магриб',
@@ -122,7 +122,7 @@ class HelperTimeShalat {
         return [
           'Imsak',
           'Subuh',
-          'Terbit',
+          'Syuruq',
           'Dhuha',
           'Dzuhur',
           'Ashar',
