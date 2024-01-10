@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:quranku/core/network/networkInfo/network_info_bloc.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
@@ -13,6 +14,7 @@ import 'package:quranku/generated/locale_keys.g.dart';
 import 'package:quranku/injection.dart';
 
 import 'features/quran/presentation/bloc/surah/surah_bloc.dart';
+import 'features/setting/presentation/bloc/setting/language_setting_bloc.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -38,6 +40,12 @@ class App extends StatelessWidget {
         BlocProvider<ShalatBloc>(
           create: (context) => sl<ShalatBloc>()..add(ShalatEvent.init(locale)),
         ),
+        BlocProvider<LanguageSettingBloc>(
+          create: (context) => sl<LanguageSettingBloc>()
+            ..add(const LanguageSettingEvent.getLatinLanguage())
+            ..add(const LanguageSettingEvent.getPrayerLanguage())
+            ..add(const LanguageSettingEvent.getQuranLanguage()),
+        ),
       ],
       child: OKToast(
         textAlign: TextAlign.center,
@@ -48,7 +56,10 @@ class App extends StatelessWidget {
           title: LocaleKeys.appName.tr(),
           debugShowCheckedModeBanner: false,
           theme: themeData,
-          localizationsDelegates: context.localizationDelegates,
+          localizationsDelegates: [
+            for (var delegate in context.localizationDelegates) delegate,
+            const LocaleNamesLocalizationsDelegate(),
+          ],
           supportedLocales: context.supportedLocales,
           locale: context.locale,
           home: const ScaffoldConnection(),

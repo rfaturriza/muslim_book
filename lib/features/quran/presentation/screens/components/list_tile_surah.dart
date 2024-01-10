@@ -43,7 +43,7 @@ class ListTileSurah extends StatelessWidget {
           ),
         ),
         subtitle: Text(
-          '${revelation?.asLocale(context) ?? emptyString}'
+          '${revelation?.asLocale(context.locale) ?? emptyString}'
           ' | '
           '${LocaleKeys.amountOfVerses.tr(
             args: [numberOfVerses.toString()],

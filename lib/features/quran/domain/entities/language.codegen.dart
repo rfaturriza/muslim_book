@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -23,8 +22,7 @@ class Language with _$Language {
         en: en,
       );
 
-  String asLocale(BuildContext context) {
-    final locale = context.locale;
+  String asLocale(Locale locale) {
     if (locale.languageCode == 'en') {
       return en ?? emptyString;
     } else if (locale.languageCode == 'id') {

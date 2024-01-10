@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quranku/core/components/spacer.dart';
@@ -14,6 +15,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../../../../../core/utils/extension/string_ext.dart';
 import '../../../../../core/utils/themes/color.dart';
 import '../../../../../injection.dart';
+import '../../../../setting/presentation/bloc/setting/language_setting_bloc.dart';
 import '../../../domain/entities/detail_surah.codegen.dart';
 import '../../bloc/audioVerse/audio_verse_bloc.dart';
 import '../../bloc/detailSurah/detail_surah_bloc.dart';
@@ -85,10 +87,10 @@ class _VersesListState extends State<VersesList> {
     if (index != -1) {
       final indices = _itemPositionsListener.itemPositions.value
           .where((item) {
-            final isTopVisible = item.itemLeadingEdge >= 0;
-            final isBottomVisible = item.itemTrailingEdge <= 1.03;
-            return isTopVisible && isBottomVisible;
-          })
+        final isTopVisible = item.itemLeadingEdge >= 0;
+        final isBottomVisible = item.itemTrailingEdge <= 1.03;
+        return isTopVisible && isBottomVisible;
+      })
           .map((e) => e.index)
           .toList();
       final lastItem = indices.last;
@@ -190,7 +192,7 @@ class ListTileVerses extends StatelessWidget {
             children: [
               ListTile(
                 contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                 leading: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -200,7 +202,7 @@ class ListTileVerses extends StatelessWidget {
                       child: FittedBox(
                         child: NumberPin(
                           number:
-                              verses.number?.inSurah.toString() ?? emptyString,
+                          verses.number?.inSurah.toString() ?? emptyString,
                         ),
                       ),
                     ),
@@ -244,15 +246,30 @@ class ListTileVerses extends StatelessWidget {
                 ),
               ),
               const VSpacer(height: 8),
-              ListTileTransliteration(
-                text: verses.text?.transliteration?.asLocale(context) ??
-                    emptyString,
-                number: verses.number?.inSurah.toString() ?? emptyString,
+              BlocBuilder<LanguageSettingBloc, LanguageSettingState>(
+                buildWhen: (p, c) => p.languageLatin != c.languageLatin,
+                builder: (context, languageSettingState) {
+                  return ListTileTransliteration(
+                    text: verses.text?.transliteration?.asLocale(
+                          languageSettingState.languageLatin ?? context.locale,
+                        ) ??
+                        emptyString,
+                    number: verses.number?.inSurah.toString() ?? emptyString,
+                  );
+                },
               ),
               const VSpacer(height: 8),
-              ListTileTranslation(
-                text: verses.translation?.asLocale(context) ?? emptyString,
-                number: verses.number?.inSurah.toString() ?? emptyString,
+              BlocBuilder<LanguageSettingBloc, LanguageSettingState>(
+                buildWhen: (p, c) => p.languageQuran != c.languageQuran,
+                builder: (context, languageSettingState) {
+                  return ListTileTranslation(
+                    text: verses.translation?.asLocale(
+                          languageSettingState.languageQuran ?? context.locale,
+                        ) ??
+                        emptyString,
+                    number: verses.number?.inSurah.toString() ?? emptyString,
+                  );
+                },
               ),
               const VSpacer(height: 8),
             ],
@@ -263,12 +280,11 @@ class ListTileVerses extends StatelessWidget {
   }
 }
 
-void _onPressedBookmark(
-  BuildContext context,
-  Verses verses,
-  ViewMode clickFrom,
-  JuzConstant? juz,
-  DetailSurah? surah,
+void _onPressedBookmark(BuildContext context,
+    Verses verses,
+    ViewMode clickFrom,
+    JuzConstant? juz,
+    DetailSurah? surah,
 ) {
   if (clickFrom == ViewMode.surah) {
     final surahDetailBloc = context.read<SurahDetailBloc>();
@@ -305,8 +321,7 @@ class ListTileTranslation extends StatelessWidget {
   final String text;
   final String number;
 
-  const ListTileTranslation(
-      {super.key, required this.text, required this.number});
+  const ListTileTranslation({super.key, required this.text, required this.number});
 
   @override
   Widget build(BuildContext context) {
@@ -337,8 +352,7 @@ class ListTileTransliteration extends StatelessWidget {
   final String text;
   final String number;
 
-  const ListTileTransliteration(
-      {super.key, required this.text, required this.number});
+  const ListTileTransliteration({super.key, required this.text, required this.number});
 
   @override
   Widget build(BuildContext context) {

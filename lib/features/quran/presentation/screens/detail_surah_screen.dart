@@ -30,7 +30,7 @@ class DetailSurahScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final audioBloc = context.watch<AudioVerseBloc>();
     final surahDetailBloc = context.read<SurahDetailBloc>();
-    final surahName = surah?.name?.transliteration?.asLocale(context);
+    final surahName = surah?.name?.transliteration?.asLocale(context.locale);
     return Scaffold(
       body: BlocConsumer<SurahDetailBloc, SurahDetailState>(
         listener: (context, state) {
