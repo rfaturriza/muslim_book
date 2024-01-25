@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quranku/core/components/spacer.dart';
-import 'package:quranku/core/constants/font_constants.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/features/bookmark/domain/entities/verse_bookmark.codegen.dart';
 import 'package:quranku/features/quran/domain/entities/juz.codegen.dart';
@@ -140,12 +139,21 @@ class _VersesListState extends State<VersesList> {
           },
           itemBuilder: (context, index) {
             if (index == 0 && isPreBismillah) {
-              return Text(
-                widget.preBismillah ?? emptyString,
-                textAlign: TextAlign.center,
-                style: context.textTheme.headlineMedium?.copyWith(
-                  fontFamily: FontConst.lpmqIsepMisbah,
-                ),
+              return BlocBuilder<StylingSettingBloc, StylingSettingState>(
+                buildWhen: (p, c) {
+                  return p.fontFamilyArabic != c.fontFamilyArabic ||
+                      p.arabicFontSize != c.arabicFontSize;
+                },
+                builder: (context, state) {
+                  return Text(
+                    widget.preBismillah ?? emptyString,
+                    textAlign: TextAlign.center,
+                    style: context.textTheme.titleLarge?.copyWith(
+                      fontSize: state.arabicFontSize,
+                      fontFamily: state.fontFamilyArabic,
+                    ),
+                  );
+                },
               );
             }
             final indexVerses = isPreBismillah ? index - 1 : index;
