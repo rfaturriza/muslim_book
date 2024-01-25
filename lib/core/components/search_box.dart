@@ -31,7 +31,7 @@ class SearchBox extends StatelessWidget {
       child: Row(
         children: [
           Icon(
-            Icons.search,
+            Icons.manage_search,
             color: primaryColor.shade50,
           ),
           const SizedBox(width: 8),

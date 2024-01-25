@@ -23,14 +23,15 @@ final themeData = ThemeData(
   fontFamily: FontConst.lato,
   textTheme: textTheme,
   tabBarTheme: TabBarTheme(
-    labelColor: defaultColor.shade50,
-    labelStyle: textTheme.bodyLarge?.copyWith(
-      fontWeight: FontWeight.bold,
+    labelColor: secondaryColor.shade500,
+    labelStyle: textTheme.titleMedium?.copyWith(
+      fontWeight: FontWeight.w500,
+      color: secondaryColor.shade500,
     ),
     unselectedLabelColor: defaultColor.shade50.withOpacity(0.5),
     dividerColor: Colors.transparent,
     indicatorColor: secondaryColor.shade500,
-    indicatorSize: TabBarIndicatorSize.tab,
+    indicatorSize: TabBarIndicatorSize.label,
   ),
   drawerTheme: DrawerThemeData(
     elevation: 0,

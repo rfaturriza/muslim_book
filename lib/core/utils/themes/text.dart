@@ -26,18 +26,18 @@ final textTheme = TextTheme(
     color: defaultColor.shade50,
   ),
   titleLarge: TextStyle(
-    fontSize: 18,
+    fontSize: 22,
     color: defaultColor.shade50,
-    letterSpacing: 0.15,
+    letterSpacing: 0,
   ),
   titleMedium: TextStyle(
-    fontSize: 14,
+    fontSize: 16,
     color: defaultColor.shade50,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.15,
   ),
   titleSmall: TextStyle(
-    fontSize: 12,
+    fontSize: 14,
     color: defaultColor.shade50,
     fontWeight: FontWeight.w500,
     letterSpacing: 0.1,

@@ -87,10 +87,10 @@ class _VersesListState extends State<VersesList> {
     if (index != -1) {
       final indices = _itemPositionsListener.itemPositions.value
           .where((item) {
-        final isTopVisible = item.itemLeadingEdge >= 0;
-        final isBottomVisible = item.itemTrailingEdge <= 1.03;
-        return isTopVisible && isBottomVisible;
-      })
+            final isTopVisible = item.itemLeadingEdge >= 0;
+            final isBottomVisible = item.itemTrailingEdge <= 1.03;
+            return isTopVisible && isBottomVisible;
+          })
           .map((e) => e.index)
           .toList();
       final lastItem = indices.last;
@@ -192,7 +192,7 @@ class ListTileVerses extends StatelessWidget {
             children: [
               ListTile(
                 contentPadding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                 leading: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -202,7 +202,7 @@ class ListTileVerses extends StatelessWidget {
                       child: FittedBox(
                         child: NumberPin(
                           number:
-                          verses.number?.inSurah.toString() ?? emptyString,
+                              verses.number?.inSurah.toString() ?? emptyString,
                         ),
                       ),
                     ),
@@ -240,7 +240,7 @@ class ListTileVerses extends StatelessWidget {
                   verses.text?.arab ?? emptyString,
                   textAlign: TextAlign.right,
                   style: context.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    height: 2.5,
                     fontFamily: FontConst.lpmqIsepMisbah,
                   ),
                 ),
@@ -280,11 +280,12 @@ class ListTileVerses extends StatelessWidget {
   }
 }
 
-void _onPressedBookmark(BuildContext context,
-    Verses verses,
-    ViewMode clickFrom,
-    JuzConstant? juz,
-    DetailSurah? surah,
+void _onPressedBookmark(
+  BuildContext context,
+  Verses verses,
+  ViewMode clickFrom,
+  JuzConstant? juz,
+  DetailSurah? surah,
 ) {
   if (clickFrom == ViewMode.surah) {
     final surahDetailBloc = context.read<SurahDetailBloc>();
@@ -321,7 +322,8 @@ class ListTileTranslation extends StatelessWidget {
   final String text;
   final String number;
 
-  const ListTileTranslation({super.key, required this.text, required this.number});
+  const ListTileTranslation(
+      {super.key, required this.text, required this.number});
 
   @override
   Widget build(BuildContext context) {
@@ -352,7 +354,8 @@ class ListTileTransliteration extends StatelessWidget {
   final String text;
   final String number;
 
-  const ListTileTransliteration({super.key, required this.text, required this.number});
+  const ListTileTransliteration(
+      {super.key, required this.text, required this.number});
 
   @override
   Widget build(BuildContext context) {
