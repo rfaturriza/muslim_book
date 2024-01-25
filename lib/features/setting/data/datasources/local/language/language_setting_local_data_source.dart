@@ -2,9 +2,9 @@ import 'dart:ui';
 
 import 'package:dartz/dartz.dart';
 
-import '../../../../core/error/failures.dart';
+import '../../../../../../core/error/failures.dart';
 
-abstract class LanguageSettingRepository {
+abstract class LanguageSettingLocalDataSource {
   Future<Either<Failure, Locale?>> getQuranLanguageSetting();
 
   Future<Either<Failure, Unit>> setQuranLanguageSetting(

@@ -14,7 +14,8 @@ import 'package:quranku/generated/locale_keys.g.dart';
 import 'package:quranku/injection.dart';
 
 import 'features/quran/presentation/bloc/surah/surah_bloc.dart';
-import 'features/setting/presentation/bloc/setting/language_setting_bloc.dart';
+import 'features/setting/presentation/bloc/language_setting/language_setting_bloc.dart';
+import 'features/setting/presentation/bloc/styling_setting/styling_setting_bloc.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -45,6 +46,13 @@ class App extends StatelessWidget {
             ..add(const LanguageSettingEvent.getLatinLanguage())
             ..add(const LanguageSettingEvent.getPrayerLanguage())
             ..add(const LanguageSettingEvent.getQuranLanguage()),
+        ),
+        BlocProvider<StylingSettingBloc>(
+          create: (context) => sl<StylingSettingBloc>()
+            ..add(const StylingSettingEvent.getArabicFontFamily())
+            ..add(const StylingSettingEvent.getLatinFontSize())
+            ..add(const StylingSettingEvent.getArabicFontSize())
+            ..add(const StylingSettingEvent.getTranslationFontSize()),
         ),
       ],
       child: OKToast(

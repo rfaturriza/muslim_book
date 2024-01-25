@@ -9,7 +9,7 @@ import 'package:quranku/features/setting/presentation/screens/components/languag
 import 'package:quranku/features/setting/presentation/screens/helper/translate_helper.dart';
 
 import '../../../../generated/locale_keys.g.dart';
-import '../bloc/setting/language_setting_bloc.dart';
+import '../bloc/language_setting/language_setting_bloc.dart';
 
 class LanguageSettingScreen extends StatelessWidget {
   const LanguageSettingScreen({super.key});

@@ -1,4 +1,7 @@
 class FontConst {
+  static const double defaultArabicFontSize = 24;
+  static const double defaultLatinFontSize = 22;
+  static const double defaultTranslationFontSize = 22;
   static const String lotusLinotype = 'Lotus-Linotype';
   static const String lato = 'Lato';
   static const String othmani = 'Othmani';
@@ -18,4 +21,25 @@ class FontConst {
   static const String neirizi = 'Neirizi';
   static const String pdmsSaleem = 'PDMS-Saleem';
   static const String quran1 = 'Quran1';
+
+  static const List<String> arabicFonts = [
+    lotusLinotype,
+    othmani,
+    decoTypeThuluthII,
+    alMajeedQuranic,
+    alMushafQuranic,
+    alQalamQuranic,
+    arslanWessamA,
+    arslanWessamB,
+    decoType,
+    hafs,
+    jannaLTBold,
+    lpmqIsepMisbah,
+    meQuran,
+    muhammadi,
+    nabi,
+    neirizi,
+    pdmsSaleem,
+    quran1,
+  ];
 }

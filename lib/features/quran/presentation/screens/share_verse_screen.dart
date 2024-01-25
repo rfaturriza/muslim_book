@@ -12,7 +12,7 @@ import 'package:quranku/generated/locale_keys.g.dart';
 
 import '../../../../core/components/checkbox.dart';
 import '../../../../core/utils/extension/string_ext.dart';
-import '../../../setting/presentation/bloc/setting/language_setting_bloc.dart';
+import '../../../setting/presentation/bloc/language_setting/language_setting_bloc.dart';
 import '../bloc/shareVerse/share_verse_bloc.dart';
 
 class ShareVerseScreen extends StatelessWidget {

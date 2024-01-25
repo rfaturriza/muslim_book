@@ -9,7 +9,7 @@ import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/extension/dartz_ext.dart';
 import 'package:quranku/core/utils/extension/extension.dart';
 import 'package:quranku/core/utils/extension/string_ext.dart';
-import 'package:quranku/features/setting/presentation/bloc/setting/language_setting_bloc.dart';
+import 'package:quranku/features/setting/presentation/bloc/language_setting/language_setting_bloc.dart';
 import 'package:quranku/generated/locale_keys.g.dart';
 
 import '../../../../core/constants/asset_constants.dart';

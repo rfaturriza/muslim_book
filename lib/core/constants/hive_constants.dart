@@ -12,4 +12,8 @@ class HiveConst {
   static const String quranLanguageKey = 'quranLanguageKey';
   static const String latinLanguageKey = 'latinLanguageKey';
   static const String prayerTimeLanguageKey = 'prayerTimeLanguageKey';
+  static const String arabicFontFamilyKey = 'arabicFontFamilyKey';
+  static const String arabicFontSizeKey = 'arabicFontSizeKey';
+  static const String latinFontSizeKey = 'latinFontSizeKey';
+  static const String translationFontSizeKey = 'translationFontSizeKey';
 }

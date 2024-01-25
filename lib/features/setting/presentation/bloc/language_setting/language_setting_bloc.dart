@@ -6,12 +6,12 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../../core/usecases/usecase.dart';
-import '../../../domain/usecases/get_latin_language_setting.dart';
-import '../../../domain/usecases/get_prayer_language_setting.dart';
-import '../../../domain/usecases/get_quran_language_setting.dart';
-import '../../../domain/usecases/set_latin_language_setting.dart';
-import '../../../domain/usecases/set_prayer_language_setting.dart';
-import '../../../domain/usecases/set_quran_language_setting.dart';
+import '../../../domain/usecases/language/get_latin_language_setting.dart';
+import '../../../domain/usecases/language/get_prayer_language_setting.dart';
+import '../../../domain/usecases/language/get_quran_language_setting.dart';
+import '../../../domain/usecases/language/set_latin_language_setting.dart';
+import '../../../domain/usecases/language/set_prayer_language_setting.dart';
+import '../../../domain/usecases/language/set_quran_language_setting.dart';
 
 part 'language_setting_bloc.freezed.dart';
 part 'language_setting_event.dart';
