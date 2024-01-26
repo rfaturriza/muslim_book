@@ -13,10 +13,18 @@ platform :android do
     previous_build_number = google_play_track_version_codes(
       track: "internal",
       json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
-    )[0]
-    current_build_number = previous_build_number + 1
+    )
+    sh "echo prev build number #{previous_build_number}"
+    current_build_number = previous_build_number[0] + 1
+    sh "echo curr build number #{current_build_number}"
+    current_version_name = google_play_track_release_names(
+      track: "internal",
+      json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
+    )
+    sh "echo curr version name #{current_version_name}"
     flutter_set_version(
         path_to_yaml: "../pubspec.yaml",
+        version_name: current_version_name,
         version_code: current_build_number.to_s,
     )
 
