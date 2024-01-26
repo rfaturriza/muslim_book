@@ -17,7 +17,7 @@ platform :android do
     current_build_number = previous_build_number + 1
     flutter_set_version(
         path_to_yaml: "../pubspec.yaml",
-        version_code: current_build_number,
+        version_code: current_build_number.to_s,
     )
 
     sh "flutter build appbundle -v --no-deferred-components"
