@@ -85,8 +85,7 @@ platform :android do
     add_git_tag(
       grouping: "fastlane-builds",
       includes_lane: true,
-      prefix: "Release-"
-      suffix: "(#{current_build_number})"
+      prefix: "Release-" + current_build_number,
       build_number: current_build_number,
     )
   end
