@@ -11,7 +11,6 @@ platform :android do
   desc "Submit a new internal testing build to Google Play"
   lane :internal do
     previous_build_number = google_play_track_version_codes(
-      package_name: "com.rizz.quranku",
       track: "internal",
       json_key: ENV['PLAY_STORE_CONFIG_JSON'],
     )[0]
@@ -34,7 +33,6 @@ platform :android do
   desc "Submit a new PRODUCTION build to Google Play"
   lane :production do
     previous_build_number = google_play_track_version_codes(
-      package_name: com.rizz.quranku,
       track: "internal",
       json_key: ENV['PLAY_STORE_CONFIG_JSON'],
     )[0]
@@ -70,7 +68,6 @@ platform :android do
   desc "Promote beta track to prod"
   lane :promote_to_production do
     previous_build_number = google_play_track_version_codes(
-      package_name: "com.rizz.quranku",
       track: "internal",
       json_key: ENV['PLAY_STORE_CONFIG_JSON'],
     )[0]
