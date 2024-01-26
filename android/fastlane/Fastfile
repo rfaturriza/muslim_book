@@ -11,7 +11,7 @@ platform :android do
   desc "Submit a new internal testing build to Google Play"
   lane :internal do
     previous_build_number = google_play_track_version_codes(
-      package_name: com.rizz.quranku,
+      package_name: "com.rizz.quranku",
       track: "internal",
       json_key: ENV['PLAY_STORE_CONFIG_JSON'],
     )[0]
@@ -26,6 +26,29 @@ platform :android do
     upload_to_play_store(
       root_url: "https://androidpublisher.googleapis.com/",
       track: 'internal',
+      aab: '../build/app/outputs/bundle/release/app-release.aab',
+      json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
+      )
+  end
+
+  desc "Submit a new PRODUCTION build to Google Play"
+  lane :production do
+    previous_build_number = google_play_track_version_codes(
+      package_name: com.rizz.quranku,
+      track: "internal",
+      json_key: ENV['PLAY_STORE_CONFIG_JSON'],
+    )[0]
+    current_build_number = previous_build_number + 1
+    increment_version_code(
+      gradle_file_path: "../app/build.gradle",
+      version_code: current_build_number
+    )
+
+    sh "flutter build appbundle -v --no-deferred-components"
+
+    upload_to_play_store(
+      root_url: "https://androidpublisher.googleapis.com/",
+      track: 'production',
       aab: '../build/app/outputs/bundle/release/app-release.aab',
       json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
       )
@@ -46,6 +69,13 @@ platform :android do
 
   desc "Promote beta track to prod"
   lane :promote_to_production do
+    previous_build_number = google_play_track_version_codes(
+      package_name: "com.rizz.quranku",
+      track: "internal",
+      json_key: ENV['PLAY_STORE_CONFIG_JSON'],
+    )[0]
+    current_build_number = previous_build_number + 1
+
     upload_to_play_store(
       root_url: "https://androidpublisher.googleapis.com/",
       track: 'beta',
@@ -55,5 +85,12 @@ platform :android do
       skip_upload_screenshots: true,
       json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
       )
+    add_git_tag(
+      grouping: "fastlane-builds",
+      includes_lane: true,
+      prefix: "Release-"
+      suffix: "(#{current_build_number})"
+      build_number: current_build_number,
+    )
   end
 end
