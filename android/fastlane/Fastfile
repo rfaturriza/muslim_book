@@ -24,7 +24,7 @@ platform :android do
     sh "echo curr version name #{current_version_name}"
     flutter_set_version(
         path_to_yaml: "../pubspec.yaml",
-        version_name: current_version_name,
+        version_name: current_version_name[0],
         version_code: current_build_number.to_s,
     )
 
