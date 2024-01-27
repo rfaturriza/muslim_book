@@ -299,6 +299,23 @@ class _RowListColorSetting extends StatelessWidget {
               CachedNetworkImage(
                 cacheKey: state.randomImageUrl,
                 imageUrl: AssetConst.imageRandomUrl,
+                errorWidget: (context, url, error) {
+                  return GestureDetector(
+                    onTap: () {
+                      shareBloc.add(
+                        const ShareVerseEvent.onChangeRandomImageUrl(),
+                      );
+                    },
+                    child: const CircleAvatar(
+                      backgroundColor: Colors.transparent,
+                      radius: 16,
+                      child: Icon(
+                        Icons.refresh,
+                        color: Colors.white,
+                      ),
+                    ),
+                  );
+                },
                 imageBuilder: (context, imageProvider) {
                   return GestureDetector(
                     onTap: () {
