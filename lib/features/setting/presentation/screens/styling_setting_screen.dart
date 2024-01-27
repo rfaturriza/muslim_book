@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:quranku/core/constants/font_constants.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/extension/dartz_ext.dart';
 import 'package:quranku/features/quran/presentation/bloc/audioVerse/audio_verse_bloc.dart';
@@ -20,7 +19,6 @@ class StylingSettingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final settingStylingBloc = context.read<StylingSettingBloc>();
     return BlocConsumer<StylingSettingBloc, StylingSettingState>(
       listener: (context, state) {
         if (state.statusArabicFontFamily == FormzSubmissionStatus.failure) {
@@ -39,51 +37,23 @@ class StylingSettingScreen extends StatelessWidget {
       builder: (context, state) {
         const surahAlFatihah = 1;
         return Scaffold(
-          floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-          floatingActionButton: FloatingActionButton.large(
+          floatingActionButton: FloatingActionButton(
             onPressed: () {
               showModalBottomSheet(
+                barrierColor: Colors.transparent,
                 context: context,
                 enableDrag: true,
                 builder: (_) => BlocProvider.value(
                   value: context.read<StylingSettingBloc>(),
                   child: StylingSettingBottomSheet(
                     title: LocaleKeys.fontStyle.tr(),
-                    onChangeArabicFontFamily: (fontFamily) {
-                      settingStylingBloc.add(
-                        StylingSettingEvent.setArabicFontFamily(
-                          fontFamily: fontFamily ?? FontConst.lpmqIsepMisbah,
-                        ),
-                      );
-                    },
-                    onChangeLatinFontSize: (fontSize) {
-                      settingStylingBloc.add(
-                        StylingSettingEvent.setLatinFontSize(
-                          fontSize: fontSize,
-                        ),
-                      );
-                    },
-                    onChangeArabicFontSize: (fontSize) {
-                      settingStylingBloc.add(
-                        StylingSettingEvent.setArabicFontSize(
-                          fontSize: fontSize,
-                        ),
-                      );
-                    },
-                    onChangeTranslationFontSize: (fontSize) {
-                      settingStylingBloc.add(
-                        StylingSettingEvent.setTranslationFontSize(
-                          fontSize: fontSize,
-                        ),
-                      );
-                    },
                   ),
                 ),
               );
             },
             child: const Icon(Icons.settings),
           ),
-          appBar: AppBarDetailScreen(title: LocaleKeys.fontStyle.tr()),
+          appBar: AppBarDetailScreen(title: LocaleKeys.stylingView.tr()),
           body: MultiBlocProvider(
             providers: [
               BlocProvider<SurahDetailBloc>(

@@ -20,7 +20,6 @@ class AppBarDetailScreen extends StatelessWidget
       elevation: 0,
       title: Text(title,
           style: context.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.w600,
             color: secondaryColor.shade400,
           )),
     );

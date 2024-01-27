@@ -99,5 +99,6 @@
   "deviceLanguage": "Bahasa Perangkat",
   "quranTranslation": "Terjemahan Al-Quran",
   "latinTranslation": "Terjemahan Latin",
-  "prayTimeLanguage": "Bahasa Waktu Sholat"
+  "prayTimeLanguage": "Bahasa Waktu Sholat",
+  "stylingView": "Tampilan"
 }

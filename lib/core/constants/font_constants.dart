@@ -1,7 +1,7 @@
 class FontConst {
   static const double defaultArabicFontSize = 24;
-  static const double defaultLatinFontSize = 22;
-  static const double defaultTranslationFontSize = 22;
+  static const double defaultLatinFontSize = 14;
+  static const double defaultTranslationFontSize = 14;
   static const String lotusLinotype = 'Lotus-Linotype';
   static const String lato = 'Lato';
   static const String othmani = 'Othmani';

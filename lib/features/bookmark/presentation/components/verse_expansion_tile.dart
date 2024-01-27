@@ -9,6 +9,7 @@ import 'package:quranku/generated/locale_keys.g.dart';
 
 import '../../../../core/constants/font_constants.dart';
 import '../../../../core/utils/extension/string_ext.dart';
+import '../../../quran/presentation/screens/components/number_pin.dart';
 import '../bloc/bookmark/bookmark_bloc.dart';
 
 class VerseExpansionTile extends StatelessWidget {
@@ -103,15 +104,14 @@ class VerseBookmarkListTile extends StatelessWidget {
       color: backgroundColor,
       child: ListTile(
         onTap: onTapVerse,
+        leading: NumberPin(number: verseNumber.toString()),
         title: Text(
           name,
-          style: context.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: context.textTheme.titleMedium,
         ),
         subtitle: Text(
           '${LocaleKeys.verses} $verseNumber',
-          style: context.textTheme.bodyMedium,
+          style: context.textTheme.titleSmall,
         ),
         trailing: () {
           if (surahName != null) {

@@ -84,7 +84,7 @@ class _ListItemMenu extends StatelessWidget {
         ),
         ButtonDrawer(
           icon: Icons.format_size,
-          title: LocaleKeys.fontStyle.tr(),
+          title: LocaleKeys.stylingView.tr(),
           onTap: () {
             context.navigateTo(const StylingSettingScreen());
           },

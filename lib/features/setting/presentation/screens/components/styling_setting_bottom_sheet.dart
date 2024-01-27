@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quranku/core/constants/font_constants.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
-import 'package:quranku/core/utils/themes/color.dart';
 import 'package:quranku/generated/locale_keys.g.dart';
 
 import '../../../../../core/components/spacer.dart';
@@ -11,76 +10,89 @@ import '../../bloc/styling_setting/styling_setting_bloc.dart';
 
 class StylingSettingBottomSheet extends StatelessWidget {
   final String title;
-  final Function(double) onChangeArabicFontSize;
-  final Function(double) onChangeTranslationFontSize;
-  final Function(double) onChangeLatinFontSize;
-  final Function(String?) onChangeArabicFontFamily;
 
   const StylingSettingBottomSheet({
     super.key,
     required this.title,
-    required this.onChangeArabicFontSize,
-    required this.onChangeTranslationFontSize,
-    required this.onChangeLatinFontSize,
-    required this.onChangeArabicFontFamily,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            textAlign: TextAlign.start,
-            style: context.textTheme.titleLarge?.copyWith(
-              color: secondaryColor.shade500,
+    final stylingBloc = context.read<StylingSettingBloc>();
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Wrap(
+          children: [
+            const VSpacer(),
+            Text(LocaleKeys.arabic.tr()),
+            BlocBuilder<StylingSettingBloc, StylingSettingState>(
+              buildWhen: (p, c) => p.arabicFontSize != c.arabicFontSize,
+              builder: (context, state) {
+                return Slider(
+                  value: state.arabicFontSize,
+                  min: 22,
+                  max: 50,
+                  onChanged: (size) {
+                    stylingBloc.add(
+                      StylingSettingEvent.setArabicFontSize(
+                        fontSize: size,
+                      ),
+                    );
+                  },
+                );
+              },
             ),
-          ),
-          const VSpacer(),
-          Text(LocaleKeys.arabic.tr()),
-          BlocBuilder<StylingSettingBloc, StylingSettingState>(
-            buildWhen: (p, c) => p.arabicFontSize != c.arabicFontSize,
-            builder: (context, state) {
-              return Slider(
-                value: state.arabicFontSize,
-                min: 22,
-                max: 50,
-                onChanged: onChangeArabicFontSize,
-              );
-            },
-          ),
-          Text(LocaleKeys.latin.tr()),
-          BlocBuilder<StylingSettingBloc, StylingSettingState>(
-            buildWhen: (p, c) => p.latinFontSize != c.latinFontSize,
-            builder: (context, state) {
-              return Slider(
-                value: state.latinFontSize,
-                min: 12,
-                max: 30,
-                onChanged: onChangeLatinFontSize,
-              );
-            },
-          ),
-          Text(LocaleKeys.translation.tr()),
-          BlocBuilder<StylingSettingBloc, StylingSettingState>(
-            buildWhen: (p, c) => p.translationFontSize != c.translationFontSize,
-            builder: (context, state) {
-              return Slider(
-                value: state.translationFontSize,
-                min: 12,
-                max: 30,
-                onChanged: onChangeTranslationFontSize,
-              );
-            },
-          ),
-          Text(LocaleKeys.fontStyle.tr()),
-          _DropdownArabicFonts(
-            onChangeArabicFontFamily: onChangeArabicFontFamily,
-          ),
-        ],
+            Text(LocaleKeys.latin.tr()),
+            BlocBuilder<StylingSettingBloc, StylingSettingState>(
+              buildWhen: (p, c) => p.latinFontSize != c.latinFontSize,
+              builder: (context, state) {
+                return Slider(
+                  value: state.latinFontSize,
+                  min: 12,
+                  max: 30,
+                  onChanged: (size) {
+                    stylingBloc.add(
+                      StylingSettingEvent.setLatinFontSize(
+                        fontSize: size,
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+            Text(LocaleKeys.translation.tr()),
+            BlocBuilder<StylingSettingBloc, StylingSettingState>(
+              buildWhen: (p, c) =>
+                  p.translationFontSize != c.translationFontSize,
+              builder: (context, state) {
+                return Slider(
+                  value: state.translationFontSize,
+                  min: 12,
+                  max: 30,
+                  onChanged: (size) {
+                    stylingBloc.add(
+                      StylingSettingEvent.setTranslationFontSize(
+                        fontSize: size,
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+            Text(LocaleKeys.fontStyle.tr()),
+            _DropdownArabicFonts(
+              onChangeArabicFontFamily: (fontFamily) {
+                stylingBloc.add(
+                  StylingSettingEvent.setArabicFontFamily(
+                    fontFamily: fontFamily ?? FontConst.lpmqIsepMisbah,
+                  ),
+                );
+              },
+            ),
+            const VSpacer(),
+          ],
+        ),
       ),
     );
   }
@@ -101,7 +113,7 @@ class _DropdownArabicFonts extends StatelessWidget {
           padding: const EdgeInsets.all(0),
           isExpanded: true,
           underline: const SizedBox(),
-          menuMaxHeight: MediaQuery.of(context).size.height * 0.5,
+          menuMaxHeight: context.height * 0.3,
           borderRadius: BorderRadius.circular(8),
           items: FontConst.arabicFonts.map((font) {
             return DropdownMenuItem(
