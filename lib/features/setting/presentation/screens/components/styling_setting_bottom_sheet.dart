@@ -21,7 +21,11 @@ class StylingSettingBottomSheet extends StatelessWidget {
     final stylingBloc = context.read<StylingSettingBloc>();
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.only(
+          left: 16,
+          right: 16,
+          bottom: 32,
+        ),
         child: Wrap(
           children: [
             const VSpacer(),
@@ -90,7 +94,6 @@ class StylingSettingBottomSheet extends StatelessWidget {
                 );
               },
             ),
-            const VSpacer(),
           ],
         ),
       ),
