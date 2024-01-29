@@ -7,7 +7,8 @@ def increment_build_number()
     track: "internal",
     json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
   )[0]
-  return current_build_number = previous_build_number + 1
+  current_build_number = previous_build_number + 1
+  return current_build_number.to_s
 end
 
 def increment_version_name(typeUpdate)
