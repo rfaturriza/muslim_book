@@ -127,9 +127,7 @@ platform :android do
 
     # TAG
     add_git_tag(
-      grouping: "Releases",
-      prefix: "Release " + version_name,
-      build_number: build_number,
+        tag: "Release v" + version_name,
     )
   end
 
@@ -157,9 +155,7 @@ platform :android do
 
     # TAG
     add_git_tag(
-      grouping: "Releases",
-      prefix: "Release " + version_name,
-      build_number: build_number,
+        tag: "Release v" + version_name,
     )
   end
 
@@ -187,9 +183,7 @@ platform :android do
 
     # TAG
     add_git_tag(
-      grouping: "Releases",
-      prefix: "Release " + version_name,
-      build_number: build_number,
+        tag: "Release v" + version_name,
     )
   end
 
@@ -221,19 +215,17 @@ platform :android do
 
     # GET VERSION NAME AND CODE
     version_name = google_play_track_release_names(
-      track: "beta",
+      track: "internal",
       json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
     )[0]
     build_number = google_play_track_version_codes(
-      track: "beta",
+      track: "internal",
       json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
     )[0]
 
     # TAG
     add_git_tag(
-      grouping: "Releases",
-      prefix: "Release " + version_name,
-      build_number: build_number,
+        tag: "Release v" + version_name,
     )
   end
 
@@ -262,9 +254,7 @@ platform :android do
 
     # TAG
     add_git_tag(
-      grouping: "Releases",
-      prefix: "Release " + version_name,
-      build_number: build_number,
+        tag: "Release v" + version_name,
     )
   end
 end
