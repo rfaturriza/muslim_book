@@ -3,11 +3,24 @@ default_platform(:android)
 ENV['SUPPLY_UPLOAD_MAX_RETRIES'] = '5'
 
 def increment_build_number()
-  previous_build_number = google_play_track_version_codes(
+  internal_build_number = google_play_track_version_codes(
     track: "internal",
     json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
   )[0]
-  current_build_number = previous_build_number + 1
+  alpha_build_number = google_play_track_version_codes(
+    track: "alpha",
+    json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
+  )[0]
+  beta_build_number = google_play_track_version_codes(
+    track: "beta",
+    json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
+  )[0]
+  production_build_number = google_play_track_version_codes(
+    track: "production",
+    json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
+  )[0]
+  max_version_code = [internal_build_number, alpha_build_number, beta_build_number, production_build_number].max
+  current_build_number = max_version_code + 1
   return current_build_number.to_s
 end
 
