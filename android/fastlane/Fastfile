@@ -127,7 +127,7 @@ platform :android do
 
     # TAG
     add_git_tag(
-        tag: "Release v" + version_name,
+        tag: "v" + version_name,
     )
   end
 
@@ -155,7 +155,7 @@ platform :android do
 
     # TAG
     add_git_tag(
-        tag: "Release v" + version_name,
+        tag: "v" + version_name,
     )
   end
 
@@ -183,7 +183,7 @@ platform :android do
 
     # TAG
     add_git_tag(
-        tag: "Release v" + version_name,
+        tag: "v" + version_name,
     )
   end
 
@@ -225,7 +225,7 @@ platform :android do
 
     # TAG
     add_git_tag(
-        tag: "Release v" + version_name,
+        tag: "v" + version_name,
     )
   end
 
@@ -254,7 +254,7 @@ platform :android do
 
     # TAG
     add_git_tag(
-        tag: "Release v" + version_name,
+        tag: "v" + version_name,
     )
   end
 end
