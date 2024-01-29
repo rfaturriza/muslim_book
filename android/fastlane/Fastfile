@@ -20,8 +20,11 @@ def increment_version_name(typeUpdate)
 
   if typeUpdate == "major"
     split_version_name[0] = split_version_name[0].to_i + 1
+    split_version_name[1] = 0
+    split_version_name[2] = 0
   elsif typeUpdate == "minor"
     split_version_name[1] = split_version_name[1].to_i + 1
+    split_version_name[2] = 0
   elsif typeUpdate == "patch"
     split_version_name[2] = split_version_name[2].to_i + 1
   end
