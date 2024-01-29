@@ -31,10 +31,18 @@ Runs all the tests
 
 Submit a new internal testing build to Google Play
 
-### android beta
+### android production
 
 ```sh
-[bundle exec] fastlane android beta
+[bundle exec] fastlane android production
+```
+
+Submit a new PRODUCTION build to Google Play
+
+### android promote_to_beta
+
+```sh
+[bundle exec] fastlane android promote_to_beta
 ```
 
 Promote internal track to beta

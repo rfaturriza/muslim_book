@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:quranku/core/constants/url_constants.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
+import 'package:quranku/features/setting/presentation/screens/styling_setting_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/components/button_drawer.dart';
@@ -78,6 +79,14 @@ class _ListItemMenu extends StatelessWidget {
           title: LocaleKeys.language.tr(),
           onTap: () {
             context.navigateTo(const LanguageSettingScreen());
+          },
+          withDecoration: false,
+        ),
+        ButtonDrawer(
+          icon: Icons.format_size,
+          title: LocaleKeys.stylingView.tr(),
+          onTap: () {
+            context.navigateTo(const StylingSettingScreen());
           },
           withDecoration: false,
         ),

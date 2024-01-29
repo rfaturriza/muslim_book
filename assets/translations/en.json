@@ -99,5 +99,6 @@
   "deviceLanguage": "Device Language",
   "quranTranslation": "Quran Translation",
   "latinTranslation": "Latin Translation",
-  "prayTimeLanguage": "Pray Time Language"
+  "prayTimeLanguage": "Pray Time Language",
+  "stylingView": "Styling View"
 }
