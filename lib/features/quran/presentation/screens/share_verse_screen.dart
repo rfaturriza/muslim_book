@@ -3,16 +3,17 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quranku/core/components/spacer.dart';
 import 'package:quranku/core/constants/asset_constants.dart';
-import 'package:quranku/core/constants/font_constants.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/themes/color.dart';
+import 'package:quranku/features/setting/presentation/bloc/styling_setting/styling_setting_bloc.dart';
 import 'package:quranku/generated/locale_keys.g.dart';
 
 import '../../../../core/components/checkbox.dart';
-import '../../../../core/components/drag.dart';
 import '../../../../core/utils/extension/string_ext.dart';
+import '../../../setting/presentation/bloc/language_setting/language_setting_bloc.dart';
 import '../bloc/shareVerse/share_verse_bloc.dart';
 
 class ShareVerseScreen extends StatelessWidget {
@@ -32,15 +33,6 @@ class ShareVerseScreen extends StatelessWidget {
               showModalBottomSheet(
                 context: context,
                 enableDrag: true,
-                useSafeArea: true,
-                backgroundColor: defaultColor.shade500,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(16),
-                    topRight: Radius.circular(16),
-                  ),
-                ),
-                barrierColor: Colors.transparent,
                 builder: (_) => BlocProvider.value(
                   value: context.read<ShareVerseBloc>(),
                   child: const _SettingPreviewBottomSheet(),
@@ -108,74 +100,117 @@ class _CanvasPreview extends StatelessWidget {
               ),
               child: AspectRatio(
                 aspectRatio: 9 / 16,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                child: Stack(
+                  alignment: Alignment.center,
                   children: [
-                    if (state.isArabicVisible) ...[
-                      Text(
-                        verse?.text?.arab ?? emptyString,
-                        style: context.textTheme.titleMedium?.copyWith(
-                          fontSize: fontSize * 1.5,
-                          fontFamily: FontConst.lpmqIsepMisbah,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const VSpacer(),
-                    ],
-                    if (state.isLatinVisible) ...[
-                      Text(
-                        verse?.text?.transliteration?.asLocale(context) ??
-                            emptyString,
-                        style: context.textTheme.bodySmall?.copyWith(
-                          fontSize: fontSize / 1.2,
-                          color: primaryColor.shade100,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const VSpacer(),
-                    ],
-                    if (state.isTranslationVisible) ...[
-                      Text(
-                        verse?.translation?.asLocale(context) ?? emptyString,
-                        style: context.textTheme.bodySmall?.copyWith(
-                          fontSize: fontSize,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const VSpacer(),
-                    ],
-                    if (state.juz != null) ...[
-                      Text(
-                        '(${LocaleKeys.juz.tr().capitalize()} '
-                        '${state.juz?.number ?? emptyString} '
-                        ': ${LocaleKeys.verses.tr().capitalize()} '
-                        '${state.verse?.number?.inQuran ?? emptyString})',
-                        style: context.textTheme.bodySmall?.copyWith(
-                          fontSize: fontSize / 1.2,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const VSpacer(),
-                    ],
-                    if (state.surah != null) ...[
-                      Text(
-                        '(QS. '
-                        '${state.surah?.name?.transliteration?.asLocale(context) ?? emptyString} '
-                        ': ${LocaleKeys.verses.tr().capitalize()} '
-                        '${state.verse?.number?.inSurah ?? emptyString})',
-                        style: context.textTheme.bodySmall?.copyWith(
-                          fontSize: fontSize / 1.2,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const VSpacer(),
-                    ],
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        if (state.isArabicVisible) ...[
+                          BlocBuilder<StylingSettingBloc, StylingSettingState>(
+                            buildWhen: (p, c) =>
+                                p.fontFamilyArabic != c.fontFamilyArabic,
+                            builder: (context, stylingState) {
+                              return Text(
+                                verse?.text?.arab ?? emptyString,
+                                style: context.textTheme.titleMedium?.copyWith(
+                                  fontSize: fontSize * 1.5,
+                                  fontFamily: stylingState.fontFamilyArabic,
+                                ),
+                                textAlign: TextAlign.center,
+                              );
+                            },
+                          ),
+                          const VSpacer(),
+                        ],
+                        if (state.isLatinVisible) ...[
+                          BlocBuilder<LanguageSettingBloc,
+                              LanguageSettingState>(
+                            buildWhen: (p, c) =>
+                                p.languageLatin != c.languageLatin,
+                            builder: (context, languageSettingState) {
+                              return Text(
+                                verse?.text?.transliteration?.asLocale(
+                                      languageSettingState.languageLatin ??
+                                          context.locale,
+                                    ) ??
+                                    emptyString,
+                                style: context.textTheme.bodySmall?.copyWith(
+                                  fontSize: fontSize / 1.2,
+                                  color: primaryColor.shade100,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.center,
+                              );
+                            },
+                          ),
+                          const VSpacer(),
+                        ],
+                        if (state.isTranslationVisible) ...[
+                          BlocBuilder<LanguageSettingBloc,
+                              LanguageSettingState>(
+                            buildWhen: (p, c) =>
+                                p.languageQuran != c.languageQuran,
+                            builder: (context, languageSettingState) {
+                              return Text(
+                                verse?.translation?.asLocale(
+                                      languageSettingState.languageQuran ??
+                                          context.locale,
+                                    ) ??
+                                    emptyString,
+                                style: context.textTheme.bodySmall?.copyWith(
+                                  fontSize: fontSize,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.center,
+                              );
+                            },
+                          ),
+                          const VSpacer(),
+                        ],
+                        if (state.juz != null) ...[
+                          Text(
+                            '(${LocaleKeys.juz.tr().capitalize()} '
+                            '${state.juz?.number ?? emptyString} '
+                            ': ${LocaleKeys.verses.tr().capitalize()} '
+                            '${state.verse?.number?.inQuran ?? emptyString})',
+                            style: context.textTheme.bodySmall?.copyWith(
+                              fontSize: fontSize / 1.2,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const VSpacer(),
+                        ],
+                        if (state.surah != null) ...[
+                          BlocBuilder<LanguageSettingBloc,
+                              LanguageSettingState>(
+                            buildWhen: (p, c) =>
+                                p.languageLatin != c.languageLatin,
+                            builder: (context, languageSettingState) {
+                              return Text(
+                                '(QS. '
+                                '${state.surah?.name?.transliteration?.asLocale(
+                                      languageSettingState.languageLatin ??
+                                          context.locale,
+                                    ) ?? emptyString} '
+                                ': ${LocaleKeys.verses.tr().capitalize()} '
+                                '${state.verse?.number?.inSurah ?? emptyString})',
+                                style: context.textTheme.bodySmall?.copyWith(
+                                  fontSize: fontSize / 1.2,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.center,
+                              );
+                            },
+                          ),
+                          const VSpacer(),
+                        ],
+                      ],
+                    ),
+                    const _CopyRightMuslimBook(),
                   ],
                 ),
               ),
@@ -183,6 +218,37 @@ class _CanvasPreview extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _CopyRightMuslimBook extends StatelessWidget {
+  const _CopyRightMuslimBook();
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          ClipOval(
+            child: SvgPicture.asset(
+              AssetConst.logoAPP,
+              width: 18,
+              height: 18,
+            ),
+          ),
+          const HSpacer(width: 4),
+          Text(
+            LocaleKeys.appName.tr(),
+            style: context.textTheme.titleSmall?.copyWith(
+              fontSize: 10,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -201,7 +267,6 @@ class _SettingPreviewBottomSheet extends StatelessWidget {
         ),
         child: Wrap(
           children: [
-            DragContainer(),
             _RowListColorSetting(),
             VSpacer(),
             _SettingFont(),
@@ -234,6 +299,23 @@ class _RowListColorSetting extends StatelessWidget {
               CachedNetworkImage(
                 cacheKey: state.randomImageUrl,
                 imageUrl: AssetConst.imageRandomUrl,
+                errorWidget: (context, url, error) {
+                  return GestureDetector(
+                    onTap: () {
+                      shareBloc.add(
+                        const ShareVerseEvent.onChangeRandomImageUrl(),
+                      );
+                    },
+                    child: const CircleAvatar(
+                      backgroundColor: Colors.transparent,
+                      radius: 16,
+                      child: Icon(
+                        Icons.refresh,
+                        color: Colors.white,
+                      ),
+                    ),
+                  );
+                },
                 imageBuilder: (context, imageProvider) {
                   return GestureDetector(
                     onTap: () {

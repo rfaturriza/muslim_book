@@ -3,9 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'app.dart';
+import 'core/constants/admob_constants.dart';
 import 'core/utils/bloc_observe.dart';
 import 'injection.dart';
 
@@ -15,6 +17,11 @@ void main() async {
   await Hive.initFlutter();
   await configureDependencies();
   await dotenv.load(fileName: ".env");
+
+  MobileAds.instance.initialize();
+  MobileAds.instance.updateRequestConfiguration(
+    RequestConfiguration(testDeviceIds: AdMobConst.testDevice),
+  );
   if (kDebugMode) {
     Bloc.observer = AppBlocObserver();
   }

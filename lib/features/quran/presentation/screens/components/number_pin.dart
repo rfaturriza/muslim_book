@@ -15,7 +15,7 @@ class NumberPin extends StatelessWidget {
         SvgPicture.asset(AssetConst.starSvg),
         Text(
           number,
-          style: context.textTheme.titleMedium,
+          style: context.textTheme.bodySmall,
           textAlign: TextAlign.center,
         ),
       ],

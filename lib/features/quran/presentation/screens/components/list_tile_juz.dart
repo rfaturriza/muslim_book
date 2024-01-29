@@ -28,13 +28,11 @@ class ListTileJuz extends StatelessWidget {
         leading: NumberPin(number: number),
         title: Text(
           name,
-          style: context.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: context.textTheme.titleMedium,
         ),
         subtitle: Text(
           description,
-          style: context.textTheme.bodyMedium,
+          style: context.textTheme.titleSmall,
         ),
       ),
     );

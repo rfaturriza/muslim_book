@@ -7,4 +7,5 @@ class AssetConst {
   static const String compassSvg = 'assets/svg/circle_compass.svg';
   static const String imageRandomUrl =
       'https://source.unsplash.com/random/1080x1920?nature';
+  static const String logoAPP = 'assets/svg/logoApp.svg';
 }

@@ -38,17 +38,15 @@ class ListTileSurah extends StatelessWidget {
         leading: NumberPin(number: number),
         title: Text(
           name,
-          style: context.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: context.textTheme.titleMedium,
         ),
         subtitle: Text(
-          '${revelation?.asLocale(context) ?? emptyString}'
+          '${revelation?.asLocale(context.locale) ?? emptyString}'
           ' | '
           '${LocaleKeys.amountOfVerses.tr(
             args: [numberOfVerses.toString()],
           )}',
-          style: context.textTheme.bodyMedium,
+          style: context.textTheme.titleSmall,
         ),
         trailing: Text(
           trailingText,

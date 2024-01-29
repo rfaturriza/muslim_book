@@ -11,49 +11,54 @@ class VersePopupMenuButton extends StatelessWidget {
     this.onBookmarkPressed,
     this.onPlayPressed,
     this.onSharePressed,
+    this.padding = const EdgeInsets.all(0),
   });
 
   final bool? isBookmarked;
   final VoidCallback? onBookmarkPressed;
   final VoidCallback? onPlayPressed;
   final VoidCallback? onSharePressed;
+  final EdgeInsetsGeometry padding;
 
   @override
   Widget build(BuildContext context) {
-    return PopupMenuHorizontal(
-      children: [
-        IconButton(
-          onPressed: () {
-            onBookmarkPressed?.call();
-            context.navigateBack();
-          },
-          icon: Icon(
-            (isBookmarked ?? false)
-                ? Icons.bookmark_remove
-                : Icons.bookmark_add_outlined,
-            color: secondaryColor.shade900,
+    return Padding(
+      padding: padding,
+      child: PopupMenuHorizontal(
+        children: [
+          IconButton(
+            onPressed: () {
+              onBookmarkPressed?.call();
+              context.navigateBack();
+            },
+            icon: Icon(
+              (isBookmarked ?? false)
+                  ? Icons.bookmark_remove
+                  : Icons.bookmark_add_outlined,
+              color: secondaryColor.shade900,
+            ),
           ),
-        ),
-        IconButton(
-          onPressed: () {
-            onPlayPressed?.call();
-            context.navigateBack();
-          },
-          icon: Icon(
-            Icons.play_circle_outline,
-            color: secondaryColor.shade900,
+          IconButton(
+            onPressed: () {
+              onPlayPressed?.call();
+              context.navigateBack();
+            },
+            icon: Icon(
+              Icons.play_circle_outline,
+              color: secondaryColor.shade900,
+            ),
           ),
-        ),
-        IconButton(
-          onPressed: () {
-            onSharePressed?.call();
-          },
-          icon: Icon(
-            Icons.ios_share,
-            color: secondaryColor.shade900,
+          IconButton(
+            onPressed: () {
+              onSharePressed?.call();
+            },
+            icon: Icon(
+              Icons.ios_share,
+              color: secondaryColor.shade900,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
