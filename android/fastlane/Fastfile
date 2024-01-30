@@ -2,25 +2,190 @@ default_platform(:android)
 
 ENV['SUPPLY_UPLOAD_MAX_RETRIES'] = '5'
 
+def increment_build_number()
+  internal_build_number = google_play_track_version_codes(
+    track: "internal",
+    json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
+  )[0]
+  beta_build_number = google_play_track_version_codes(
+    track: "beta",
+    json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
+  )[0]
+  production_build_number = google_play_track_version_codes(
+    track: "production",
+    json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
+  )[0]
+  max_version_code = [internal_build_number, beta_build_number, production_build_number].max
+  current_build_number = max_version_code + 1
+  return current_build_number.to_s
+end
+
+def increment_version_name(typeUpdate)
+  current_version_name = google_play_track_release_names(
+    track: "internal",
+    json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
+  )[0]
+  split_version_name = current_version_name.split(".")
+
+  if typeUpdate == "major"
+    split_version_name[0] = split_version_name[0].to_i + 1
+    split_version_name[1] = 0
+    split_version_name[2] = 0
+  elsif typeUpdate == "minor"
+    split_version_name[1] = split_version_name[1].to_i + 1
+    split_version_name[2] = 0
+  elsif typeUpdate == "patch"
+    split_version_name[2] = split_version_name[2].to_i + 1
+  end
+  return version_name = split_version_name.join(".")
+end
+
 platform :android do
   desc "Runs all the tests"
   lane :test do
     gradle(task: "test")
   end
 
-  desc "Submit a new internal testing build to Google Play"
-  lane :internal do
+  desc "Submit patch update for INTERNAL TESTING build to Google Play"
+  lane :internal_patch do
+    # UPDATE VERSION NAME AND CODE
+    build_number = increment_build_number()
+    version_name = increment_version_name("patch")
+    flutter_set_version(
+        path_to_yaml: "../pubspec.yaml",
+        version_name: version_name,
+        version_code: build_number,
+    )
+    
+    # BUILD
     sh "flutter build appbundle -v --no-deferred-components"
+    
+    # UPLOAD
     upload_to_play_store(
       root_url: "https://androidpublisher.googleapis.com/",
       track: 'internal',
       aab: '../build/app/outputs/bundle/release/app-release.aab',
       json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
-      )
+    )
   end
 
-  desc "Promote internal track to beta"
-  lane :promote_to_beta do
+  desc "Submit minor update for INTERNAL TESTING build to Google Play"
+  lane :internal_minor do
+    # UPDATE VERSION NAME AND CODE
+    build_number = increment_build_number()
+    version_name = increment_version_name("minor")
+    flutter_set_version(
+        path_to_yaml: "../pubspec.yaml",
+        version_name: version_name,
+        version_code: build_number,
+    )
+    
+    # BUILD
+    sh "flutter build appbundle -v --no-deferred-components"
+    
+    # UPLOAD
+    upload_to_play_store(
+      root_url: "https://androidpublisher.googleapis.com/",
+      track: 'internal',
+      aab: '../build/app/outputs/bundle/release/app-release.aab',
+      json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
+    )
+  end
+  
+  desc "Submit major update for INTERNAL TESTING build to Google Play"
+  lane :internal_major do
+    # UPDATE VERSION NAME AND CODE
+    build_number = increment_build_number()
+    version_name = increment_version_name("major")
+    flutter_set_version(
+        path_to_yaml: "../pubspec.yaml",
+        version_name: version_name,
+        version_code: build_number,
+    )
+    
+    # BUILD
+    sh "flutter build appbundle -v --no-deferred-components"
+    
+    # UPLOAD
+    upload_to_play_store(
+      root_url: "https://androidpublisher.googleapis.com/",
+      track: 'internal',
+      aab: '../build/app/outputs/bundle/release/app-release.aab',
+      json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
+    )
+  end
+
+  desc "Submit patch update for PRODUCTION build to Google Play"
+  lane :production_patch do
+    # UPDATE VERSION NAME AND CODE
+    build_number = increment_build_number()
+    version_name = increment_version_name("patch")
+    flutter_set_version(
+        path_to_yaml: "../pubspec.yaml",
+        version_name: version_name,
+        version_code: build_number,
+    )
+    
+    # BUILD
+    sh "flutter build appbundle -v --no-deferred-components"
+
+    # UPLOAD
+    upload_to_play_store(
+      root_url: "https://androidpublisher.googleapis.com/",
+      track: 'production',
+      aab: '../build/app/outputs/bundle/release/app-release.aab',
+      json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
+    )
+  end
+
+  desc "Submit minor update for PRODUCTION build to Google Play"
+  lane :production_minor do
+    # UPDATE VERSION NAME AND CODE
+    build_number = increment_build_number()
+    version_name = increment_version_name("minor")
+    flutter_set_version(
+        path_to_yaml: "../pubspec.yaml",
+        version_name: version_name,
+        version_code: build_number,
+    )
+
+    # BUILD
+    sh "flutter build appbundle -v --no-deferred-components"
+
+    # UPLOAD
+    upload_to_play_store(
+      root_url: "https://androidpublisher.googleapis.com/",
+      track: 'production',
+      aab: '../build/app/outputs/bundle/release/app-release.aab',
+      json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
+    )
+  end
+
+  desc "Submit major update for PRODUCTION build to Google Play"
+  lane :production_major do
+    # UPDATE VERSION NAME AND CODE
+    build_number = increment_build_number()
+    version_name = increment_version_name("major")
+    flutter_set_version(
+        path_to_yaml: "../pubspec.yaml",
+        version_name: version_name,
+        version_code: build_number,
+    )
+
+    # BUILD
+    sh "flutter build appbundle -v --no-deferred-components"
+
+    # UPLOAD
+    upload_to_play_store(
+      root_url: "https://androidpublisher.googleapis.com/",
+      track: 'production',
+      aab: '../build/app/outputs/bundle/release/app-release.aab',
+      json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
+    )
+  end
+
+  desc "Promote INTERNAL track to BETA"
+  lane :promote_internal_to_beta do
     upload_to_play_store(
       root_url: "https://androidpublisher.googleapis.com/",
       track: 'internal',
@@ -29,11 +194,36 @@ platform :android do
       skip_upload_images: true,
       skip_upload_screenshots: true,
       json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
-      )
+    )
   end
 
-  desc "Promote beta track to prod"
-  lane :promote_to_production do
+  desc "Promote INTERNAL track to PRODUCTION"
+  lane :promote_internal_to_production do
+    # UPLOAD
+    upload_to_play_store(
+      root_url: "https://androidpublisher.googleapis.com/",
+      track: 'internal',
+      track_promote_to: 'production',
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
+    )
+
+    # GET VERSION NAME AND CODE
+    version_name = google_play_track_release_names(
+      track: "internal",
+      json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
+    )[0]
+    build_number = google_play_track_version_codes(
+      track: "internal",
+      json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
+    )[0]
+  end
+
+  desc "Promote BETA track to PRODUCTION"
+  lane :promote_beta_to_production do
+    # UPLOAD
     upload_to_play_store(
       root_url: "https://androidpublisher.googleapis.com/",
       track: 'beta',
@@ -42,6 +232,16 @@ platform :android do
       skip_upload_images: true,
       skip_upload_screenshots: true,
       json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
-      )
+    )
+
+    # GET VERSION NAME AND CODE
+    version_name = google_play_track_release_names(
+      track: "beta",
+      json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
+    )[0]
+    build_number = google_play_track_version_codes(
+      track: "beta",
+      json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
+    )[0]
   end
 end

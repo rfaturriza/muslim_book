@@ -9,6 +9,7 @@ import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/extension/dartz_ext.dart';
 import 'package:quranku/core/utils/extension/extension.dart';
 import 'package:quranku/core/utils/extension/string_ext.dart';
+import 'package:quranku/features/setting/presentation/bloc/language_setting/language_setting_bloc.dart';
 import 'package:quranku/generated/locale_keys.g.dart';
 
 import '../../../../core/constants/asset_constants.dart';
@@ -41,107 +42,147 @@ class ShalatInfoCard extends StatelessWidget {
           );
         }
       },
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        decoration: ShapeDecoration(
-          image: DecorationImage(
-            image: const CachedNetworkImageProvider(
-              AssetConst.backgroundShalatTimeCardNetwork,
-            ),
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(
-              Colors.black.withOpacity(0.5),
-              BlendMode.darken,
-            ),
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-        child: BlocBuilder<ShalatBloc, ShalatState>(
-          builder: (context, state) {
-            final shalat = HelperTimeShalat.getShalatNameByTime(
-              state.scheduleByDay?.asRight()?.schedule,
-            );
-            final shalatTime = HelperTimeShalat.getShalatTimeByShalatName(
-              state.scheduleByDay?.asRight()?.schedule,
-              shalat,
-            );
-
-            final place = state.geoLocation?.place ?? '-';
-            if (state.isLoading) {
-              return const Center(child: LinearProgressIndicator());
-            }
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      children: [
-                        if (state.scheduleByDay?.isRight() == true) ...[
-                          Text(
-                            shalat.capitalize(),
-                            style: context.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            shalatTime ?? '-',
-                            style: context.textTheme.titleMedium,
-                          ),
-                        ],
-                        if (state.scheduleByDay?.isLeft() == true) ...[
-                          Expanded(
-                            child: IconButton(
-                              onPressed: () {
-                                context.read<ShalatBloc>().add(
-                                      const ShalatEvent
-                                          .getShalatScheduleByDayEvent(),
-                                    );
-                              },
-                              icon: const Icon(Icons.refresh),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        if (state.scheduleByDay?.isLeft() == true) ...[
-                          Text(
-                            state.scheduleByDay?.asLeft().message ??
-                                emptyString,
-                            style: context.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                        if (state.scheduleByDay?.isRight() == true) ...[
-                          Text(
-                            place,
-                            style: context.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.end,
-                            overflow: TextOverflow.clip,
-                          ),
-                        ]
-                      ],
-                    ),
-                  ),
-                ],
+      child: Stack(
+        children: [
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            decoration: ShapeDecoration(
+              image: const DecorationImage(
+                image: CachedNetworkImageProvider(
+                  AssetConst.backgroundShalatTimeCardNetwork,
+                ),
+                alignment: Alignment.bottomCenter,
+                fit: BoxFit.cover,
               ),
-            );
-          },
-        ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            decoration: ShapeDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [
+                  Colors.black.withOpacity(0.85),
+                  Colors.black.withOpacity(0.2),
+                ], // Customize your gradient colors
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            child: BlocBuilder<LanguageSettingBloc, LanguageSettingState>(
+              buildWhen: (p, c) => p.languagePrayerTime != c.languagePrayerTime,
+              builder: (context, languageSettingState) {
+                return BlocBuilder<ShalatBloc, ShalatState>(
+                  builder: (context, state) {
+                    final shalat = () {
+                      if (state.scheduleByDay?.isRight() == true) {
+                        return HelperTimeShalat.getShalatNameByTime(
+                          state.scheduleByDay?.asRight()?.schedule,
+                          languageSettingState.languagePrayerTime,
+                        );
+                      }
+                      return emptyString;
+                    }();
+
+                    final shalatTime = () {
+                      if (state.scheduleByDay?.isRight() == true) {
+                        return HelperTimeShalat.getShalatTimeByShalatName(
+                          state.scheduleByDay?.asRight()?.schedule,
+                          shalat,
+                          languageSettingState.languagePrayerTime,
+                        );
+                      }
+                      return emptyString;
+                    }();
+
+                    final place = state.geoLocation?.place ?? '-';
+                    if (state.isLoading) {
+                      return const Center(child: LinearProgressIndicator());
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 17.5,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (state.scheduleByDay?.isRight() == true) ...[
+                                  Text(
+                                    shalat.capitalize(),
+                                    style:
+                                        context.textTheme.titleSmall?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    shalatTime ?? '-',
+                                    style: context.textTheme.titleSmall,
+                                  ),
+                                ],
+                                if (state.scheduleByDay?.isLeft() == true) ...[
+                                  Expanded(
+                                    child: IconButton(
+                                      onPressed: () {
+                                        context.read<ShalatBloc>().add(
+                                              const ShalatEvent
+                                                  .getShalatScheduleByDayEvent(),
+                                            );
+                                      },
+                                      icon: const Icon(Icons.refresh),
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                if (state.scheduleByDay?.isLeft() == true) ...[
+                                  Text(
+                                    state.scheduleByDay?.asLeft().message ??
+                                        emptyString,
+                                    style:
+                                        context.textTheme.titleSmall?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                                if (state.scheduleByDay?.isRight() == true) ...[
+                                  Text(
+                                    place,
+                                    style: context.textTheme.titleSmall,
+                                    textAlign: TextAlign.end,
+                                    overflow: TextOverflow.clip,
+                                  ),
+                                ]
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -59,7 +59,8 @@ class SurahExpansionTile extends StatelessWidget {
           (e) => ListTileSurah(
             onTapSurah: () => onTapSurah(e),
             number: e.surahNumber.toString(),
-            name: e.surahName.transliteration?.asLocale(context) ?? emptyString,
+            name: e.surahName.transliteration?.asLocale(context.locale) ??
+                emptyString,
             revelation: e.revelation,
             numberOfVerses: e.totalVerses.toString(),
             trailingText: e.surahName.short ?? emptyString,

@@ -1,7 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quranku/core/components/spacer.dart';
-import 'package:quranku/core/constants/font_constants.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/features/bookmark/domain/entities/verse_bookmark.codegen.dart';
 import 'package:quranku/features/quran/domain/entities/juz.codegen.dart';
@@ -14,6 +14,8 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../../../../../core/utils/extension/string_ext.dart';
 import '../../../../../core/utils/themes/color.dart';
 import '../../../../../injection.dart';
+import '../../../../setting/presentation/bloc/language_setting/language_setting_bloc.dart';
+import '../../../../setting/presentation/bloc/styling_setting/styling_setting_bloc.dart';
 import '../../../domain/entities/detail_surah.codegen.dart';
 import '../../bloc/audioVerse/audio_verse_bloc.dart';
 import '../../bloc/detailSurah/detail_surah_bloc.dart';
@@ -23,6 +25,7 @@ import 'number_pin.dart';
 enum ViewMode {
   juz,
   surah,
+  setting,
 }
 
 class VersesList extends StatefulWidget {
@@ -136,12 +139,21 @@ class _VersesListState extends State<VersesList> {
           },
           itemBuilder: (context, index) {
             if (index == 0 && isPreBismillah) {
-              return Text(
-                widget.preBismillah ?? emptyString,
-                textAlign: TextAlign.center,
-                style: context.textTheme.headlineMedium?.copyWith(
-                  fontFamily: FontConst.lpmqIsepMisbah,
-                ),
+              return BlocBuilder<StylingSettingBloc, StylingSettingState>(
+                buildWhen: (p, c) {
+                  return p.fontFamilyArabic != c.fontFamilyArabic ||
+                      p.arabicFontSize != c.arabicFontSize;
+                },
+                builder: (context, state) {
+                  return Text(
+                    widget.preBismillah ?? emptyString,
+                    textAlign: TextAlign.center,
+                    style: context.textTheme.titleLarge?.copyWith(
+                      fontSize: state.arabicFontSize,
+                      fontFamily: state.fontFamilyArabic,
+                    ),
+                  );
+                },
               );
             }
             final indexVerses = isPreBismillah ? index - 1 : index;
@@ -204,55 +216,81 @@ class ListTileVerses extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Expanded(
-                      child: VersePopupMenuButton(
-                        isBookmarked: verses.isBookmarked,
-                        onPlayPressed: () {
-                          audioVerseBloc
-                              .add(PlayAudioVerse(audioVerse: verses.audio));
-                        },
-                        onBookmarkPressed: () {
-                          _onPressedBookmark(
-                              context, verses, clickFrom, juz, surah);
-                        },
-                        onSharePressed: () {
-                          context.navigateTo(
-                            BlocProvider(
-                              create: (context) => sl<ShareVerseBloc>()
-                                ..add(
-                                  ShareVerseEvent.onInit(
-                                    verse: verses,
-                                    juz: juz,
-                                    surah: surah,
+                    if (clickFrom != ViewMode.setting) ...[
+                      Expanded(
+                        child: VersePopupMenuButton(
+                          isBookmarked: verses.isBookmarked,
+                          onPlayPressed: () {
+                            audioVerseBloc
+                                .add(PlayAudioVerse(audioVerse: verses.audio));
+                          },
+                          onBookmarkPressed: () {
+                            _onPressedBookmark(
+                                context, verses, clickFrom, juz, surah);
+                          },
+                          onSharePressed: () {
+                            context.navigateTo(
+                              BlocProvider(
+                                create: (context) => sl<ShareVerseBloc>()
+                                  ..add(
+                                    ShareVerseEvent.onInit(
+                                      verse: verses,
+                                      juz: juz,
+                                      surah: surah,
+                                    ),
                                   ),
-                                ),
-                              child: const ShareVerseScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                    )
+                                child: const ShareVerseScreen(),
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    ]
                   ],
                 ),
-                title: Text(
-                  verses.text?.arab ?? emptyString,
-                  textAlign: TextAlign.right,
-                  style: context.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontFamily: FontConst.lpmqIsepMisbah,
-                  ),
+                title: BlocBuilder<StylingSettingBloc, StylingSettingState>(
+                  buildWhen: (p, c) {
+                    return p.fontFamilyArabic != c.fontFamilyArabic ||
+                        p.arabicFontSize != c.arabicFontSize;
+                  },
+                  builder: (context, state) {
+                    return Text(
+                      verses.text?.arab ?? emptyString,
+                      textAlign: TextAlign.right,
+                      style: context.textTheme.headlineSmall?.copyWith(
+                        height: 2.5,
+                        fontFamily: state.fontFamilyArabic,
+                        fontSize: state.arabicFontSize,
+                      ),
+                    );
+                  },
                 ),
               ),
               const VSpacer(height: 8),
-              ListTileTransliteration(
-                text: verses.text?.transliteration?.asLocale(context) ??
-                    emptyString,
-                number: verses.number?.inSurah.toString() ?? emptyString,
+              BlocBuilder<LanguageSettingBloc, LanguageSettingState>(
+                buildWhen: (p, c) => p.languageLatin != c.languageLatin,
+                builder: (context, languageSettingState) {
+                  return ListTileTransliteration(
+                    text: verses.text?.transliteration?.asLocale(
+                          languageSettingState.languageLatin ?? context.locale,
+                        ) ??
+                        emptyString,
+                    number: verses.number?.inSurah.toString() ?? emptyString,
+                  );
+                },
               ),
               const VSpacer(height: 8),
-              ListTileTranslation(
-                text: verses.translation?.asLocale(context) ?? emptyString,
-                number: verses.number?.inSurah.toString() ?? emptyString,
+              BlocBuilder<LanguageSettingBloc, LanguageSettingState>(
+                buildWhen: (p, c) => p.languageQuran != c.languageQuran,
+                builder: (context, languageSettingState) {
+                  return ListTileTranslation(
+                    text: verses.translation?.asLocale(
+                          languageSettingState.languageQuran ?? context.locale,
+                        ) ??
+                        emptyString,
+                    number: verses.number?.inSurah.toString() ?? emptyString,
+                  );
+                },
               ),
               const VSpacer(height: 8),
             ],
@@ -310,25 +348,30 @@ class ListTileTranslation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = context.textTheme.bodySmall?.copyWith(
-      fontWeight: FontWeight.w500,
-    );
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('$number .', style: textStyle),
-          const HSpacer(width: 8),
-          Expanded(
-            child: Text(
-              text,
-              style: textStyle,
-              overflow: TextOverflow.clip,
-            ),
+    return BlocBuilder<StylingSettingBloc, StylingSettingState>(
+      builder: (context, state) {
+        final textStyle = context.textTheme.bodySmall?.copyWith(
+          fontWeight: FontWeight.w500,
+          fontSize: state.translationFontSize,
+        );
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('$number .', style: textStyle),
+              const HSpacer(width: 8),
+              Expanded(
+                child: Text(
+                  text,
+                  style: textStyle,
+                  overflow: TextOverflow.clip,
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -342,25 +385,30 @@ class ListTileTransliteration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = context.textTheme.bodySmall?.copyWith(
-      color: primaryColor.shade400,
-    );
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('$number .', style: textStyle),
-          const HSpacer(width: 8),
-          Expanded(
-            child: Text(
-              text,
-              style: textStyle,
-              overflow: TextOverflow.clip,
-            ),
+    return BlocBuilder<StylingSettingBloc, StylingSettingState>(
+      builder: (context, state) {
+        final textStyle = context.textTheme.bodySmall?.copyWith(
+          color: primaryColor.shade400,
+          fontSize: state.latinFontSize,
+        );
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('$number .', style: textStyle),
+              const HSpacer(width: 8),
+              Expanded(
+                child: Text(
+                  text,
+                  style: textStyle,
+                  overflow: TextOverflow.clip,
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

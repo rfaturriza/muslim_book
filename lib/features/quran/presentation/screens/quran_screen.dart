@@ -67,7 +67,6 @@ class QuranScreen extends StatelessWidget {
                             Tab(text: LocaleKeys.juz.tr()),
                             Tab(text: LocaleKeys.bookmark.tr()),
                           ],
-                          labelStyle: context.textTheme.titleLarge,
                         ),
                       ),
                     ),
