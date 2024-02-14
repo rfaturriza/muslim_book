@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:quranku/core/components/loading_dialog.dart';
 import 'package:quranku/core/utils/themes/color.dart';
 
 extension ContextExt on BuildContext {
@@ -91,6 +92,16 @@ extension ContextExt on BuildContext {
       context: this,
       textStyle: textTheme.bodySmall,
       backgroundColor: secondaryColor.shade800,
+    );
+  }
+
+  showLoadingDialog() {
+    showDialog(
+      context: this,
+      barrierDismissible: false,
+      builder: (context) {
+        return const LoadingDialog();
+      },
     );
   }
 }

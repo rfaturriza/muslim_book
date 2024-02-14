@@ -200,70 +200,78 @@ class ListTileVerses extends StatelessWidget {
               : Colors.transparent,
           child: Column(
             children: [
-              ListTile(
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                leading: Column(
-                  mainAxisSize: MainAxisSize.min,
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 8,
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                      width: 32,
-                      height: 32,
-                      child: FittedBox(
-                        child: NumberPin(
-                          number:
-                              verses.number?.inSurah.toString() ?? emptyString,
+                    Column(
+                      children: [
+                        SizedBox(
+                          width: 38,
+                          height: 38,
+                          child: FittedBox(
+                            child: NumberPin(
+                              number: verses.number?.inSurah.toString() ??
+                                  emptyString,
+                            ),
+                          ),
                         ),
+                        if (clickFrom != ViewMode.setting) ...[
+                          VersePopupMenuButton(
+                            isBookmarked: verses.isBookmarked,
+                            onPlayPressed: () {
+                              audioVerseBloc.add(
+                                  PlayAudioVerse(audioVerse: verses.audio));
+                            },
+                            onBookmarkPressed: () {
+                              _onPressedBookmark(
+                                  context, verses, clickFrom, juz, surah);
+                            },
+                            onSharePressed: () {
+                              context.navigateTo(
+                                BlocProvider(
+                                  create: (context) => sl<ShareVerseBloc>()
+                                    ..add(
+                                      ShareVerseEvent.onInit(
+                                        verse: verses,
+                                        juz: juz,
+                                        surah: surah,
+                                      ),
+                                    ),
+                                  child: const ShareVerseScreen(),
+                                ),
+                              );
+                            },
+                          )
+                        ]
+                      ],
+                    ),
+                    Expanded(
+                      child:
+                          BlocBuilder<StylingSettingBloc, StylingSettingState>(
+                        buildWhen: (p, c) {
+                          return p.fontFamilyArabic != c.fontFamilyArabic ||
+                              p.arabicFontSize != c.arabicFontSize;
+                        },
+                        builder: (context, state) {
+                          return Text(
+                            verses.text?.arab ?? emptyString,
+                            textAlign: TextAlign.right,
+                            style: context.textTheme.headlineSmall?.copyWith(
+                              height: 2.5,
+                              fontFamily: state.fontFamilyArabic,
+                              fontSize: state.arabicFontSize,
+                            ),
+                          );
+                        },
                       ),
                     ),
-                    if (clickFrom != ViewMode.setting) ...[
-                      Expanded(
-                        child: VersePopupMenuButton(
-                          isBookmarked: verses.isBookmarked,
-                          onPlayPressed: () {
-                            audioVerseBloc
-                                .add(PlayAudioVerse(audioVerse: verses.audio));
-                          },
-                          onBookmarkPressed: () {
-                            _onPressedBookmark(
-                                context, verses, clickFrom, juz, surah);
-                          },
-                          onSharePressed: () {
-                            context.navigateTo(
-                              BlocProvider(
-                                create: (context) => sl<ShareVerseBloc>()
-                                  ..add(
-                                    ShareVerseEvent.onInit(
-                                      verse: verses,
-                                      juz: juz,
-                                      surah: surah,
-                                    ),
-                                  ),
-                                child: const ShareVerseScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                      )
-                    ]
                   ],
-                ),
-                title: BlocBuilder<StylingSettingBloc, StylingSettingState>(
-                  buildWhen: (p, c) {
-                    return p.fontFamilyArabic != c.fontFamilyArabic ||
-                        p.arabicFontSize != c.arabicFontSize;
-                  },
-                  builder: (context, state) {
-                    return Text(
-                      verses.text?.arab ?? emptyString,
-                      textAlign: TextAlign.right,
-                      style: context.textTheme.headlineSmall?.copyWith(
-                        height: 2.5,
-                        fontFamily: state.fontFamilyArabic,
-                        fontSize: state.arabicFontSize,
-                      ),
-                    );
-                  },
                 ),
               ),
               const VSpacer(height: 8),

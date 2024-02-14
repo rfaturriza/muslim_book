@@ -20,7 +20,9 @@ void main() async {
 
   MobileAds.instance.initialize();
   MobileAds.instance.updateRequestConfiguration(
-    RequestConfiguration(testDeviceIds: AdMobConst.testDevice),
+    RequestConfiguration(
+      testDeviceIds: kDebugMode ? AdMobConst.testDevice : [],
+    ),
   );
   if (kDebugMode) {
     Bloc.observer = AppBlocObserver();

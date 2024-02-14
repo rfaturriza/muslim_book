@@ -4,7 +4,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdMobConst {
   static const List<String> testDevice = [
-    '016dc064-ed13-410f-817c-15cde9a02c61',
+    '44E72C0E3C5644F9CB7D8ADE66AE51E4',
   ];
   static const int maxFailedLoadAttempts = 3;
   static String rewardedSettingID = () {
@@ -16,6 +16,43 @@ class AdMobConst {
       return '';
     }
   }();
+  static String rewardedInterstitialSettingID = () {
+    if (Platform.isAndroid) {
+      return 'ca-app-pub-2622910246074431/6674988866';
+    } else if (Platform.isIOS) {
+      return '';
+    } else {
+      return '';
+    }
+  }();
+  static String bannerGeneralID = () {
+    if (Platform.isAndroid) {
+      return 'ca-app-pub-2622910246074431/2069998630';
+    } else if (Platform.isIOS) {
+      return '';
+    } else {
+      return '';
+    }
+  }();
+  static String bannerShareID = () {
+    if (Platform.isAndroid) {
+      return 'ca-app-pub-2622910246074431/2852121905';
+    } else if (Platform.isIOS) {
+      return '';
+    } else {
+      return '';
+    }
+  }();
+  static String rewardedInterstitialShareID = () {
+    if (Platform.isAndroid) {
+      return 'ca-app-pub-2622910246074431/5976160452';
+    } else if (Platform.isIOS) {
+      return '';
+    } else {
+      return '';
+    }
+  }();
+
   static const AdRequest request = AdRequest(
     nonPersonalizedAds: true,
   );
@@ -41,6 +78,52 @@ class AdMobConst {
               onLoaded: onLoaded,
             );
           }
+        },
+      ),
+    );
+  }
+
+  static Future<void> showRewardedInterstitialAd({
+    required String adUnitId,
+    required void Function(RewardItem rewardItem) onEarnedReward,
+    required void Function() onLoaded,
+    required void Function(String message) onFailedToLoad,
+  }) async {
+    await RewardedInterstitialAd.load(
+      adUnitId: adUnitId,
+      request: request,
+      rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
+        onAdLoaded: (RewardedInterstitialAd ad) {
+          onLoaded();
+          ad.show(onUserEarnedReward: (_, rewardItem) {
+            onEarnedReward(rewardItem);
+          });
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          onFailedToLoad(error.message);
+        },
+      ),
+    );
+  }
+
+  static Future<void> showRewardedAd({
+    required String adUnitId,
+    required void Function(RewardItem rewardItem) onEarnedReward,
+    required void Function() onLoaded,
+    required void Function(String message) onFailedToLoad,
+  }) async {
+    await RewardedAd.load(
+      adUnitId: adUnitId,
+      request: request,
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (RewardedAd ad) {
+          onLoaded();
+          ad.show(onUserEarnedReward: (_, rewardItem) {
+            onEarnedReward(rewardItem);
+          });
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          onFailedToLoad(error.message);
         },
       ),
     );
