@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:quranku/core/constants/admob_constants.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/extension/dartz_ext.dart';
@@ -16,58 +15,35 @@ import '../../../quran/presentation/screens/components/verses_list.dart';
 import '../bloc/styling_setting/styling_setting_bloc.dart';
 import 'components/styling_setting_bottom_sheet.dart';
 
-class StylingSettingScreen extends StatefulWidget {
+class StylingSettingScreen extends StatelessWidget {
   const StylingSettingScreen({super.key});
 
   @override
-  State<StylingSettingScreen> createState() => _StylingSettingScreenState();
-}
-
-class _StylingSettingScreenState extends State<StylingSettingScreen> {
-  RewardedAd? _rewardedAd;
-
-  @override
-  void initState() {
-    super.initState();
-    AdMobConst.createRewardedAd(
-      adUnitId: AdMobConst.rewardedSettingID,
-      onLoaded: (ad) {
-        setState(() {
-          _rewardedAd = ad;
-        });
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    _rewardedAd?.dispose();
-    super.dispose();
-  }
-
-  void showAdsFirst() {
-    _rewardedAd?.showRewardedAd(
-      adUnitId: AdMobConst.rewardedSettingID,
-      onUserEarnedReward: (ad, rewardItem) {
-        showModalBottomSheet(
-          barrierColor: Colors.transparent,
-          context: context,
-          enableDrag: true,
-          builder: (_) => StylingSettingBottomSheet(
-            title: LocaleKeys.fontStyle.tr(),
-          ),
-        );
-      },
-      onReloadAd: (RewardedAd ad) {
-        setState(() {
-          _rewardedAd = ad;
-        });
-      },
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
+    void showAdsFirst() {
+      context.showLoadingDialog();
+      AdMobConst.showRewardedAd(
+        adUnitId: AdMobConst.rewardedSettingID,
+        onEarnedReward: (rewardItem) {
+          showModalBottomSheet(
+            barrierColor: Colors.transparent,
+            context: context,
+            enableDrag: true,
+            builder: (_) => StylingSettingBottomSheet(
+              title: LocaleKeys.fontStyle.tr(),
+            ),
+          );
+        },
+        onLoaded: () {
+          context.navigateBack();
+        },
+        onFailedToLoad: (String message) {
+          context.navigateBack();
+          context.showErrorToast(message);
+        },
+      );
+    }
+
     return BlocListener<StylingSettingBloc, StylingSettingState>(
       listener: (context, state) {
         if (state.statusArabicFontFamily == FormzSubmissionStatus.failure) {
@@ -84,15 +60,10 @@ class _StylingSettingScreenState extends State<StylingSettingScreen> {
         }
       },
       child: Scaffold(
-        floatingActionButton: Builder(builder: (context) {
-          if (_rewardedAd == null) {
-            return const CircularProgressIndicator();
-          }
-          return FloatingActionButton(
-            onPressed: showAdsFirst,
-            child: const Icon(Icons.settings),
-          );
-        }),
+        floatingActionButton: FloatingActionButton(
+          onPressed: showAdsFirst,
+          child: const Icon(Icons.settings),
+        ),
         appBar: AppBarDetailScreen(title: LocaleKeys.stylingView.tr()),
         body: MultiBlocProvider(
           providers: [
