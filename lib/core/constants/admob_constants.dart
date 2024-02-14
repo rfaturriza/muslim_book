@@ -4,7 +4,8 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdMobConst {
   static const List<String> testDevice = [
-    '44E72C0E3C5644F9CB7D8ADE66AE51E4'];
+    '44E72C0E3C5644F9CB7D8ADE66AE51E4',
+  ];
   static const int maxFailedLoadAttempts = 3;
   static String rewardedSettingID = () {
     if (Platform.isAndroid) {
