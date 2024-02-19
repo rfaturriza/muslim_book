@@ -1,21 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
+import 'package:quranku/core/components/spacer.dart';
+import 'package:quranku/core/utils/extension/context_ext.dart';
 
 class LoadingDialog extends StatelessWidget {
-  const LoadingDialog({Key? key}) : super(key: key);
+  final String? message;
+
+  const LoadingDialog({Key? key, this.message}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      insetPadding: const EdgeInsets.all(20),
       backgroundColor: Colors.transparent,
+      alignment: Alignment.center,
       child: Container(
-        // padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.theme.colorScheme.background,
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Lottie.asset(
-          'assets/lottie/loadingText.json',
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const CircularProgressIndicator(),
+            const VSpacer(),
+            Text(message ?? 'Loading...',
+                style: context.textTheme.labelMedium?.copyWith(
+                  color: context.theme.colorScheme.secondary,
+                )),
+          ],
         ),
       ),
     );

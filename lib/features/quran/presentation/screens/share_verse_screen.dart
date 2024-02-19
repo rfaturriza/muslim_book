@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quranku/core/components/spacer.dart';
+import 'package:quranku/core/constants/admob_constants.dart';
 import 'package:quranku/core/constants/asset_constants.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/themes/color.dart';
@@ -45,11 +46,24 @@ class ShareVerseScreen extends StatelessWidget {
             child: IconButton(
               icon: const Icon(Icons.ios_share),
               onPressed: () {
+                context.showLoadingDialog();
                 final boundary = canvasGlobalKey.currentContext
                     ?.findRenderObject() as RenderRepaintBoundary?;
-                context.read<ShareVerseBloc>().add(
-                      ShareVerseEvent.onSharePressed(boundary),
-                    );
+                AdMobConst.showRewardedInterstitialAd(
+                  adUnitId: AdMobConst.rewardedInterstitialShareID,
+                  onEarnedReward: (_) {
+                    context.read<ShareVerseBloc>().add(
+                          ShareVerseEvent.onSharePressed(boundary),
+                        );
+                  },
+                  onFailedToLoad: (error) {
+                    context.navigateBack();
+                    context.showErrorToast(error);
+                  },
+                  onLoaded: () {
+                    context.navigateBack();
+                  },
+                );
               },
             ),
           )

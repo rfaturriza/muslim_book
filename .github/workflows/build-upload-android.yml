@@ -9,10 +9,15 @@ on:
         default: "internal"
         type: choice
         options:
-          - internal
-          - promote_to_beta
-          - promote_to_production
-          - production
+          - internal_patch
+          - internal_minor
+          - internal_major
+          - promote_internal_to_beta
+          - promote_beta_to_production
+          - promote_internal_to_production
+          - production_patch
+          - production_minor
+          - production_major
 
 jobs:
   release-android:
