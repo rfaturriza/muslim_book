@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'app.dart';
 import 'core/constants/admob_constants.dart';
 import 'core/utils/bloc_observe.dart';
+import 'core/utils/firebase_cloud_message.dart';
+import 'core/utils/local_notification.dart';
 import 'firebase_options.dart';
 import 'injection.dart';
 
@@ -19,7 +22,6 @@ void main() async {
   await Hive.initFlutter();
   await configureDependencies();
   await dotenv.load(fileName: ".env");
-
   MobileAds.instance.initialize();
   MobileAds.instance.updateRequestConfiguration(
     RequestConfiguration(
@@ -29,6 +31,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await initializeFCM();
+  configureFCMListeners();
+  FirebaseMessaging.onBackgroundMessage(backgroundHandler);
+  await sl<LocalNotification>().init();
   if (kDebugMode) {
     Bloc.observer = AppBlocObserver();
   }
