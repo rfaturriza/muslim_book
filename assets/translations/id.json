@@ -106,7 +106,7 @@
   "yourLastJuzReading": "Bacaan Terakhir: {}, Ayat {}",
   "readingHistory": "Riwayat Bacaan",
   "saveLastReading": "Simpan Bacaan Terakhir",
-  "saveLastReadingDescription": "Apakah Anda ingin menyimpan ayat ini sebagai bacaan terakhir?\n{}\n\n Anda dapat mematikan pengingat ini di pengaturan tampilan.",
+  "saveLastReadingDescription": "Apakah Anda ingin menyimpan ayat ini sebagai bacaan terakhir?\n{}, ayat {}\n\n Anda dapat mematikan pengingat ini di pengaturan tampilan.",
   "yes": "Ya",
   "no": "Tidak",
   "warningLastReading": "Pengingat Bacaan Terakhir",

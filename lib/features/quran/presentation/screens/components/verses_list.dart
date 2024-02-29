@@ -120,80 +120,82 @@ class _VersesListState extends State<VersesList> {
     final isPreBismillah = widget.preBismillah?.isNotEmpty == true;
     final isLastReadReminderOn =
         context.read<StylingSettingBloc>().state.isLastReadReminderOn;
-    return WillPopScope(
-      onWillPop: () async {
-        if (!isLastReadReminderOn) return true;
-        if (widget.view == ViewMode.setting) return true;
-        final visibleVerse = _itemPositionsListener.itemPositions.value
-            .map((e) => e.index)
-            .toList();
-        if (visibleVerse.isEmpty) return true;
-        final verseNumberVisible = () {
-          if (isPreBismillah && visibleVerse.first != 0) {
-            return visibleVerse.first - 1;
-          }
-          return visibleVerse.first;
-        }();
-        final verse = widget.listVerses[verseNumberVisible].number;
-        showAdaptiveDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Text(LocaleKeys.saveLastReading.tr()),
-                content: Text(
-                  LocaleKeys.saveLastReadingDescription.tr(args: [
+    Future<bool> showReminderDialog() async {
+      if (!isLastReadReminderOn) return true;
+      if (widget.view == ViewMode.setting) return true;
+      final visibleVerse = _itemPositionsListener.itemPositions.value
+          .map((e) => e.index)
+          .toList();
+      if (visibleVerse.isEmpty) return true;
+      final verseNumberVisible = () {
+        if (isPreBismillah && visibleVerse.first != 0) {
+          return visibleVerse.first - 1;
+        }
+        return visibleVerse.first;
+      }();
+      final verse = widget.listVerses[verseNumberVisible].number;
+      showAdaptiveDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(LocaleKeys.saveLastReading.tr()),
+              content: Text(
+                LocaleKeys.saveLastReadingDescription.tr(
+                  args: [
                     widget.view == ViewMode.juz
-                        ? '${widget.juz?.name}, ${verse?.inSurah}'
-                        : '${widget.surah?.name?.transliteration?.asLocale(context.locale)}, ${verse?.inSurah}'
-                  ]),
+                        ? '${widget.juz?.name}'
+                        : '${widget.surah?.name?.transliteration?.asLocale(context.locale)}',
+                    verse?.inSurah?.toString() ?? emptyString,
+                  ],
                 ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(false);
-                      Navigator.of(context).pop(false);
-                    },
-                    child: Text(LocaleKeys.no.tr()),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                    Navigator.of(context).pop(false);
+                  },
+                  child: Text(LocaleKeys.no.tr()),
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: context.theme.colorScheme.primary,
+                    foregroundColor: defaultColor.shade50,
                   ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: context.theme.colorScheme.primary,
-                      foregroundColor: defaultColor.shade50,
-                    ),
-                    onPressed: () {
-                      if (widget.view == ViewMode.juz) {
-                        context
-                            .read<LastReadCubit>()
-                            .setLastReadJuz(LastReadJuz(
-                              name: widget.juz?.name ?? emptyString,
-                              number: widget.juz?.number ?? 0,
-                              description:
-                                  widget.juz?.description ?? emptyString,
+                  onPressed: () {
+                    if (widget.view == ViewMode.juz) {
+                      context.read<LastReadCubit>().setLastReadJuz(LastReadJuz(
+                            name: widget.juz?.name ?? emptyString,
+                            number: widget.juz?.number ?? 0,
+                            description: widget.juz?.description ?? emptyString,
+                            versesNumber: verse!,
+                            createdAt: DateTime.now(),
+                          ));
+                    } else if (widget.view == ViewMode.surah) {
+                      context.read<LastReadCubit>().setLastReadSurah(
+                            LastReadSurah(
+                              revelation: widget.surah?.revelation,
+                              surahName: widget.surah?.name,
+                              surahNumber: widget.surah?.number ?? 0,
+                              totalVerses: widget.surah?.numberOfVerses ?? 0,
                               versesNumber: verse!,
                               createdAt: DateTime.now(),
-                            ));
-                      } else if (widget.view == ViewMode.surah) {
-                        context.read<LastReadCubit>().setLastReadSurah(
-                              LastReadSurah(
-                                revelation: widget.surah?.revelation,
-                                surahName: widget.surah?.name,
-                                surahNumber: widget.surah?.number ?? 0,
-                                totalVerses: widget.surah?.numberOfVerses ?? 0,
-                                versesNumber: verse!,
-                                createdAt: DateTime.now(),
-                              ),
-                            );
-                      }
-                      Navigator.of(context).pop(false);
-                      Navigator.of(context).pop(false);
-                    },
-                    child: Text(LocaleKeys.yes.tr()),
-                  ),
-                ],
-              );
-            });
-        return true;
-      },
+                            ),
+                          );
+                    }
+                    Navigator.of(context).pop(false);
+                    Navigator.of(context).pop(false);
+                  },
+                  child: Text(LocaleKeys.yes.tr()),
+                ),
+              ],
+            );
+          });
+      return true;
+    }
+
+    return WillPopScope(
+      onWillPop: showReminderDialog,
       child: BlocListener<AudioVerseBloc, AudioVerseState>(
         listener: (context, state) {
           if (state.audioVersePlaying != null) {

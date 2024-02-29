@@ -106,7 +106,7 @@
   "yourLastJuzReading": "Last Reading: {}, Verse {}",
   "readingHistory": "Reading History",
   "saveLastReading": "Save Last Reading",
-  "saveLastReadingDescription": "Do you want to save this verse as last read?\n{}\n\nYou can change this warning in the Styling View settings",
+  "saveLastReadingDescription": "Do you want to save this verse as last read?\n{}, verse {}\n\nYou can change this warning in the Styling View setting",
   "yes": "Yes",
   "no": "No",
   "warningLastReading": "Warning Last Reading",

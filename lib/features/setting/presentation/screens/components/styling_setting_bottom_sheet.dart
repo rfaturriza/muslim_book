@@ -24,7 +24,7 @@ class StylingSettingBottomSheet extends StatelessWidget {
         padding: const EdgeInsets.only(
           left: 16,
           right: 16,
-          bottom: 32,
+          bottom: 16,
         ),
         child: Wrap(
           children: [
