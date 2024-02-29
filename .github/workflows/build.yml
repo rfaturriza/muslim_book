@@ -40,11 +40,15 @@ jobs:
       - name: Check Flutter
         run: flutter doctor -v
 
-      - name: Add firebase_options
+      - name: configure firebase
         run: |
           echo "$FIREBASE_OPTIONS" | base64 --decode > lib/firebase_options.dart
+          echo "$FIREBASE_ANDROID_JSON" | base64 --decode > android/app/google-services.json
+          echo "$FIREBASE_IOS_PLIST" | base64 --decode > ios/Runner/GoogleService-Info.plist
         env:
-          FIREBASE_OPTIONS: ${{ secrets.FIREBASE_OPTIONS }}
+          FIREBASE_OPTIONS: ${{ secrets.FIREBASE_OPTION_FILE }}
+          FIREBASE_ANDROID_JSON: ${{ secrets.GOOGLE_SERVICE_ANDROID_JSON_FILE }}
+          FIREBASE_IOS_PLIST: ${{ secrets.GOOGLE_SERVICE_IOS_PLIST_FILE }}
 
       - name: Add .env file
         run: |
