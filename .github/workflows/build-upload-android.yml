@@ -33,7 +33,7 @@ jobs:
           java-version: 11
           distribution: 'temurin'
 
-      - name: configure firebase
+      - name: Configure Firebase
         run: |
           echo "$FIREBASE_OPTIONS" | base64 --decode > lib/firebase_options.dart
           echo "$FIREBASE_ANDROID_JSON" | base64 --decode > android/app/google-services.json
