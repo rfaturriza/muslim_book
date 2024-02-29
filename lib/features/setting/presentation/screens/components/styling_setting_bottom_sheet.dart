@@ -28,71 +28,128 @@ class StylingSettingBottomSheet extends StatelessWidget {
         ),
         child: Wrap(
           children: [
+            BlocBuilder<StylingSettingBloc, StylingSettingState>(
+              buildWhen: (p, c) =>
+                  p.isLastReadReminderOn != c.isLastReadReminderOn,
+              builder: (context, state) {
+                return CheckboxListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(LocaleKeys.warningLastReading.tr()),
+                  subtitle: Text(LocaleKeys.warningLastReadingDescription.tr()),
+                  value: state.isLastReadReminderOn,
+                  onChanged: (value) {
+                    stylingBloc.add(
+                      StylingSettingEvent.setLastReadReminder(
+                        isOn: value ?? true,
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
             const VSpacer(),
-            Text(LocaleKeys.arabic.tr()),
             BlocBuilder<StylingSettingBloc, StylingSettingState>(
               buildWhen: (p, c) => p.arabicFontSize != c.arabicFontSize,
               builder: (context, state) {
-                return Slider(
-                  value: state.arabicFontSize,
-                  min: 22,
-                  max: 50,
-                  onChanged: (size) {
-                    stylingBloc.add(
-                      StylingSettingEvent.setArabicFontSize(
-                        fontSize: size,
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-            Text(LocaleKeys.latin.tr()),
-            BlocBuilder<StylingSettingBloc, StylingSettingState>(
-              buildWhen: (p, c) => p.latinFontSize != c.latinFontSize,
-              builder: (context, state) {
-                return Slider(
-                  value: state.latinFontSize,
-                  min: 12,
-                  max: 30,
-                  onChanged: (size) {
-                    stylingBloc.add(
-                      StylingSettingEvent.setLatinFontSize(
-                        fontSize: size,
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-            Text(LocaleKeys.translation.tr()),
-            BlocBuilder<StylingSettingBloc, StylingSettingState>(
-              buildWhen: (p, c) =>
-                  p.translationFontSize != c.translationFontSize,
-              builder: (context, state) {
-                return Slider(
-                  value: state.translationFontSize,
-                  min: 12,
-                  max: 30,
-                  onChanged: (size) {
-                    stylingBloc.add(
-                      StylingSettingEvent.setTranslationFontSize(
-                        fontSize: size,
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-            Text(LocaleKeys.fontStyle.tr()),
-            _DropdownArabicFonts(
-              onChangeArabicFontFamily: (fontFamily) {
-                stylingBloc.add(
-                  StylingSettingEvent.setArabicFontFamily(
-                    fontFamily: fontFamily ?? FontConst.lpmqIsepMisbah,
+                return ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  title: Text(LocaleKeys.arabic.tr()),
+                  subtitle: Slider(
+                    value: state.arabicFontSize,
+                    min: 22,
+                    max: 50,
+                    onChanged: (size) {
+                      stylingBloc.add(
+                        StylingSettingEvent.setArabicFontSize(
+                          fontSize: size,
+                        ),
+                      );
+                    },
                   ),
                 );
               },
+            ),
+            BlocBuilder<StylingSettingBloc, StylingSettingState>(
+              buildWhen: (p, c) =>
+                  p.latinFontSize != c.latinFontSize ||
+                  p.isShowLatin != c.isShowLatin,
+              builder: (context, state) {
+                return ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  title: Text(LocaleKeys.latin.tr()),
+                  subtitle: Slider(
+                    value: state.latinFontSize,
+                    min: 12,
+                    max: 30,
+                    onChanged: (size) {
+                      stylingBloc.add(
+                        StylingSettingEvent.setLatinFontSize(
+                          fontSize: size,
+                        ),
+                      );
+                    },
+                  ),
+                  trailing: Checkbox(
+                    value: state.isShowLatin,
+                    onChanged: (value) {
+                      stylingBloc.add(
+                        StylingSettingEvent.setShowLatin(
+                          isShow: value ?? true,
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+            BlocBuilder<StylingSettingBloc, StylingSettingState>(
+              buildWhen: (p, c) =>
+                  p.translationFontSize != c.translationFontSize ||
+                  p.isShowTranslation != c.isShowTranslation,
+              builder: (context, state) {
+                return ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                    title: Text(LocaleKeys.translation.tr()),
+                    subtitle: Slider(
+                      value: state.translationFontSize,
+                      min: 12,
+                      max: 30,
+                      onChanged: (size) {
+                        stylingBloc.add(
+                          StylingSettingEvent.setTranslationFontSize(
+                            fontSize: size,
+                          ),
+                        );
+                      },
+                    ),
+                    trailing: Checkbox(
+                      value: state.isShowTranslation,
+                      onChanged: (value) {
+                        stylingBloc.add(
+                          StylingSettingEvent.setShowTranslation(
+                            isShow: value ?? true,
+                          ),
+                        );
+                      },
+                    ));
+              },
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              title: Text(LocaleKeys.fontStyle.tr()),
+              subtitle: _DropdownArabicFonts(
+                onChangeArabicFontFamily: (fontFamily) {
+                  stylingBloc.add(
+                    StylingSettingEvent.setArabicFontFamily(
+                      fontFamily: fontFamily ?? FontConst.lpmqIsepMisbah,
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
@@ -113,7 +170,7 @@ class _DropdownArabicFonts extends StatelessWidget {
       builder: (context, state) {
         return DropdownButton(
           icon: const Icon(Icons.font_download_outlined),
-          padding: const EdgeInsets.all(0),
+          padding: EdgeInsets.zero,
           isExpanded: true,
           underline: const SizedBox(),
           menuMaxHeight: context.height * 0.3,
@@ -122,6 +179,7 @@ class _DropdownArabicFonts extends StatelessWidget {
             return DropdownMenuItem(
               value: font,
               child: ListTile(
+                contentPadding: EdgeInsets.zero,
                 title: Text(
                   "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ",
                   textAlign: TextAlign.end,

@@ -101,5 +101,14 @@
   "latinTranslation": "Latin Translation",
   "prayTimeLanguage": "Pray Time Language",
   "stylingView": "Styling View",
-  "rateUs": "Rate Us"
+  "rateUs": "Rate Us",
+  "yourLastSurahReading": "Last Reading: Surah {}, Verse {}",
+  "yourLastJuzReading": "Last Reading: {}, Verse {}",
+  "readingHistory": "Reading History",
+  "saveLastReading": "Save Last Reading",
+  "saveLastReadingDescription": "Do you want to save this verse as last read?\n{}\n\nYou can change this warning in the Styling View settings",
+  "yes": "Yes",
+  "no": "No",
+  "warningLastReading": "Warning Last Reading",
+  "warningLastReadingDescription": "If On, you will be warned every time you exit the Surah/Juz page."
 }

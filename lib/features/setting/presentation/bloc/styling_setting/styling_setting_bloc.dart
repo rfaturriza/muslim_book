@@ -8,10 +8,16 @@ import 'package:quranku/features/setting/domain/usecases/styling/set_arabic_font
 import '../../../../../core/usecases/usecase.dart';
 import '../../../domain/usecases/styling/get_arabic_font_family_setting.dart';
 import '../../../domain/usecases/styling/get_arabic_font_size_setting.dart';
+import '../../../domain/usecases/styling/get_last_read_reminder_setting.dart';
 import '../../../domain/usecases/styling/get_latin_font_size_setting.dart';
+import '../../../domain/usecases/styling/get_show_latin_setting.dart';
+import '../../../domain/usecases/styling/get_show_translation_setting.dart';
 import '../../../domain/usecases/styling/get_translation_font_size_setting.dart';
 import '../../../domain/usecases/styling/set_arabic_font_family_setting.dart';
+import '../../../domain/usecases/styling/set_last_read_reminder_setting.dart';
 import '../../../domain/usecases/styling/set_latin_font_size_setting.dart';
+import '../../../domain/usecases/styling/set_show_latin_setting.dart';
+import '../../../domain/usecases/styling/set_show_translation_setting.dart';
 import '../../../domain/usecases/styling/set_translation_font_size_setting.dart';
 
 part 'styling_setting_bloc.freezed.dart';
@@ -29,6 +35,12 @@ class StylingSettingBloc
   final GetLatinFontSizeSetting getLatinFontSizeSetting;
   final SetTranslationFontSizeSetting setTranslationFontSizeSetting;
   final GetTranslationFontSizeSetting getTranslationFontSizeSetting;
+  final GetShowTranslationSetting getShowTranslationSetting;
+  final SetShowTranslationSetting setShowTranslationSetting;
+  final GetShowLatinSetting getShowLatinSetting;
+  final SetShowLatinSetting setShowLatinSetting;
+  final GetLastReadReminderSetting getLastReadReminderSetting;
+  final SetLastReadReminderSetting setLastReadReminderSetting;
 
   StylingSettingBloc(
     this.setArabicFontFamilySetting,
@@ -39,7 +51,14 @@ class StylingSettingBloc
     this.getLatinFontSizeSetting,
     this.setTranslationFontSizeSetting,
     this.getTranslationFontSizeSetting,
+    this.getShowTranslationSetting,
+    this.setShowTranslationSetting,
+    this.getShowLatinSetting,
+    this.setShowLatinSetting,
+    this.getLastReadReminderSetting,
+    this.setLastReadReminderSetting,
   ) : super(const StylingSettingState()) {
+    on<_Init>(_onInit);
     on<_SetArabicFontFamily>(_onSetArabicFontFamily);
     on<_SetArabicFontSize>(_onSetArabicFontSize);
     on<_SetLatinFontSize>(_onSetLatinFontSize);
@@ -48,6 +67,22 @@ class StylingSettingBloc
     on<_GetArabicFontSize>(_onGetArabicFontSize);
     on<_GetLatinFontSize>(_onGetLatinFontSize);
     on<_GetTranslationFontSize>(_onGetTranslationFontSize);
+    on<_SetLastReadReminder>(_onSetLastReadReminder);
+    on<_GetLastReadReminder>(_onGetLastReadReminder);
+    on<_SetShowLatin>(_onSetShowLatin);
+    on<_GetShowLatin>(_onGetShowLatin);
+    on<_SetShowTranslation>(_onSetShowTranslation);
+    on<_GetShowTranslation>(_onGetShowTranslation);
+  }
+
+  void _onInit(_Init event, emit) {
+    add(const _GetArabicFontFamily());
+    add(const _GetArabicFontSize());
+    add(const _GetLatinFontSize());
+    add(const _GetTranslationFontSize());
+    add(const _GetLastReadReminder());
+    add(const _GetShowLatin());
+    add(const _GetShowTranslation());
   }
 
   void _onSetArabicFontFamily(_SetArabicFontFamily event, emit) async {
@@ -162,6 +197,66 @@ class StylingSettingBloc
       (fontSize) => emit(state.copyWith(
         statusTranslationFontSize: FormzSubmissionStatus.success,
         translationFontSize: fontSize ?? FontConst.defaultTranslationFontSize,
+      )),
+    );
+  }
+
+  void _onSetLastReadReminder(_SetLastReadReminder event, emit) async {
+    final result = await setLastReadReminderSetting(event.isOn);
+    result.fold(
+      (failure) {},
+      (_) => emit(state.copyWith(
+        isLastReadReminderOn: event.isOn,
+      )),
+    );
+  }
+
+  void _onGetLastReadReminder(_GetLastReadReminder event, emit) async {
+    final result = await getLastReadReminderSetting(NoParams());
+    result.fold(
+      (failure) {},
+      (isReminderOn) => emit(state.copyWith(
+        isLastReadReminderOn: isReminderOn ?? true,
+      )),
+    );
+  }
+
+  void _onSetShowLatin(_SetShowLatin event, emit) async {
+    final result = await setShowLatinSetting(event.isShow);
+    result.fold(
+      (failure) {},
+      (_) => emit(state.copyWith(
+        isShowLatin: event.isShow,
+      )),
+    );
+  }
+
+  void _onGetShowLatin(_GetShowLatin event, emit) async {
+    final result = await getShowLatinSetting(NoParams());
+    result.fold(
+      (failure) {},
+      (isShow) => emit(state.copyWith(
+        isShowLatin: isShow ?? true,
+      )),
+    );
+  }
+
+  void _onSetShowTranslation(_SetShowTranslation event, emit) async {
+    final result = await setShowTranslationSetting(event.isShow);
+    result.fold(
+      (failure) {},
+      (_) => emit(state.copyWith(
+        isShowTranslation: event.isShow,
+      )),
+    );
+  }
+
+  void _onGetShowTranslation(_GetShowTranslation event, emit) async {
+    final result = await getShowTranslationSetting(NoParams());
+    result.fold(
+      (failure) {},
+      (isShow) => emit(state.copyWith(
+        isShowTranslation: isShow ?? true,
       )),
     );
   }

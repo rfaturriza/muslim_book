@@ -46,7 +46,7 @@ final themeData = ThemeData(
       statusBarIconBrightness: Brightness.light,
     ),
   ),
-  bottomSheetTheme:  BottomSheetThemeData(
+  bottomSheetTheme: BottomSheetThemeData(
     showDragHandle: true,
     dragHandleColor: defaultColor.shade100,
     dragHandleSize: const Size(32, 4),
@@ -68,11 +68,63 @@ final themeData = ThemeData(
     visualDensity: VisualDensity.compact,
     titleTextStyle: textTheme.titleMedium?.copyWith(
       color: defaultColor.shade50,
-      fontWeight: FontWeight.w500,
     ),
     subtitleTextStyle: textTheme.titleSmall?.copyWith(
       color: defaultColor.shade100,
+    ),
+  ),
+  dialogTheme: DialogTheme(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+    backgroundColor: backgroundColor,
+    titleTextStyle: textTheme.titleMedium?.copyWith(
+      color: defaultColor.shade50,
       fontWeight: FontWeight.w500,
+    ),
+    contentTextStyle: textTheme.titleSmall?.copyWith(
+      color: defaultColor.shade100,
+      fontWeight: FontWeight.w500,
+    ),
+  ),
+  textButtonTheme: TextButtonThemeData(
+    style: TextButton.styleFrom(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      foregroundColor: defaultColor.shade50,
+      textStyle: textTheme.titleSmall?.copyWith(
+        color: defaultColor.shade50,
+      ),
+    ),
+  ),
+  checkboxTheme: CheckboxThemeData(
+    fillColor: MaterialStateProperty.resolveWith((states) {
+      if (states.contains(MaterialState.selected)) {
+        return primaryColor.shade500;
+      }
+      return Colors.transparent;
+    }),
+    overlayColor:
+        MaterialStateProperty.all(defaultColor.shade50.withOpacity(0.1)),
+    checkColor: MaterialStateProperty.all(defaultColor.shade50),
+    shape: RoundedRectangleBorder(
+      side: BorderSide(
+        color: defaultColor.shade50,
+        width: 2,
+      ),
+      borderRadius: BorderRadius.circular(2),
+    ),
+    side: BorderSide(
+      color: defaultColor.shade50,
+      width: 2,
+    ),
+  ),
+  sliderTheme: SliderThemeData(
+    overlayShape: SliderComponentShape.noOverlay,
+    thumbShape: const RoundSliderThumbShape(
+      enabledThumbRadius: 8,
     ),
   ),
 );
