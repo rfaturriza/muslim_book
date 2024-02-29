@@ -147,4 +147,40 @@ class QuranRepositoryImpl implements QuranRepository {
       (r) => Right(r),
     );
   }
+
+  @override
+  Future<Either<Failure, Unit>> deleteAllLastReadJuz() async {
+    final result = await localDataSource.deleteAllLastReadJuz();
+    return result.fold(
+      (l) => Left(l),
+      (r) => Right(r),
+    );
+  }
+
+  @override
+  Future<Either<Failure, Unit>> deleteAllLastReadSurah() async {
+    final result = await localDataSource.deleteAllLastReadSurah();
+    return result.fold(
+      (l) => Left(l),
+      (r) => Right(r),
+    );
+  }
+
+  @override
+  Future<Either<Failure, Unit>> deleteLastReadJuz(DateTime createdAt) async {
+    final result = await localDataSource.deleteLastReadJuz(createdAt);
+    return result.fold(
+      (l) => Left(l),
+      (r) => Right(r),
+    );
+  }
+
+  @override
+  Future<Either<Failure, Unit>> deleteLastReadSurah(DateTime createdAt) async {
+    final result = await localDataSource.deleteLastReadSurah(createdAt);
+    return result.fold(
+      (l) => Left(l),
+      (r) => Right(r),
+    );
+  }
 }

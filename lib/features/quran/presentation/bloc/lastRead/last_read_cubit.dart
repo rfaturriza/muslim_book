@@ -6,6 +6,10 @@ import 'package:quranku/core/usecases/usecase.dart';
 
 import '../../../domain/entities/last_read_juz.codegen.dart';
 import '../../../domain/entities/last_read_surah.codegen.dart';
+import '../../../domain/usecases/delete_all_last_read_juz_usecase.dart';
+import '../../../domain/usecases/delete_all_last_read_surah_usecase.dart';
+import '../../../domain/usecases/delete_last_read_juz_usecase.dart';
+import '../../../domain/usecases/delete_last_read_surah_usecase.dart';
 import '../../../domain/usecases/get_last_read_juz_usecase.dart';
 import '../../../domain/usecases/get_last_read_surah_usecase.dart';
 import '../../../domain/usecases/set_last_read_juz_usecase.dart';
@@ -20,12 +24,20 @@ class LastReadCubit extends Cubit<LastReadState> {
   final GetLastReadJuzUseCase _getLastReadJuzUseCase;
   final SetLastReadSurahUseCase _setLastReadSurahUseCase;
   final SetLastReadJuzUseCase _setLastReadJuzUseCase;
+  final DeleteLastReadSurahUseCase _deleteLastReadSurahUseCase;
+  final DeleteLastReadJuzUseCase _deleteLastReadJuzUseCase;
+  final DeleteAllLastReadSurahUseCase _deleteAllLastReadSurahUseCase;
+  final DeleteAllLastReadJuzUseCase _deleteAllLastReadJuzUseCase;
 
   LastReadCubit(
     this._getLastReadSurahUseCase,
     this._getLastReadJuzUseCase,
     this._setLastReadSurahUseCase,
     this._setLastReadJuzUseCase,
+    this._deleteLastReadSurahUseCase,
+    this._deleteLastReadJuzUseCase,
+    this._deleteAllLastReadSurahUseCase,
+    this._deleteAllLastReadJuzUseCase,
   ) : super(const LastReadState());
 
   void setLastReadSurah(LastReadSurah surah) async {
@@ -108,5 +120,82 @@ class LastReadCubit extends Cubit<LastReadState> {
         ),
       ),
     );
+  }
+
+  void deleteLastReadSurah(DateTime createdAt) async {
+    final result = await _deleteLastReadSurahUseCase(createdAt);
+    final currentList = [...state.lastReadSurah];
+    currentList.removeWhere((e) => e.createdAt == createdAt);
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          statusSurah: FormzSubmissionStatus.failure,
+        ),
+      ),
+      (unit) => emit(
+        state.copyWith(
+          statusSurah: FormzSubmissionStatus.success,
+          lastReadSurah: currentList,
+        ),
+      ),
+    );
+  }
+
+  void deleteLastReadJuz(DateTime createdAt) async {
+    final result = await _deleteLastReadJuzUseCase(createdAt);
+    final currentList = [...state.lastReadJuz];
+    currentList.removeWhere((e) => e.createdAt == createdAt);
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          statusJuz: FormzSubmissionStatus.failure,
+        ),
+      ),
+      (unit) => emit(
+        state.copyWith(
+          statusJuz: FormzSubmissionStatus.success,
+          lastReadJuz: currentList,
+        ),
+      ),
+    );
+  }
+
+  void deleteAllLastReadSurah() async {
+    final result = await _deleteAllLastReadSurahUseCase(NoParams());
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          statusSurah: FormzSubmissionStatus.failure,
+        ),
+      ),
+      (unit) => emit(
+        state.copyWith(
+          statusSurah: FormzSubmissionStatus.success,
+          lastReadSurah: [],
+        ),
+      ),
+    );
+  }
+
+  void deleteAllLastReadJuz() async {
+    final result = await _deleteAllLastReadJuzUseCase(NoParams());
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          statusJuz: FormzSubmissionStatus.failure,
+        ),
+      ),
+      (unit) => emit(
+        state.copyWith(
+          statusJuz: FormzSubmissionStatus.success,
+          lastReadJuz: [],
+        ),
+      ),
+    );
+  }
+
+  void deleteAllLastRead() async {
+    deleteAllLastReadSurah();
+    deleteAllLastReadJuz();
   }
 }

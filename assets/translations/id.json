@@ -110,5 +110,7 @@
   "yes": "Ya",
   "no": "Tidak",
   "warningLastReading": "Pengingat Bacaan Terakhir",
-  "warningLastReadingDescription": "Jika Nyala, Anda akan diperingati setiap keluar dari halaman Surah/Juz."
+  "warningLastReadingDescription": "Jika Nyala, Anda akan diperingati setiap keluar dari halaman Surah/Juz.",
+  "deleted": "{} akan dihapus...",
+  "undo": "Batal"
 }

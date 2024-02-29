@@ -27,4 +27,12 @@ abstract class QuranLocalDataSource {
   Future<Either<Failure, Unit>> setLastReadJuz(LastReadJuzModel juz);
 
   Future<Either<Failure, List<LastReadJuzModel>>> getLastReadJuz();
+
+  Future<Either<Failure, Unit>> deleteLastReadSurah(DateTime createdAt);
+
+  Future<Either<Failure, Unit>> deleteLastReadJuz(DateTime createdAt);
+
+  Future<Either<Failure, Unit>> deleteAllLastReadSurah();
+
+  Future<Either<Failure, Unit>> deleteAllLastReadJuz();
 }

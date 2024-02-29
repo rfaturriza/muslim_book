@@ -36,7 +36,7 @@ const defaultColor = MaterialColor(
   0xFF414148,
   <int, Color>{
     50: Color(0xFFE8E8E9),
-    100: Color(0xFF7A7A7F),
+    100: Color(0xFFC2C2C4),
     200: Color(0xFF414148),
     300: Color(0xFF1A1A23),
     400: Color(0xFF121219),

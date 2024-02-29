@@ -187,13 +187,74 @@ class QuranLocalDataSourceImpl implements QuranLocalDataSource {
 
   @override
   Future<Either<Failure, Unit>> setLastReadSurah(
-    LastReadSurahModel surah,
-  ) async {
+    LastReadSurahModel surah,) async {
     try {
       var box = await Hive.openBox(HiveConst.lastReadSurahBox);
       final key = surah.createdAt.millisecondsSinceEpoch.toString();
       final jsonString = jsonEncode(surah.toJson());
       await box.put(key, jsonString);
+      return right(unit);
+    } catch (e) {
+      return left(
+        CacheFailure(
+          message: LocaleKeys.defaultErrorMessage.tr(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> deleteAllLastReadJuz() async {
+    try {
+      var box = await Hive.openBox(HiveConst.lastReadJuzBox);
+      await box.clear();
+      return right(unit);
+    } catch (e) {
+      return left(
+        CacheFailure(
+          message: LocaleKeys.defaultErrorMessage.tr(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> deleteAllLastReadSurah() async {
+    try {
+      var box = await Hive.openBox(HiveConst.lastReadSurahBox);
+      await box.clear();
+      return right(unit);
+    } catch (e) {
+      return left(
+        CacheFailure(
+          message: LocaleKeys.defaultErrorMessage.tr(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> deleteLastReadJuz(DateTime createdAt) async {
+    try {
+      var box = await Hive.openBox(HiveConst.lastReadJuzBox);
+      final key = createdAt.millisecondsSinceEpoch.toString();
+      await box.delete(key);
+      return right(unit);
+    } catch (e) {
+      return left(
+        CacheFailure(
+          message: LocaleKeys.defaultErrorMessage.tr(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> deleteLastReadSurah(DateTime createdAt) async {
+    try {
+      var box = await Hive.openBox(HiveConst.lastReadSurahBox);
+      final key = createdAt.millisecondsSinceEpoch.toString();
+      await box.delete(key);
       return right(unit);
     } catch (e) {
       return left(

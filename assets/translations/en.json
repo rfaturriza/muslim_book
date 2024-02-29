@@ -110,5 +110,7 @@
   "yes": "Yes",
   "no": "No",
   "warningLastReading": "Warning Last Reading",
-  "warningLastReadingDescription": "If On, you will be warned every time you exit the Surah/Juz page."
+  "warningLastReadingDescription": "If On, you will be warned every time you exit the Surah/Juz page.",
+  "deleted": "{} will be deleted...",
+  "undo": "Undo"
 }

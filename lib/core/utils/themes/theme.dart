@@ -127,4 +127,14 @@ final themeData = ThemeData(
       enabledThumbRadius: 8,
     ),
   ),
+  snackBarTheme: SnackBarThemeData(
+    behavior: SnackBarBehavior.floating,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+    backgroundColor: secondaryColor.shade800,
+    contentTextStyle: textTheme.titleSmall?.copyWith(
+      fontWeight: FontWeight.bold,
+    ),
+  ),
 );
