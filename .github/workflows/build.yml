@@ -40,6 +40,12 @@ jobs:
       - name: Check Flutter
         run: flutter doctor -v
 
+      - name: Add firebase_options
+        run: |
+          echo "$FIREBASE_OPTIONS" | base64 --decode > lib/firebase_options.dart
+        env:
+          FIREBASE_OPTIONS: ${{ secrets.FIREBASE_OPTIONS }}
+
       - name: Add .env file
         run: |
           echo "$ENV_FILE" | base64 --decode > .env
