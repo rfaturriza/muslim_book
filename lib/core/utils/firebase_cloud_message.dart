@@ -26,14 +26,6 @@ void configureFCMListeners() {
       payload: message.data.toString(),
     );
   });
-
-  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    // Handle incoming data message when the app is in the background or terminated
-    if (kDebugMode) {
-      print("Data message opened: ${message.data}");
-    }
-    // Extract data and perform custom actions
-  });
 }
 
 Future<void> backgroundHandler(RemoteMessage message) async {

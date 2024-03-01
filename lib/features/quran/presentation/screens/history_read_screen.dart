@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:quranku/core/components/loading_screen.dart';
 import 'package:quranku/core/components/spacer.dart';
+import 'package:quranku/core/constants/admob_constants.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/features/quran/presentation/bloc/lastRead/last_read_cubit.dart';
 import 'package:quranku/features/quran/presentation/screens/components/app_bar_detail_screen.dart';
@@ -18,8 +19,24 @@ import '../../domain/entities/surah.codegen.dart';
 import 'components/juz_list.dart';
 import 'components/surah_list.dart';
 
-class HistoryReadScreen extends StatelessWidget {
+class HistoryReadScreen extends StatefulWidget {
   const HistoryReadScreen({super.key});
+
+  @override
+  State<HistoryReadScreen> createState() => _HistoryReadScreenState();
+}
+
+class _HistoryReadScreenState extends State<HistoryReadScreen> {
+  @override
+  void initState() {
+    super.initState();
+    AdMobConst.showRewardedInterstitialAd(
+      adUnitId: AdMobConst.rewardedInterstitialLastReadHistory,
+      onEarnedReward: (_) {},
+      onLoaded: () {},
+      onFailedToLoad: (_) {},
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

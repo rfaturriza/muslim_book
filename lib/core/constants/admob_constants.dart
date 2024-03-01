@@ -54,6 +54,15 @@ class AdMobConst {
       return '';
     }
   }();
+  static String rewardedInterstitialLastReadHistory = () {
+    if (Platform.isAndroid) {
+      return 'ca-app-pub-2622910246074431/5837419450';
+    } else if (Platform.isIOS) {
+      return '';
+    } else {
+      return '';
+    }
+  }();
 
   static const AdRequest request = AdRequest(
     nonPersonalizedAds: true,
@@ -102,7 +111,8 @@ class AdMobConst {
           });
         },
         onAdFailedToLoad: (LoadAdError error) {
-          onFailedToLoad(error.message);
+          onLoaded();
+          onEarnedReward(RewardItem(1, 'Ads'));
         },
       ),
     );
