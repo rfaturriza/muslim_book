@@ -48,58 +48,60 @@ class _HistoryReadScreenState extends State<HistoryReadScreen> {
             ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
           final sortedJuz = state.lastReadJuz.toList()
             ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
-          return DefaultTabController(
-            length: 2,
-            child: Column(
-              children: [
-                TabBar(
-                  tabs: [
-                    Tab(text: LocaleKeys.surah.tr()),
-                    Tab(text: LocaleKeys.juz.tr()),
-                  ],
-                ),
-                Expanded(
-                  child: TabBarView(
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: [
-                      if (state.statusSurah ==
-                          FormzSubmissionStatus.inProgress) ...[
-                        const LoadingScreen(),
-                      ],
-                      if (state.statusSurah !=
-                          FormzSubmissionStatus.inProgress) ...[
-                        ListView.builder(
-                          padding: const EdgeInsets.all(10.0),
-                          physics: const BouncingScrollPhysics(),
-                          itemCount: sortedSurah.length,
-                          itemBuilder: (context, index) {
-                            return _SurahList(
-                              surah: sortedSurah[index],
-                            );
-                          },
-                        ),
-                      ],
-                      if (state.statusJuz ==
-                          FormzSubmissionStatus.inProgress) ...[
-                        const LoadingScreen(),
-                      ],
-                      if (state.statusJuz !=
-                          FormzSubmissionStatus.inProgress) ...[
-                        ListView.builder(
-                          padding: const EdgeInsets.all(10.0),
-                          physics: const BouncingScrollPhysics(),
-                          itemCount: sortedJuz.length,
-                          itemBuilder: (context, index) {
-                            return _JuzList(
-                              juz: sortedJuz[index],
-                            );
-                          },
-                        ),
-                      ]
+          return SafeArea(
+            child: DefaultTabController(
+              length: 2,
+              child: Column(
+                children: [
+                  TabBar(
+                    tabs: [
+                      Tab(text: LocaleKeys.surah.tr()),
+                      Tab(text: LocaleKeys.juz.tr()),
                     ],
                   ),
-                ),
-              ],
+                  Expanded(
+                    child: TabBarView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: [
+                        if (state.statusSurah ==
+                            FormzSubmissionStatus.inProgress) ...[
+                          const LoadingScreen(),
+                        ],
+                        if (state.statusSurah !=
+                            FormzSubmissionStatus.inProgress) ...[
+                          ListView.builder(
+                            padding: const EdgeInsets.all(10.0),
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: sortedSurah.length,
+                            itemBuilder: (context, index) {
+                              return _SurahList(
+                                surah: sortedSurah[index],
+                              );
+                            },
+                          ),
+                        ],
+                        if (state.statusJuz ==
+                            FormzSubmissionStatus.inProgress) ...[
+                          const LoadingScreen(),
+                        ],
+                        if (state.statusJuz !=
+                            FormzSubmissionStatus.inProgress) ...[
+                          ListView.builder(
+                            padding: const EdgeInsets.all(10.0),
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: sortedJuz.length,
+                            itemBuilder: (context, index) {
+                              return _JuzList(
+                                juz: sortedJuz[index],
+                              );
+                            },
+                          ),
+                        ]
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         },
