@@ -134,4 +134,95 @@ class StylingSettingLocalDataSourceImpl
       );
     }
   }
+
+  @override
+  Future<Either<Failure, Unit>> setLastReadReminder(bool isReminders) async {
+    try {
+      var box = await hive.openBox(HiveConst.settingBox);
+      await box.put(HiveConst.lastReadRemindersKey, isReminders);
+      return right(unit);
+    } catch (e) {
+      return left(
+        CacheFailure(
+          message: e.toString(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool?>> getLastReadReminder() async {
+    try {
+      var box = await hive.openBox(HiveConst.settingBox);
+      final bool? isReminders = await box.get(HiveConst.lastReadRemindersKey);
+      return right(isReminders);
+    } catch (e) {
+      return left(
+        CacheFailure(
+          message: e.toString(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool?>> getShowLatin() async {
+    try {
+      var box = await hive.openBox(HiveConst.settingBox);
+      final bool? isShowLatins = await box.get(HiveConst.latinLanguageKey);
+      return right(isShowLatins);
+    } catch (e) {
+      return left(
+        CacheFailure(
+          message: e.toString(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool?>> getShowTranslation() async {
+    try {
+      var box = await hive.openBox(HiveConst.settingBox);
+      final bool? isShowTranslations =
+          await box.get(HiveConst.translationFontSizeKey);
+      return right(isShowTranslations);
+    } catch (e) {
+      return left(
+        CacheFailure(
+          message: e.toString(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> setShowLatin(bool isShow) async {
+    try {
+      var box = await hive.openBox(HiveConst.settingBox);
+      await box.put(HiveConst.latinLanguageKey, isShow);
+      return right(unit);
+    } catch (e) {
+      return left(
+        CacheFailure(
+          message: e.toString(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> setShowTranslation(bool isShow) async {
+    try {
+      var box = await hive.openBox(HiveConst.settingBox);
+      await box.put(HiveConst.translationFontSizeKey, isShow);
+      return right(unit);
+    } catch (e) {
+      return left(
+        CacheFailure(
+          message: e.toString(),
+        ),
+      );
+    }
+  }
 }

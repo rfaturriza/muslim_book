@@ -15,5 +15,8 @@ class StylingSettingState with _$StylingSettingState {
     @Default(FontConst.lpmqIsepMisbah) String fontFamilyArabic,
     @Default(FontConst.defaultLatinFontSize) double latinFontSize,
     @Default(FontConst.defaultTranslationFontSize) double translationFontSize,
-  }) = _SettingState;
+    @Default(true) bool isLastReadReminderOn,
+    @Default(true) bool isShowLatin,
+    @Default(true) bool isShowTranslation,
+  }) = _StylingSettingState;
 }

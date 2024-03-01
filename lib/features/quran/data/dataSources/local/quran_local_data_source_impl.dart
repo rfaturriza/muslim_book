@@ -7,6 +7,8 @@ import 'package:injectable/injectable.dart';
 import 'package:quranku/core/error/failures.dart';
 import 'package:quranku/features/quran/data/dataSources/local/quran_local_data_source.dart';
 import 'package:quranku/features/quran/data/models/detail_juz_model.codegen.dart';
+import 'package:quranku/features/quran/data/models/last_read_juz_model.codegen.dart';
+import 'package:quranku/features/quran/data/models/last_read_surah_model.codegen.dart';
 
 import '../../../../../core/constants/hive_constants.dart';
 import '../../../../../generated/locale_keys.g.dart';
@@ -121,6 +123,138 @@ class QuranLocalDataSourceImpl implements QuranLocalDataSource {
       final key = surah.number.toString();
       final jsonString = jsonEncode(surah.toJson());
       await box.put(key, jsonString);
+      return right(unit);
+    } catch (e) {
+      return left(
+        CacheFailure(
+          message: LocaleKeys.defaultErrorMessage.tr(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<LastReadJuzModel>>> getLastReadJuz() async {
+    try {
+      var box = await Hive.openBox(HiveConst.lastReadJuzBox);
+      final listJuz = box.values.map((e) => jsonDecode(e)).toList();
+      final result = listJuz.map((e) => LastReadJuzModel.fromJson(e)).toList();
+      return right(result);
+    } catch (e) {
+      return left(
+        CacheFailure(
+          message: LocaleKeys.defaultErrorMessage.tr(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<LastReadSurahModel>>> getLastReadSurah() async {
+    try {
+      var box = await Hive.openBox(HiveConst.lastReadSurahBox);
+      final listSurah = box.values.map((e) => jsonDecode(e)).toList();
+      final result =
+          listSurah.map((e) => LastReadSurahModel.fromJson(e)).toList();
+      return right(result);
+    } catch (e) {
+      return left(
+        CacheFailure(
+          message: LocaleKeys.defaultErrorMessage.tr(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> setLastReadJuz(
+    LastReadJuzModel juz,
+  ) async {
+    try {
+      var box = await Hive.openBox(HiveConst.lastReadJuzBox);
+      final key = juz.createdAt.millisecondsSinceEpoch.toString();
+      final jsonString = jsonEncode(juz.toJson());
+      await box.put(key, jsonString);
+      return right(unit);
+    } catch (e) {
+      return left(
+        CacheFailure(
+          message: LocaleKeys.defaultErrorMessage.tr(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> setLastReadSurah(
+    LastReadSurahModel surah,) async {
+    try {
+      var box = await Hive.openBox(HiveConst.lastReadSurahBox);
+      final key = surah.createdAt.millisecondsSinceEpoch.toString();
+      final jsonString = jsonEncode(surah.toJson());
+      await box.put(key, jsonString);
+      return right(unit);
+    } catch (e) {
+      return left(
+        CacheFailure(
+          message: LocaleKeys.defaultErrorMessage.tr(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> deleteAllLastReadJuz() async {
+    try {
+      var box = await Hive.openBox(HiveConst.lastReadJuzBox);
+      await box.clear();
+      return right(unit);
+    } catch (e) {
+      return left(
+        CacheFailure(
+          message: LocaleKeys.defaultErrorMessage.tr(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> deleteAllLastReadSurah() async {
+    try {
+      var box = await Hive.openBox(HiveConst.lastReadSurahBox);
+      await box.clear();
+      return right(unit);
+    } catch (e) {
+      return left(
+        CacheFailure(
+          message: LocaleKeys.defaultErrorMessage.tr(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> deleteLastReadJuz(DateTime createdAt) async {
+    try {
+      var box = await Hive.openBox(HiveConst.lastReadJuzBox);
+      final key = createdAt.millisecondsSinceEpoch.toString();
+      await box.delete(key);
+      return right(unit);
+    } catch (e) {
+      return left(
+        CacheFailure(
+          message: LocaleKeys.defaultErrorMessage.tr(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> deleteLastReadSurah(DateTime createdAt) async {
+    try {
+      var box = await Hive.openBox(HiveConst.lastReadSurahBox);
+      final key = createdAt.millisecondsSinceEpoch.toString();
+      await box.delete(key);
       return right(unit);
     } catch (e) {
       return left(

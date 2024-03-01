@@ -26,7 +26,7 @@ class QuranRemoteDataSourceImpl implements QuranRemoteDataSource {
     } on DioException catch (e) {
       throw ServerException(e);
     } catch (e) {
-      throw ServerException(e as Exception);
+      throw ServerException(Exception('Unknown Error'));
     }
   }
 
@@ -41,7 +41,7 @@ class QuranRemoteDataSourceImpl implements QuranRemoteDataSource {
     } on DioException catch (e) {
       throw ServerException(e);
     } catch (e) {
-      throw ServerException(e as Exception);
+      throw ServerException(Exception('Unknown Error'));
     }
   }
 
@@ -56,7 +56,7 @@ class QuranRemoteDataSourceImpl implements QuranRemoteDataSource {
     } on DioException catch (e) {
       throw ServerException(e);
     } catch (e) {
-      throw ServerException(e as Exception);
+      throw ServerException(Exception('Unknown Error'));
     }
   }
 }

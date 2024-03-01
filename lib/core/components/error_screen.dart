@@ -17,24 +17,27 @@ class ErrorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            message ?? LocaleKeys.defaultErrorMessage.tr(),
-            textAlign: TextAlign.center,
-          ),
-          // icon Refresh
-          if (onRefresh != null) ...[
-            const VSpacer(),
-            IconButton(
-              onPressed: onRefresh,
-              icon: const Icon(Icons.refresh),
-              color: defaultColor.shade50,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              message ?? LocaleKeys.defaultErrorMessage.tr(),
+              textAlign: TextAlign.center,
             ),
-          ]
-        ],
+            // icon Refresh
+            if (onRefresh != null) ...[
+              const VSpacer(),
+              IconButton(
+                onPressed: onRefresh,
+                icon: const Icon(Icons.refresh),
+                color: defaultColor.shade50,
+              ),
+            ]
+          ],
+        ),
       ),
     );
   }

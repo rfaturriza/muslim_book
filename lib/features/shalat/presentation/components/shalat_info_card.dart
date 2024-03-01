@@ -9,10 +9,16 @@ import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/extension/dartz_ext.dart';
 import 'package:quranku/core/utils/extension/extension.dart';
 import 'package:quranku/core/utils/extension/string_ext.dart';
+import 'package:quranku/features/quran/presentation/bloc/lastRead/last_read_cubit.dart';
+import 'package:quranku/features/quran/presentation/screens/history_read_screen.dart';
 import 'package:quranku/features/setting/presentation/bloc/language_setting/language_setting_bloc.dart';
 import 'package:quranku/generated/locale_keys.g.dart';
 
 import '../../../../core/constants/asset_constants.dart';
+import '../../../quran/domain/entities/juz.codegen.dart';
+import '../../../quran/domain/entities/surah.codegen.dart';
+import '../../../quran/presentation/screens/components/juz_list.dart';
+import '../../../quran/presentation/screens/components/surah_list.dart';
 import '../bloc/shalat/shalat_bloc.dart';
 import '../helper/helper_time_shalat.dart';
 
@@ -74,116 +80,281 @@ class ShalatInfoCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            child: BlocBuilder<LanguageSettingBloc, LanguageSettingState>(
-              buildWhen: (p, c) => p.languagePrayerTime != c.languagePrayerTime,
-              builder: (context, languageSettingState) {
-                return BlocBuilder<ShalatBloc, ShalatState>(
-                  builder: (context, state) {
-                    final shalat = () {
-                      if (state.scheduleByDay?.isRight() == true) {
-                        return HelperTimeShalat.getShalatNameByTime(
-                          state.scheduleByDay?.asRight()?.schedule,
-                          languageSettingState.languagePrayerTime,
-                        );
-                      }
-                      return emptyString;
-                    }();
-
-                    final shalatTime = () {
-                      if (state.scheduleByDay?.isRight() == true) {
-                        return HelperTimeShalat.getShalatTimeByShalatName(
-                          state.scheduleByDay?.asRight()?.schedule,
-                          shalat,
-                          languageSettingState.languagePrayerTime,
-                        );
-                      }
-                      return emptyString;
-                    }();
-
-                    final place = state.geoLocation?.place ?? '-';
-                    if (state.isLoading) {
-                      return const Center(child: LinearProgressIndicator());
-                    }
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 17.5,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (state.scheduleByDay?.isRight() == true) ...[
-                                  Text(
-                                    shalat.capitalize(),
-                                    style:
-                                        context.textTheme.titleSmall?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    shalatTime ?? '-',
-                                    style: context.textTheme.titleSmall,
-                                  ),
-                                ],
-                                if (state.scheduleByDay?.isLeft() == true) ...[
-                                  Expanded(
-                                    child: IconButton(
-                                      onPressed: () {
-                                        context.read<ShalatBloc>().add(
-                                              const ShalatEvent
-                                                  .getShalatScheduleByDayEvent(),
-                                            );
-                                      },
-                                      icon: const Icon(Icons.refresh),
-                                    ),
-                                  ),
-                                ],
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                if (state.scheduleByDay?.isLeft() == true) ...[
-                                  Text(
-                                    state.scheduleByDay?.asLeft().message ??
-                                        emptyString,
-                                    style:
-                                        context.textTheme.titleSmall?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                                if (state.scheduleByDay?.isRight() == true) ...[
-                                  Text(
-                                    place,
-                                    style: context.textTheme.titleSmall,
-                                    textAlign: TextAlign.end,
-                                    overflow: TextOverflow.clip,
-                                  ),
-                                ]
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                );
-              },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 17.5,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const _PrayTimeInfo(),
+                  Divider(
+                    color: context.theme.colorScheme.secondary,
+                    thickness: 2,
+                  ),
+                  const _LastReadInfo(),
+                ],
+              ),
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class _PrayTimeInfo extends StatelessWidget {
+  const _PrayTimeInfo();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<LanguageSettingBloc, LanguageSettingState>(
+      buildWhen: (p, c) => p.languagePrayerTime != c.languagePrayerTime,
+      builder: (context, languageSettingState) {
+        return BlocBuilder<ShalatBloc, ShalatState>(
+          builder: (context, state) {
+            final shalat = () {
+              if (state.scheduleByDay?.isRight() == true) {
+                return HelperTimeShalat.getShalatNameByTime(
+                  state.scheduleByDay?.asRight()?.schedule,
+                  languageSettingState.languagePrayerTime,
+                );
+              }
+              return emptyString;
+            }();
+
+            final shalatTime = () {
+              if (state.scheduleByDay?.isRight() == true) {
+                return HelperTimeShalat.getShalatTimeByShalatName(
+                  state.scheduleByDay?.asRight()?.schedule,
+                  shalat,
+                  languageSettingState.languagePrayerTime,
+                );
+              }
+              return emptyString;
+            }();
+
+            final place = state.geoLocation?.place ?? '-';
+            if (state.isLoading) {
+              return const Center(child: LinearProgressIndicator());
+            }
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (state.scheduleByDay?.isRight() == true) ...[
+                        Text(
+                          shalat.capitalize(),
+                          style: context.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          shalatTime ?? '-',
+                          style: context.textTheme.titleSmall,
+                        ),
+                      ],
+                      if (state.scheduleByDay?.isLeft() == true) ...[
+                        Expanded(
+                          child: IconButton(
+                            onPressed: () {
+                              context.read<ShalatBloc>().add(
+                                    const ShalatEvent
+                                        .getShalatScheduleByDayEvent(),
+                                  );
+                            },
+                            icon: const Icon(Icons.refresh),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      if (state.scheduleByDay?.isLeft() == true) ...[
+                        Text(
+                          state.scheduleByDay?.asLeft().message ?? emptyString,
+                          style: context.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                      if (state.scheduleByDay?.isRight() == true) ...[
+                        Text(
+                          place,
+                          style: context.textTheme.titleSmall,
+                          textAlign: TextAlign.end,
+                          overflow: TextOverflow.clip,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _LastReadInfo extends StatelessWidget {
+  const _LastReadInfo();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<LastReadCubit, LastReadState>(
+      builder: (context, state) {
+        if (state.lastReadSurah.isEmpty && state.lastReadJuz.isEmpty) {
+          return const SizedBox();
+        }
+        var lastReadSurah =
+            state.lastReadSurah.isEmpty ? null : state.lastReadSurah.last;
+        var lastReadJuz =
+            state.lastReadJuz.isEmpty ? null : state.lastReadJuz.last;
+        var lastReadText = emptyString;
+        void setLastReadTextSurah() {
+          lastReadText = LocaleKeys.yourLastSurahReading.tr(
+            args: [
+              lastReadSurah?.surahName?.transliteration?.asLocale(
+                    context.locale,
+                  ) ??
+                  emptyString,
+              lastReadSurah?.versesNumber.inSurah.toString() ?? emptyString,
+            ],
+          );
+        }
+
+        void setLastReadTextJuz() {
+          lastReadText = LocaleKeys.yourLastJuzReading.tr(
+            args: [
+              lastReadJuz?.name ?? emptyString,
+              lastReadJuz?.versesNumber.inSurah.toString() ?? emptyString,
+            ],
+          );
+        }
+
+        if (lastReadSurah != null && lastReadJuz != null) {
+          if (lastReadSurah.createdAt.isAfter(lastReadJuz.createdAt)) {
+            setLastReadTextSurah();
+          }
+          if (lastReadSurah.createdAt.isBefore(lastReadJuz.createdAt)) {
+            setLastReadTextJuz();
+          }
+        } else {
+          if (lastReadSurah != null) {
+            setLastReadTextSurah();
+          } else {
+            setLastReadTextJuz();
+          }
+        }
+
+        final progress = lastReadSurah?.progress ?? lastReadJuz?.progress ?? 0;
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  lastReadText.split(':').first,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.start,
+                  overflow: TextOverflow.clip,
+                ),
+                Text(
+                  lastReadText.split(':').last,
+                  style: context.textTheme.titleSmall,
+                  textAlign: TextAlign.start,
+                  overflow: TextOverflow.clip,
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                IconButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
+                    context.navigateTo(const HistoryReadScreen());
+                  },
+                  icon: const Icon(
+                    Icons.list_alt_rounded,
+                  ),
+                  color: context.theme.colorScheme.secondary,
+                ),
+                InkWell(
+                  onTap: () {
+                    if (!lastReadText.contains('Juz')) {
+                      SurahList.onTapSurah(
+                        context,
+                        Surah(
+                          number: lastReadSurah?.surahNumber,
+                          name: lastReadSurah?.surahName,
+                        ),
+                        jumpToVerse: lastReadSurah?.versesNumber.inSurah ?? 0,
+                      );
+                    } else {
+                      JuzList.onTapJuz(
+                        context,
+                        JuzConstant(
+                          number: lastReadJuz?.number ?? 0,
+                          name: lastReadJuz?.name ?? emptyString,
+                          description: lastReadJuz?.description ?? emptyString,
+                        ),
+                        jumpToVerse: lastReadJuz?.versesNumber.inQuran ?? 0,
+                      );
+                    }
+                  },
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      IconButton(
+                        style: IconButton.styleFrom(
+                          foregroundColor: context.theme.colorScheme.secondary,
+                          backgroundColor: context.theme.colorScheme.background
+                              .withAlpha(150),
+                          padding: EdgeInsets.zero,
+                        ),
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.arrow_forward,
+                        ),
+                      ),
+                      CircularProgressIndicator(
+                        value: progress,
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          context.theme.colorScheme.secondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
     );
   }
 }

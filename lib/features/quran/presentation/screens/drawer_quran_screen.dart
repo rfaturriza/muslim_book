@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:quranku/core/constants/url_constants.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
@@ -102,6 +103,18 @@ class _Footer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        ButtonDrawer(
+          onTap: () async {
+            final inAppReview = InAppReview.instance;
+
+            if (await inAppReview.isAvailable()) {
+              inAppReview.requestReview();
+            }
+          },
+          icon: Icons.rate_review_rounded,
+          title: LocaleKeys.rateUs.tr(),
+        ),
+        const VSpacer(),
         ButtonDrawer(
           onTap: () {
             context.navigateTo(const DonationPaymentScreen());

@@ -19,31 +19,24 @@ class PermissionDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: context.theme.colorScheme.background,
-      title: Text(
-        title ?? LocaleKeys.permissionTitle.tr(),
-        style: context.textTheme.titleLarge,
-      ),
+      title: Text(title ?? LocaleKeys.permissionTitle.tr()),
       content: Text(
         content ?? LocaleKeys.defaultPermissionMessage.tr(),
-        style: context.textTheme.titleMedium,
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text(
-            LocaleKeys.cancel.tr(),
-            style: context.textTheme.titleMedium,
-          ),
+          child: Text(LocaleKeys.cancel.tr()),
         ),
-        ElevatedButton(
+        TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: context.theme.colorScheme.primary,
+          ),
           onPressed: () {
             onOk();
             Navigator.pop(context);
           },
-          child: Text(
-            LocaleKeys.next.tr(),
-            style: context.textTheme.titleLarge,
-          ),
+          child: Text(LocaleKeys.next.tr()),
         ),
       ],
     );

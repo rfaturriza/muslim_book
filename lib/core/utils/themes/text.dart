@@ -58,7 +58,6 @@ final textTheme = TextTheme(
     fontSize: 18,
     color: defaultColor.shade50,
     fontWeight: FontWeight.w500,
-    letterSpacing: 1.25,
   ),
   bodySmall: TextStyle(
     fontSize: 11,
@@ -70,7 +69,11 @@ final textTheme = TextTheme(
     fontSize: 9,
     color: defaultColor.shade50,
     fontWeight: FontWeight.w400,
-    letterSpacing: 1.5,
+  ),
+  labelMedium: TextStyle(
+    fontSize: 12,
+    color: defaultColor.shade50,
+    fontWeight: FontWeight.w400,
   ),
 ).apply(
   fontFamily: 'Lato',

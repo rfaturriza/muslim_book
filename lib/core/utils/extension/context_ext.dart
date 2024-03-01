@@ -21,9 +21,11 @@ extension ContextExt on BuildContext {
 
   double get bottomPadding => padding.bottom;
 
-  bool get isLandscape => MediaQuery.of(this).orientation == Orientation.landscape;
+  bool get isLandscape =>
+      MediaQuery.of(this).orientation == Orientation.landscape;
 
-  bool get isPortrait => MediaQuery.of(this).orientation == Orientation.portrait;
+  bool get isPortrait =>
+      MediaQuery.of(this).orientation == Orientation.portrait;
 
   dismissKeyboard() {
     FocusScope.of(this).requestFocus(FocusNode());
@@ -102,6 +104,23 @@ extension ContextExt on BuildContext {
       builder: (context) {
         return const LoadingDialog();
       },
+    );
+  }
+
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> appSnackBar(
+    String message, {
+    SnackBarAction? action,
+  }) {
+    return ScaffoldMessenger.of(this).showSnackBar(
+      SnackBar(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        backgroundColor: secondaryColor.shade800,
+        content: Text(message),
+        action: action,
+        duration: const Duration(seconds: 3),
+      ),
     );
   }
 }

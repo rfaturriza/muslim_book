@@ -3,7 +3,7 @@ import 'package:injectable/injectable.dart';
 
 import 'injection.config.dart';
 
-final sl = GetIt.instance;
+final sl = GetIt.I;
 
 @InjectableInit(
   initializerName: 'init',
