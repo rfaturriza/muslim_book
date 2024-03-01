@@ -89,6 +89,7 @@ class LastReadCubit extends Cubit<LastReadState> {
   }
 
   void getLastReadSurah() async {
+    emit(state.copyWith(statusSurah: FormzSubmissionStatus.inProgress));
     final result = await _getLastReadSurahUseCase(NoParams());
     result.fold(
       (failure) => emit(
@@ -100,12 +101,13 @@ class LastReadCubit extends Cubit<LastReadState> {
         state.copyWith(
           statusSurah: FormzSubmissionStatus.success,
           lastReadSurah: surah ?? [],
-        ),
-      ),
+            ),
+          ),
     );
   }
 
   void getLastReadJuz() async {
+    emit(state.copyWith(statusJuz: FormzSubmissionStatus.inProgress));
     final result = await _getLastReadJuzUseCase(NoParams());
     result.fold(
       (failure) => emit(
@@ -117,8 +119,8 @@ class LastReadCubit extends Cubit<LastReadState> {
         state.copyWith(
           statusJuz: FormzSubmissionStatus.success,
           lastReadJuz: juz ?? [],
-        ),
-      ),
+            ),
+          ),
     );
   }
 

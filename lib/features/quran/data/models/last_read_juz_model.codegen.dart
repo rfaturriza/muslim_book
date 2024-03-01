@@ -22,7 +22,7 @@ class LastReadJuzModel with _$LastReadJuzModel {
       _$LastReadJuzModelFromJson(json);
 
   factory LastReadJuzModel.fromEntity(LastReadJuz entity) => LastReadJuzModel(
-    name: entity.name,
+        name: entity.name,
         number: entity.number,
         description: entity.description,
         versesNumber: entity.versesNumber.toModel(),

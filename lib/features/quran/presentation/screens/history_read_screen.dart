@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:formz/formz.dart';
+import 'package:quranku/core/components/loading_screen.dart';
 import 'package:quranku/core/components/spacer.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/features/quran/presentation/bloc/lastRead/last_read_cubit.dart';
@@ -43,26 +45,40 @@ class HistoryReadScreen extends StatelessWidget {
                   child: TabBarView(
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
-                      ListView.builder(
-                        padding: const EdgeInsets.all(10.0),
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: sortedSurah.length,
-                        itemBuilder: (context, index) {
-                          return _SurahList(
-                            surah: sortedSurah[index],
-                          );
-                        },
-                      ),
-                      ListView.builder(
-                        padding: const EdgeInsets.all(10.0),
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: sortedJuz.length,
-                        itemBuilder: (context, index) {
-                          return _JuzList(
-                            juz: sortedJuz[index],
-                          );
-                        },
-                      ),
+                      if (state.statusSurah ==
+                          FormzSubmissionStatus.inProgress) ...[
+                        const LoadingScreen(),
+                      ],
+                      if (state.statusSurah !=
+                          FormzSubmissionStatus.inProgress) ...[
+                        ListView.builder(
+                          padding: const EdgeInsets.all(10.0),
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: sortedSurah.length,
+                          itemBuilder: (context, index) {
+                            return _SurahList(
+                              surah: sortedSurah[index],
+                            );
+                          },
+                        ),
+                      ],
+                      if (state.statusJuz ==
+                          FormzSubmissionStatus.inProgress) ...[
+                        const LoadingScreen(),
+                      ],
+                      if (state.statusJuz !=
+                          FormzSubmissionStatus.inProgress) ...[
+                        ListView.builder(
+                          padding: const EdgeInsets.all(10.0),
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: sortedJuz.length,
+                          itemBuilder: (context, index) {
+                            return _JuzList(
+                              juz: sortedJuz[index],
+                            );
+                          },
+                        ),
+                      ]
                     ],
                   ),
                 ),

@@ -107,10 +107,10 @@ class _VersesListState extends State<VersesList> {
     if (index != -1) {
       final indices = _itemPositionsListener.itemPositions.value
           .where((item) {
-        final isTopVisible = item.itemLeadingEdge >= 0;
-        final isBottomVisible = item.itemTrailingEdge <= 1.03;
-        return isTopVisible && isBottomVisible;
-      })
+            final isTopVisible = item.itemLeadingEdge >= 0;
+            final isBottomVisible = item.itemTrailingEdge <= 1.03;
+            return isTopVisible && isBottomVisible;
+          })
           .map((e) => e.index)
           .toList();
       final lastItem = indices.last;
@@ -192,8 +192,8 @@ class _VersesListState extends State<VersesList> {
                           );
                     } else if (widget.view == ViewMode.surah) {
                       context.read<LastReadCubit>().setLastReadSurah(
-                        LastReadSurah(
-                          revelation: widget.surah?.revelation,
+                            LastReadSurah(
+                              revelation: widget.surah?.revelation,
                               surahName: widget.surah?.name,
                               surahNumber: widget.surah?.number ?? 0,
                               totalVerses: widget.surah?.numberOfVerses ?? 0,
@@ -201,7 +201,7 @@ class _VersesListState extends State<VersesList> {
                               progress: _progress.value,
                               createdAt: DateTime.now(),
                             ),
-                      );
+                          );
                     }
                     Navigator.of(context).pop(false);
                     Navigator.of(context).pop(false);
