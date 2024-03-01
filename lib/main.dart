@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import 'app.dart';
 import 'core/constants/admob_constants.dart';
@@ -35,6 +36,8 @@ void main() async {
   configureFCMListeners();
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
   await sl<LocalNotification>().init();
+  timeago.setLocaleMessages('id', timeago.IdMessages());
+  timeago.setLocaleMessages('en', timeago.EnMessages());
   if (kDebugMode) {
     Bloc.observer = AppBlocObserver();
   }

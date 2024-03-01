@@ -8,6 +8,7 @@ import 'package:quranku/core/network/networkInfo/network_info_bloc.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/themes/theme.dart';
 import 'package:quranku/features/quran/presentation/bloc/juz/juz_cubit.dart';
+import 'package:quranku/features/quran/presentation/bloc/lastRead/last_read_cubit.dart';
 import 'package:quranku/features/quran/presentation/screens/quran_screen.dart';
 import 'package:quranku/features/shalat/presentation/bloc/shalat/shalat_bloc.dart';
 import 'package:quranku/generated/locale_keys.g.dart';
@@ -41,6 +42,11 @@ class App extends StatelessWidget {
         BlocProvider<ShalatBloc>(
           create: (context) => sl<ShalatBloc>()..add(ShalatEvent.init(locale)),
         ),
+        BlocProvider<LastReadCubit>(
+          create: (context) => sl<LastReadCubit>()
+            ..getLastReadJuz()
+            ..getLastReadSurah(),
+        ),
         BlocProvider<LanguageSettingBloc>(
           create: (context) => sl<LanguageSettingBloc>()
             ..add(const LanguageSettingEvent.getLatinLanguage())
@@ -48,11 +54,8 @@ class App extends StatelessWidget {
             ..add(const LanguageSettingEvent.getQuranLanguage()),
         ),
         BlocProvider<StylingSettingBloc>(
-          create: (context) => sl<StylingSettingBloc>()
-            ..add(const StylingSettingEvent.getArabicFontFamily())
-            ..add(const StylingSettingEvent.getLatinFontSize())
-            ..add(const StylingSettingEvent.getArabicFontSize())
-            ..add(const StylingSettingEvent.getTranslationFontSize()),
+          create: (context) =>
+              sl<StylingSettingBloc>()..add(const StylingSettingEvent.init()),
         ),
       ],
       child: OKToast(

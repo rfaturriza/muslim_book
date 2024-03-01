@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdMobConst {
   static const List<String> testDevice = [
     '44E72C0E3C5644F9CB7D8ADE66AE51E4',
+    '41994ef2-bd34-45a8-95f5-10ca1ad1abe1',
   ];
   static const int maxFailedLoadAttempts = 3;
   static String rewardedSettingID = () {
@@ -112,6 +114,11 @@ class AdMobConst {
     required void Function() onLoaded,
     required void Function(String message) onFailedToLoad,
   }) async {
+    if (kDebugMode) {
+      onLoaded();
+      onEarnedReward(RewardItem(1, 'Ads'));
+      return;
+    }
     await RewardedAd.load(
       adUnitId: adUnitId,
       request: request,
@@ -123,7 +130,8 @@ class AdMobConst {
           });
         },
         onAdFailedToLoad: (LoadAdError error) {
-          onFailedToLoad(error.message);
+          onLoaded();
+          onEarnedReward(RewardItem(1, 'Ads'));
         },
       ),
     );

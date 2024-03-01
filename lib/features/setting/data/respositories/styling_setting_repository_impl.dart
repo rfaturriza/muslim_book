@@ -1,13 +1,13 @@
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
+import 'package:quranku/features/setting/data/datasources/local/styling/styling_setting_local_data_source.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../domain/repositories/styling_setting_repository.dart';
-import '../datasources/local/language/language_setting_local_data_source.dart';
 
 @LazySingleton(as: StylingSettingRepository)
 class StylingSettingRepositoryImpl implements StylingSettingRepository {
-  final LanguageSettingLocalDataSource localDataSource;
+  final StylingSettingLocalDataSource localDataSource;
 
   const StylingSettingRepositoryImpl({
     required this.localDataSource,
@@ -79,6 +79,60 @@ class StylingSettingRepositoryImpl implements StylingSettingRepository {
   @override
   Future<Either<Failure, Unit>> setTranslationFontSize(double fontSize) async {
     final result = await localDataSource.setTranslationFontSize(fontSize);
+    return result.fold(
+      (l) => Left(l),
+      (r) => Right(r),
+    );
+  }
+
+  @override
+  Future<Either<Failure, bool?>> getLastReadReminder() async {
+    final result = await localDataSource.getLastReadReminder();
+    return result.fold(
+      (l) => Left(l),
+      (r) => Right(r),
+    );
+  }
+
+  @override
+  Future<Either<Failure, bool?>> getShowLatin() async {
+    final result = await localDataSource.getShowLatin();
+    return result.fold(
+      (l) => Left(l),
+      (r) => Right(r),
+    );
+  }
+
+  @override
+  Future<Either<Failure, bool?>> getShowTranslation() async {
+    final result = await localDataSource.getShowTranslation();
+    return result.fold(
+      (l) => Left(l),
+      (r) => Right(r),
+    );
+  }
+
+  @override
+  Future<Either<Failure, Unit>> setLastReadReminder(bool isOn) async {
+    final result = await localDataSource.setLastReadReminder(isOn);
+    return result.fold(
+      (l) => Left(l),
+      (r) => Right(r),
+    );
+  }
+
+  @override
+  Future<Either<Failure, Unit>> setShowLatin(bool isShow) async {
+    final result = await localDataSource.setShowLatin(isShow);
+    return result.fold(
+      (l) => Left(l),
+      (r) => Right(r),
+    );
+  }
+
+  @override
+  Future<Either<Failure, Unit>> setShowTranslation(bool isShow) async {
+    final result = await localDataSource.setShowTranslation(isShow);
     return result.fold(
       (l) => Left(l),
       (r) => Right(r),

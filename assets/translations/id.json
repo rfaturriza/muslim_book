@@ -101,5 +101,16 @@
   "latinTranslation": "Terjemahan Latin",
   "prayTimeLanguage": "Bahasa Waktu Sholat",
   "stylingView": "Tampilan",
-  "rateUs": "Beri Penilaian"
+  "rateUs": "Beri Penilaian",
+  "yourLastSurahReading": "Bacaan Terakhir: Surah {}, Ayat {}",
+  "yourLastJuzReading": "Bacaan Terakhir: {}, Ayat {}",
+  "readingHistory": "Riwayat Bacaan",
+  "saveLastReading": "Simpan Bacaan Terakhir",
+  "saveLastReadingDescription": "Apakah Anda ingin menyimpan ayat ini sebagai bacaan terakhir?\n{}, ayat {}\n\n Anda dapat mematikan pengingat ini di pengaturan tampilan.",
+  "yes": "Ya",
+  "no": "Tidak",
+  "warningLastReading": "Pengingat Bacaan Terakhir",
+  "warningLastReadingDescription": "Jika Nyala, Anda akan diperingati setiap keluar dari halaman Surah/Juz.",
+  "deleted": "{} akan dihapus...",
+  "undo": "Batal"
 }

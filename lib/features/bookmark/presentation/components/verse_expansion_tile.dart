@@ -72,7 +72,7 @@ class VerseExpansionTile extends StatelessWidget {
 }
 
 class VerseBookmarkListTile extends StatelessWidget {
-  final Function() onTapVerse;
+  final VoidCallback? onTapVerse;
   final SurahName? surahName;
   final String? juzName;
   final int verseNumber;
@@ -80,7 +80,7 @@ class VerseBookmarkListTile extends StatelessWidget {
 
   const VerseBookmarkListTile({
     super.key,
-    required this.onTapVerse,
+    this.onTapVerse,
     this.surahName,
     this.juzName,
     required this.verseNumber,
