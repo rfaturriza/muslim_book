@@ -118,11 +118,12 @@ class _TimeInfo extends StatelessWidget {
                 children: [
                   Text(
                     '${(progress * 100).toInt()}%',
-                    style: context.textTheme.bodyMedium,
+                    style: context.textTheme.bodySmall,
                   ),
                   CircularProgressIndicator(
                     strokeWidth: 2,
                     value: progress,
+                    strokeCap: StrokeCap.round,
                   ),
                 ],
               ),
@@ -176,28 +177,26 @@ class _SurahList extends StatelessWidget {
               surah.createdAt,
             );
       },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          VerseBookmarkListTile(
-            surahName: surah.surahName,
-            onTapVerse: () {
-              SurahList.onTapSurah(
-                context,
-                Surah(
-                  number: surah.surahNumber,
-                  name: surah.surahName,
-                ),
-                jumpToVerse: surah.versesNumber.inSurah,
-              );
-            },
-            verseNumber: surah.versesNumber.inSurah ?? 0,
-          ),
-          _TimeInfo(
-            createdAt: surah.createdAt,
-            progress: surah.progress,
-          ),
-        ],
+      child: ListTile(
+        contentPadding: EdgeInsets.zero,
+        onTap: () {
+          SurahList.onTapSurah(
+            context,
+            Surah(
+              number: surah.surahNumber,
+              name: surah.surahName,
+            ),
+            jumpToVerse: surah.versesNumber.inSurah,
+          );
+        },
+        title: VerseBookmarkListTile(
+          surahName: surah.surahName,
+          verseNumber: surah.versesNumber.inSurah ?? 0,
+        ),
+        subtitle: _TimeInfo(
+          createdAt: surah.createdAt,
+          progress: surah.progress,
+        ),
       ),
     );
   }
@@ -220,28 +219,27 @@ class _JuzList extends StatelessWidget {
               juz.createdAt,
             );
       },
-      child: Column(
-        children: [
-          VerseBookmarkListTile(
-            juzName: juz.name,
-            onTapVerse: () {
-              JuzList.onTapJuz(
-                context,
-                JuzConstant(
-                  number: juz.number,
-                  name: juz.name,
-                  description: juz.description,
-                ),
-                jumpToVerse: juz.versesNumber.inQuran,
-              );
-            },
-            verseNumber: juz.versesNumber.inQuran ?? 0,
-          ),
-          _TimeInfo(
-            createdAt: juz.createdAt,
-            progress: juz.progress,
-          ),
-        ],
+      child: ListTile(
+        contentPadding: EdgeInsets.zero,
+        onTap: () {
+          JuzList.onTapJuz(
+            context,
+            JuzConstant(
+              number: juz.number,
+              name: juz.name,
+              description: juz.description,
+            ),
+            jumpToVerse: juz.versesNumber.inQuran,
+          );
+        },
+        title: VerseBookmarkListTile(
+          juzName: juz.name,
+          verseNumber: juz.versesNumber.inQuran ?? 0,
+        ),
+        subtitle: _TimeInfo(
+          createdAt: juz.createdAt,
+          progress: juz.progress,
+        ),
       ),
     );
   }
