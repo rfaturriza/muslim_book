@@ -55,12 +55,27 @@ class VersesList extends StatefulWidget {
 }
 
 class _VersesListState extends State<VersesList> {
+  final _progress = ValueNotifier<double>(0.0);
+  var onDrag = false;
   final _itemScrollController = ItemScrollController();
   final _itemPositionsListener = ItemPositionsListener.create();
+
+  void _listener() {
+    _itemPositionsListener.itemPositions.addListener(() {
+      final value = _itemPositionsListener.itemPositions.value
+          .map((e) => e.index)
+          .toList();
+      final verseNumberVisible = value.isNotEmpty ? (value.last + 1) : 0;
+      _progress.value = verseNumberVisible / widget.listVerses.length;
+      debugPrint('listener ${_itemPositionsListener.itemPositions.value}');
+      debugPrint('listener progress ${_progress}');
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    _listener();
     WidgetsBinding.instance.addPostFrameCallback(_scrollTo);
   }
 
@@ -92,10 +107,10 @@ class _VersesListState extends State<VersesList> {
     if (index != -1) {
       final indices = _itemPositionsListener.itemPositions.value
           .where((item) {
-            final isTopVisible = item.itemLeadingEdge >= 0;
-            final isBottomVisible = item.itemTrailingEdge <= 1.03;
-            return isTopVisible && isBottomVisible;
-          })
+        final isTopVisible = item.itemLeadingEdge >= 0;
+        final isBottomVisible = item.itemTrailingEdge <= 1.03;
+        return isTopVisible && isBottomVisible;
+      })
           .map((e) => e.index)
           .toList();
       final lastItem = indices.last;
@@ -164,24 +179,29 @@ class _VersesListState extends State<VersesList> {
                   ),
                   onPressed: () {
                     if (widget.view == ViewMode.juz) {
-                      context.read<LastReadCubit>().setLastReadJuz(LastReadJuz(
-                            name: widget.juz?.name ?? emptyString,
-                            number: widget.juz?.number ?? 0,
-                            description: widget.juz?.description ?? emptyString,
-                            versesNumber: verse!,
-                            createdAt: DateTime.now(),
-                          ));
+                      context.read<LastReadCubit>().setLastReadJuz(
+                            LastReadJuz(
+                              name: widget.juz?.name ?? emptyString,
+                              number: widget.juz?.number ?? 0,
+                              description:
+                                  widget.juz?.description ?? emptyString,
+                              versesNumber: verse!,
+                              progress: _progress.value,
+                              createdAt: DateTime.now(),
+                            ),
+                          );
                     } else if (widget.view == ViewMode.surah) {
                       context.read<LastReadCubit>().setLastReadSurah(
-                            LastReadSurah(
-                              revelation: widget.surah?.revelation,
+                        LastReadSurah(
+                          revelation: widget.surah?.revelation,
                               surahName: widget.surah?.name,
                               surahNumber: widget.surah?.number ?? 0,
                               totalVerses: widget.surah?.numberOfVerses ?? 0,
                               versesNumber: verse!,
+                              progress: _progress.value,
                               createdAt: DateTime.now(),
                             ),
-                          );
+                      );
                     }
                     Navigator.of(context).pop(false);
                     Navigator.of(context).pop(false);
@@ -204,49 +224,100 @@ class _VersesListState extends State<VersesList> {
         },
         child: SafeArea(
           top: false,
-          child: ScrollablePositionedList.separated(
-            itemScrollController: _itemScrollController,
-            itemPositionsListener: _itemPositionsListener,
-            itemCount: () {
-              if (isPreBismillah) {
-                return widget.listVerses.length + 1;
-              }
-              return widget.listVerses.length;
-            }(),
-            separatorBuilder: (BuildContext context, int index) {
-              if (isPreBismillah && index == 0) {
-                return const Divider(color: Colors.transparent);
-              }
-              return Divider(color: secondaryColor.shade500, thickness: 0.1);
-            },
-            itemBuilder: (context, index) {
-              if (index == 0 && isPreBismillah) {
-                return BlocBuilder<StylingSettingBloc, StylingSettingState>(
-                  buildWhen: (p, c) {
-                    return p.fontFamilyArabic != c.fontFamilyArabic ||
-                        p.arabicFontSize != c.arabicFontSize;
-                  },
-                  builder: (context, state) {
-                    return Text(
-                      widget.preBismillah ?? emptyString,
-                      textAlign: TextAlign.center,
-                      style: context.textTheme.titleLarge?.copyWith(
-                        fontSize: state.arabicFontSize,
-                        fontFamily: state.fontFamilyArabic,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ValueListenableBuilder<double>(
+                valueListenable: _progress,
+                builder: (context, value, _) {
+                  return GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTapDown: (details) {
+                      final width = context.width;
+                      final value = details.localPosition.dx / width;
+                      _itemScrollController.jumpTo(
+                        index: (value * widget.listVerses.length).toInt(),
+                      );
+                    },
+                    onPanStart: (details) {
+                      setState(() {
+                        onDrag = true;
+                      });
+                    },
+                    onPanEnd: (details) {
+                      setState(() {
+                        onDrag = false;
+                      });
+                    },
+                    onPanUpdate: (details) {
+                      final width = context.width;
+                      final value = details.localPosition.dx / width;
+                      _itemScrollController.jumpTo(
+                        index: (value * widget.listVerses.length).toInt(),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: LinearProgressIndicator(
+                        borderRadius: BorderRadius.circular(10),
+                        value: value,
+                        backgroundColor: primaryColor.shade500.withOpacity(0.3),
+                        minHeight: onDrag ? 5 : 2,
                       ),
+                    ),
+                  );
+                },
+              ),
+              Expanded(
+                child: ScrollablePositionedList.separated(
+                  itemScrollController: _itemScrollController,
+                  itemPositionsListener: _itemPositionsListener,
+                  itemCount: () {
+                    if (isPreBismillah) {
+                      return widget.listVerses.length + 1;
+                    }
+                    return widget.listVerses.length;
+                  }(),
+                  separatorBuilder: (BuildContext context, int index) {
+                    if (isPreBismillah && index == 0) {
+                      return const Divider(color: Colors.transparent);
+                    }
+                    return Divider(
+                        color: secondaryColor.shade500, thickness: 0.1);
+                  },
+                  itemBuilder: (context, index) {
+                    if (index == 0 && isPreBismillah) {
+                      return BlocBuilder<StylingSettingBloc,
+                          StylingSettingState>(
+                        buildWhen: (p, c) {
+                          return p.fontFamilyArabic != c.fontFamilyArabic ||
+                              p.arabicFontSize != c.arabicFontSize;
+                        },
+                        builder: (context, state) {
+                          return Text(
+                            widget.preBismillah ?? emptyString,
+                            textAlign: TextAlign.center,
+                            style: context.textTheme.titleLarge?.copyWith(
+                              fontSize: state.arabicFontSize,
+                              fontFamily: state.fontFamilyArabic,
+                            ),
+                          );
+                        },
+                      );
+                    }
+                    final indexVerses = isPreBismillah ? index - 1 : index;
+                    final verses = widget.listVerses[indexVerses];
+                    return ListTileVerses(
+                      verses: verses,
+                      clickFrom: widget.view,
+                      juz: widget.juz,
+                      surah: widget.surah,
                     );
                   },
-                );
-              }
-              final indexVerses = isPreBismillah ? index - 1 : index;
-              final verses = widget.listVerses[indexVerses];
-              return ListTileVerses(
-                verses: verses,
-                clickFrom: widget.view,
-                juz: widget.juz,
-                surah: widget.surah,
-              );
-            },
+                ),
+              ),
+            ],
           ),
         ),
       ),

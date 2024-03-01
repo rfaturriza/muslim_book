@@ -16,6 +16,7 @@ class LastReadSurahModel with _$LastReadSurahModel {
     required LanguageModel? revelation,
     required int totalVerses,
     required VersesNumberModel versesNumber,
+    required double progress,
     required DateTime createdAt,
   }) = _LastReadSurahModel;
 
@@ -31,15 +32,17 @@ class LastReadSurahModel with _$LastReadSurahModel {
         revelation: entity.revelation?.toModel(),
         totalVerses: entity.totalVerses,
         versesNumber: entity.versesNumber.toModel(),
+        progress: entity.progress,
         createdAt: entity.createdAt,
       );
 
   LastReadSurah toEntity() => LastReadSurah(
-        surahName: surahName?.toEntity(),
+    surahName: surahName?.toEntity(),
         surahNumber: surahNumber,
         revelation: revelation?.toEntity(),
         totalVerses: totalVerses,
         versesNumber: versesNumber.toEntity(),
+        progress: progress,
         createdAt: createdAt,
       );
 }

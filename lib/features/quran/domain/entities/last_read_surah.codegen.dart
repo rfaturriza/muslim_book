@@ -14,6 +14,7 @@ class LastReadSurah with _$LastReadSurah {
     required Language? revelation,
     required int totalVerses,
     required VersesNumber versesNumber,
+    required double progress,
     required DateTime createdAt,
   }) = _LastReadSurah;
 }

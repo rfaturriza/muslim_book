@@ -262,6 +262,8 @@ class _LastReadInfo extends StatelessWidget {
             setLastReadTextJuz();
           }
         }
+
+        final progress = lastReadSurah?.progress ?? lastReadJuz?.progress ?? 0;
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -300,38 +302,52 @@ class _LastReadInfo extends StatelessWidget {
                   ),
                   color: context.theme.colorScheme.secondary,
                 ),
-                IconButton(
-                  style: IconButton.styleFrom(
-                    foregroundColor: context.theme.colorScheme.secondary,
-                    backgroundColor:
-                        context.theme.colorScheme.background.withAlpha(150),
-                    padding: EdgeInsets.zero,
-                  ),
-                  onPressed: () {
-                    if (!lastReadText.contains('Juz')) {
-                      SurahList.onTapSurah(
-                        context,
-                        Surah(
-                          number: lastReadSurah?.surahNumber,
-                          name: lastReadSurah?.surahName,
-                        ),
-                        jumpToVerse: lastReadSurah?.versesNumber.inSurah ?? 0,
-                      );
-                    } else {
-                      JuzList.onTapJuz(
-                        context,
-                        JuzConstant(
-                          number: lastReadJuz?.number ?? 0,
-                          name: lastReadJuz?.name ?? emptyString,
-                          description: lastReadJuz?.description ?? emptyString,
-                        ),
-                        jumpToVerse: lastReadJuz?.versesNumber.inQuran ?? 0,
-                      );
-                    }
-                  },
-                  icon: const Icon(
-                    Icons.arrow_forward,
-                  ),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    IconButton(
+                      style: IconButton.styleFrom(
+                        foregroundColor: context.theme.colorScheme.secondary,
+                        backgroundColor:
+                            context.theme.colorScheme.background.withAlpha(150),
+                        padding: EdgeInsets.zero,
+                      ),
+                      onPressed: () {
+                        if (!lastReadText.contains('Juz')) {
+                          SurahList.onTapSurah(
+                            context,
+                            Surah(
+                              number: lastReadSurah?.surahNumber,
+                              name: lastReadSurah?.surahName,
+                            ),
+                            jumpToVerse:
+                                lastReadSurah?.versesNumber.inSurah ?? 0,
+                          );
+                        } else {
+                          JuzList.onTapJuz(
+                            context,
+                            JuzConstant(
+                              number: lastReadJuz?.number ?? 0,
+                              name: lastReadJuz?.name ?? emptyString,
+                              description:
+                                  lastReadJuz?.description ?? emptyString,
+                            ),
+                            jumpToVerse: lastReadJuz?.versesNumber.inQuran ?? 0,
+                          );
+                        }
+                      },
+                      icon: const Icon(
+                        Icons.arrow_forward,
+                      ),
+                    ),
+                    CircularProgressIndicator(
+                      value: progress,
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        context.theme.colorScheme.secondary,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

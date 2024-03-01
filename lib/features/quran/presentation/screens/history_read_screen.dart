@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quranku/core/components/spacer.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/features/quran/presentation/bloc/lastRead/last_read_cubit.dart';
 import 'package:quranku/features/quran/presentation/screens/components/app_bar_detail_screen.dart';
@@ -75,9 +76,12 @@ class HistoryReadScreen extends StatelessWidget {
 }
 
 class _TimeInfo extends StatelessWidget {
+  final double progress;
+
   final DateTime createdAt;
 
   const _TimeInfo({
+    required this.progress,
     required this.createdAt,
   });
 
@@ -89,17 +93,37 @@ class _TimeInfo extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            '${DateFormat.yMMMMd(
-              context.locale.languageCode,
-            ).format(
-              createdAt.toLocal(),
-            )} - ${DateFormat.Hm(
-              context.locale.languageCode,
-            ).format(
-              createdAt.toLocal(),
-            )}',
-            style: context.textTheme.bodyMedium,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Text(
+                    '${(progress * 100).toInt()}%',
+                    style: context.textTheme.bodyMedium,
+                  ),
+                  CircularProgressIndicator(
+                    strokeWidth: 2,
+                    value: progress,
+                  ),
+                ],
+              ),
+              const HSpacer(width: 8),
+              Text(
+                '${DateFormat.yMMMMd(
+                  context.locale.languageCode,
+                ).format(
+                  createdAt.toLocal(),
+                )} - ${DateFormat.Hm(
+                  context.locale.languageCode,
+                ).format(
+                  createdAt.toLocal(),
+                )}',
+                style: context.textTheme.bodyMedium,
+              ),
+            ],
           ),
           const SizedBox(width: 5),
           Text(
@@ -153,7 +177,10 @@ class _SurahList extends StatelessWidget {
             },
             verseNumber: surah.versesNumber.inSurah ?? 0,
           ),
-          _TimeInfo(createdAt: surah.createdAt),
+          _TimeInfo(
+            createdAt: surah.createdAt,
+            progress: surah.progress,
+          ),
         ],
       ),
     );
@@ -194,7 +221,10 @@ class _JuzList extends StatelessWidget {
             },
             verseNumber: juz.versesNumber.inQuran ?? 0,
           ),
-          _TimeInfo(createdAt: juz.createdAt),
+          _TimeInfo(
+            createdAt: juz.createdAt,
+            progress: juz.progress,
+          ),
         ],
       ),
     );

@@ -10,6 +10,7 @@ class LastReadJuz with _$LastReadJuz {
     required int number,
     required String description,
     required VersesNumber versesNumber,
+    required double progress,
     required DateTime createdAt,
   }) = _LastReadJuz;
 }
