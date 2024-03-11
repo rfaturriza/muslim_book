@@ -1,0 +1,5 @@
+- Fixed imsak time calculation
+- Fixed Dhuha time calculation
+- Changed calculation method prayer times using Egyptian General Authority Of Survey
+
+If you like the app and the progress we're making, please show us your support by submitting a review on the Play Store. Thank You For Supporting Us.
