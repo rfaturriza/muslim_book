@@ -92,8 +92,10 @@ extension ContextExt on BuildContext {
     return showToast(
       message,
       context: this,
-      textStyle: textTheme.bodySmall,
-      backgroundColor: secondaryColor.shade800,
+      textStyle: textTheme.bodySmall?.copyWith(
+        color: theme.colorScheme.onTertiaryContainer,
+      ),
+      backgroundColor: theme.colorScheme.tertiaryContainer,
     );
   }
 
@@ -122,5 +124,9 @@ extension ContextExt on BuildContext {
         duration: const Duration(seconds: 3),
       ),
     );
+  }
+
+  bool get isDarkMode {
+    return theme.brightness == Brightness.dark;
   }
 }

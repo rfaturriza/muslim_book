@@ -15,6 +15,7 @@ import 'package:quranku/features/setting/presentation/bloc/language_setting/lang
 import 'package:quranku/generated/locale_keys.g.dart';
 
 import '../../../../core/constants/asset_constants.dart';
+import '../../../../core/utils/themes/color_schemes.dart';
 import '../../../quran/domain/entities/juz.codegen.dart';
 import '../../../quran/domain/entities/surah.codegen.dart';
 import '../../../quran/presentation/screens/components/juz_list.dart';
@@ -155,11 +156,14 @@ class _PrayTimeInfo extends StatelessWidget {
                           shalat.capitalize(),
                           style: context.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.bold,
+                            color: lightColorScheme.onPrimary,
                           ),
                         ),
                         Text(
                           shalatTime ?? '-',
-                          style: context.textTheme.titleSmall,
+                          style: context.textTheme.titleSmall?.copyWith(
+                            color: lightColorScheme.onPrimary,
+                          ),
                         ),
                       ],
                       if (state.scheduleByDay?.isLeft() == true) ...[
@@ -189,13 +193,16 @@ class _PrayTimeInfo extends StatelessWidget {
                           state.scheduleByDay?.asLeft().message ?? emptyString,
                           style: context.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.bold,
+                            color: lightColorScheme.onPrimary,
                           ),
                         ),
                       ],
                       if (state.scheduleByDay?.isRight() == true) ...[
                         Text(
                           place,
-                          style: context.textTheme.titleSmall,
+                          style: context.textTheme.titleSmall?.copyWith(
+                            color: lightColorScheme.onPrimary,
+                          ),
                           textAlign: TextAlign.end,
                           overflow: TextOverflow.clip,
                         ),
@@ -276,13 +283,16 @@ class _LastReadInfo extends StatelessWidget {
                   lastReadText.split(':').first,
                   style: context.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.bold,
+                    color: lightColorScheme.onPrimary,
                   ),
                   textAlign: TextAlign.start,
                   overflow: TextOverflow.clip,
                 ),
                 Text(
                   lastReadText.split(':').last,
-                  style: context.textTheme.titleSmall,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    color: lightColorScheme.onPrimary,
+                  ),
                   textAlign: TextAlign.start,
                   overflow: TextOverflow.clip,
                 ),

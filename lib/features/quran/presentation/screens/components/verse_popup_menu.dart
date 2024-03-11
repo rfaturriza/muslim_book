@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 
 import '../../../../../core/components/popup_menu.dart';
-import '../../../../../core/utils/themes/color.dart';
 
 class VersePopupMenuButton extends StatelessWidget {
   const VersePopupMenuButton({
@@ -35,7 +34,7 @@ class VersePopupMenuButton extends StatelessWidget {
               (isBookmarked ?? false)
                   ? Icons.bookmark_remove
                   : Icons.bookmark_add_outlined,
-              color: secondaryColor.shade900,
+              color: context.theme.colorScheme.primary,
             ),
           ),
           IconButton(
@@ -45,7 +44,7 @@ class VersePopupMenuButton extends StatelessWidget {
             },
             icon: Icon(
               Icons.play_circle_outline,
-              color: secondaryColor.shade900,
+              color: context.theme.colorScheme.primary,
             ),
           ),
           IconButton(
@@ -54,7 +53,7 @@ class VersePopupMenuButton extends StatelessWidget {
             },
             icon: Icon(
               Icons.ios_share,
-              color: secondaryColor.shade900,
+              color: context.theme.colorScheme.tertiary,
             ),
           ),
         ],

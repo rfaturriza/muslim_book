@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quranku/core/utils/extension/context_ext.dart';
 
-import '../../../../../core/utils/themes/color.dart';
 import '../../bloc/audioVerse/audio_verse_bloc.dart';
 
 class BottomNavPlayer extends StatelessWidget {
@@ -12,11 +12,11 @@ class BottomNavPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final audioBloc = context.read<AudioVerseBloc>();
-    final colorIcon = defaultColor.shade50;
+    final colorIcon = context.theme.colorScheme.onSecondaryContainer;
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: secondaryColor.shade800,
+        color: context.theme.colorScheme.secondaryContainer,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(15),
           topRight: Radius.circular(15),
@@ -47,8 +47,9 @@ class BottomNavPlayer extends StatelessWidget {
                         child: LinearProgressIndicator(
                           value: value,
                           backgroundColor: colorIcon,
-                          valueColor:
-                              const AlwaysStoppedAnimation<Color>(secondaryColor),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            context.theme.colorScheme.onSecondary,
+                          ),
                           borderRadius: BorderRadius.circular(10),
                         ),
                       );

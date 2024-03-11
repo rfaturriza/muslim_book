@@ -13,7 +13,6 @@ import 'package:quranku/features/quran/presentation/screens/components/app_bar_d
 import '../../../../core/components/error_screen.dart';
 import '../../../../generated/locale_keys.g.dart';
 import '../../../../injection.dart';
-import '../../../quran/presentation/screens/components/background_gradient.dart';
 
 class QiblaCompassScreen extends StatelessWidget {
   const QiblaCompassScreen({super.key});
@@ -25,49 +24,43 @@ class QiblaCompassScreen extends StatelessWidget {
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBarDetailScreen(title: LocaleKeys.qibla.tr()),
-        body: Stack(
-          children: [
-            const BackgroundGradient(isShowBottom: false),
-            SafeArea(
-              child: Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(20.0),
-                child: BlocBuilder<QiblaBloc, QiblaState>(
-                  builder: (context, state) {
-                    final locationStatusResult = state.locationStatusResult;
-                    if (state.isLoading) {
-                      return const CircularProgressIndicator.adaptive();
-                    }
-                    if (locationStatusResult?.isRight() == true) {
-                      final locationStatus = locationStatusResult?.asRight();
-                      switch (locationStatus?.status) {
-                        case LocationPermission.always:
-                        case LocationPermission.whileInUse:
-                          return const QiblaCompassWidget();
+        body: SafeArea(
+          child: Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(20.0),
+            child: BlocBuilder<QiblaBloc, QiblaState>(
+              builder: (context, state) {
+                final locationStatusResult = state.locationStatusResult;
+                if (state.isLoading) {
+                  return const CircularProgressIndicator.adaptive();
+                }
+                if (locationStatusResult?.isRight() == true) {
+                  final locationStatus = locationStatusResult?.asRight();
+                  switch (locationStatus?.status) {
+                    case LocationPermission.always:
+                    case LocationPermission.whileInUse:
+                      return const QiblaCompassWidget();
 
-                        case LocationPermission.denied:
-                          return ErrorScreen(
-                            message: LocaleKeys.errorLocationDenied.tr(),
-                          );
-                        case LocationPermission.deniedForever:
-                          return ErrorScreen(
-                            message:
-                                LocaleKeys.errorLocationPermanentDenied.tr(),
-                          );
-                        default:
-                          return Container();
-                      }
-                    } else if (locationStatusResult?.isLeft() == true) {
+                    case LocationPermission.denied:
                       return ErrorScreen(
-                        message: LocaleKeys.errorLocationDisabled.tr(),
+                        message: LocaleKeys.errorLocationDenied.tr(),
                       );
-                    }
-                    return Container();
-                  },
-                ),
-              ),
+                    case LocationPermission.deniedForever:
+                      return ErrorScreen(
+                        message: LocaleKeys.errorLocationPermanentDenied.tr(),
+                      );
+                    default:
+                      return Container();
+                  }
+                } else if (locationStatusResult?.isLeft() == true) {
+                  return ErrorScreen(
+                    message: LocaleKeys.errorLocationDisabled.tr(),
+                  );
+                }
+                return Container();
+              },
             ),
-          ],
+          ),
         ),
       ),
     );

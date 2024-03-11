@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
-import 'package:quranku/core/utils/themes/color.dart';
 
 import '../utils/debouncer.dart';
 
@@ -25,14 +24,14 @@ class SearchBox extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: secondaryColor.shade800,
+        color: context.theme.colorScheme.surfaceVariant,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         children: [
           Icon(
             Icons.manage_search,
-            color: primaryColor.shade50,
+            color: context.theme.colorScheme.onSurface,
           ),
           const SizedBox(width: 8),
           Expanded(
@@ -47,7 +46,7 @@ class SearchBox extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: hintText,
                 hintStyle: TextStyle(
-                  color: primaryColor.shade50,
+                  color: context.theme.colorScheme.onSurface.withOpacity(0.5),
                 ),
                 border: InputBorder.none,
               ),

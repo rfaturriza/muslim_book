@@ -175,7 +175,7 @@ class _VersesListState extends State<VersesList> {
                 TextButton(
                   style: TextButton.styleFrom(
                     backgroundColor: context.theme.colorScheme.primary,
-                    foregroundColor: defaultColor.shade50,
+                    foregroundColor: context.theme.colorScheme.onPrimary,
                   ),
                   onPressed: () {
                     if (widget.view == ViewMode.juz) {
@@ -350,7 +350,7 @@ class ListTileVerses extends StatelessWidget {
         final isVersePlaying = state.audioVersePlaying == verses.audio;
         return Container(
           color: isVersePlaying
-              ? secondaryColor.shade500.withOpacity(0.2)
+              ? context.theme.colorScheme.primaryContainer
               : Colors.transparent,
           child: Column(
             children: [
@@ -552,7 +552,7 @@ class ListTileTransliteration extends StatelessWidget {
       builder: (context, state) {
         if (!state.isShowLatin) return const SizedBox();
         final textStyle = context.textTheme.bodySmall?.copyWith(
-          color: primaryColor.shade400,
+          color: context.theme.colorScheme.primary,
           fontSize: state.latinFontSize,
         );
         return Padding(

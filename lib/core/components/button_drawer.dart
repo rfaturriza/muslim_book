@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 
-import '../utils/themes/color.dart';
-
 class ButtonDrawer extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -30,17 +28,23 @@ class ButtonDrawer extends StatelessWidget {
                 begin: Alignment.topRight,
                 end: Alignment.bottomLeft,
                 colors: [
-                  primaryColor.shade500,
-                  primaryColor.shade500.withOpacity(0)
+                  context.theme.colorScheme.primary.withOpacity(0.5),
+                  context.theme.colorScheme.primary.withOpacity(0),
                 ],
               ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(100),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(100),
+                  bottomRight: Radius.circular(100),
+                ),
               ),
             )
-          : ShapeDecoration(
+          : const ShapeDecoration(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(100),
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(100),
+                  bottomRight: Radius.circular(100),
+                ),
               ),
             ),
       child: ListTile(
@@ -53,7 +57,6 @@ class ButtonDrawer extends StatelessWidget {
         dense: true,
         leading: Icon(
           icon,
-          color: Colors.white,
         ),
         title: Text(
           title,
