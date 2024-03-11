@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
+import 'package:quranku/core/utils/themes/color_schemes_material.dart';
 
 import '../utils/debouncer.dart';
 
@@ -10,12 +11,14 @@ class SearchBox extends StatelessWidget {
     required this.hintText,
     required this.onChanged,
     required this.onSubmitted,
+    this.isDense = false,
   });
 
   final String initialValue;
   final String hintText;
   final void Function(String) onChanged;
   final void Function() onSubmitted;
+  final bool isDense;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +27,9 @@ class SearchBox extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: context.theme.colorScheme.surfaceVariant,
+        color: context.isDarkMode
+            ? MaterialTheme.darkScheme().surfaceContainer
+            : MaterialTheme.lightScheme().surfaceContainer,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -44,8 +49,9 @@ class SearchBox extends StatelessWidget {
               onFieldSubmitted: (_) => context.dismissKeyboard(),
               textInputAction: TextInputAction.search,
               decoration: InputDecoration(
+                isDense: isDense,
                 hintText: hintText,
-                hintStyle: TextStyle(
+                hintStyle: context.theme.textTheme.titleSmall?.copyWith(
                   color: context.theme.colorScheme.onSurface.withOpacity(0.5),
                 ),
                 border: InputBorder.none,

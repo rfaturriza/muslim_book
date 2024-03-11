@@ -15,7 +15,6 @@ import 'package:quranku/features/setting/presentation/bloc/language_setting/lang
 import 'package:quranku/generated/locale_keys.g.dart';
 
 import '../../../../core/constants/asset_constants.dart';
-import '../../../../core/utils/themes/color_schemes.dart';
 import '../../../quran/domain/entities/juz.codegen.dart';
 import '../../../quran/domain/entities/surah.codegen.dart';
 import '../../../quran/presentation/screens/components/juz_list.dart';
@@ -73,16 +72,16 @@ class ShalatInfoCard extends StatelessWidget {
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [
-                  Colors.black.withOpacity(0.85),
-                  Colors.black.withOpacity(0.2),
+                  context.theme.colorScheme.surface.withOpacity(0.85),
+                  context.theme.colorScheme.surface.withOpacity(0.2),
                 ], // Customize your gradient colors
               ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
+            child: const Padding(
+              padding: EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 17.5,
               ),
@@ -90,12 +89,9 @@ class ShalatInfoCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const _PrayTimeInfo(),
-                  Divider(
-                    color: context.theme.colorScheme.secondary,
-                    thickness: 2,
-                  ),
-                  const _LastReadInfo(),
+                  _PrayTimeInfo(),
+                  Divider(thickness: 2),
+                  _LastReadInfo(),
                 ],
               ),
             ),
@@ -156,13 +152,13 @@ class _PrayTimeInfo extends StatelessWidget {
                           shalat.capitalize(),
                           style: context.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: lightColorScheme.onPrimary,
+                            color: context.theme.colorScheme.onSurface,
                           ),
                         ),
                         Text(
                           shalatTime ?? '-',
                           style: context.textTheme.titleSmall?.copyWith(
-                            color: lightColorScheme.onPrimary,
+                            color: context.theme.colorScheme.onSurface,
                           ),
                         ),
                       ],
@@ -193,7 +189,7 @@ class _PrayTimeInfo extends StatelessWidget {
                           state.scheduleByDay?.asLeft().message ?? emptyString,
                           style: context.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: lightColorScheme.onPrimary,
+                            color: context.theme.colorScheme.onSurface,
                           ),
                         ),
                       ],
@@ -201,7 +197,7 @@ class _PrayTimeInfo extends StatelessWidget {
                         Text(
                           place,
                           style: context.textTheme.titleSmall?.copyWith(
-                            color: lightColorScheme.onPrimary,
+                            color: context.theme.colorScheme.onSurface,
                           ),
                           textAlign: TextAlign.end,
                           overflow: TextOverflow.clip,
@@ -283,7 +279,7 @@ class _LastReadInfo extends StatelessWidget {
                   lastReadText.split(':').first,
                   style: context.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: lightColorScheme.onPrimary,
+                    color: context.theme.colorScheme.onSurface,
                   ),
                   textAlign: TextAlign.start,
                   overflow: TextOverflow.clip,
@@ -291,7 +287,7 @@ class _LastReadInfo extends StatelessWidget {
                 Text(
                   lastReadText.split(':').last,
                   style: context.textTheme.titleSmall?.copyWith(
-                    color: lightColorScheme.onPrimary,
+                    color: context.theme.colorScheme.onSurface,
                   ),
                   textAlign: TextAlign.start,
                   overflow: TextOverflow.clip,
@@ -310,7 +306,7 @@ class _LastReadInfo extends StatelessWidget {
                   icon: const Icon(
                     Icons.list_alt_rounded,
                   ),
-                  color: context.theme.colorScheme.secondary,
+                  color: context.theme.colorScheme.onSurface,
                 ),
                 InkWell(
                   onTap: () {
@@ -340,8 +336,10 @@ class _LastReadInfo extends StatelessWidget {
                     children: [
                       IconButton(
                         style: IconButton.styleFrom(
-                          foregroundColor: context.theme.colorScheme.secondary,
-                          backgroundColor: context.theme.colorScheme.background
+                          foregroundColor:
+                              context.theme.colorScheme.onTertiaryContainer,
+                          backgroundColor: context
+                              .theme.colorScheme.tertiaryContainer
                               .withAlpha(150),
                           padding: EdgeInsets.zero,
                         ),
@@ -354,7 +352,7 @@ class _LastReadInfo extends StatelessWidget {
                         value: progress,
                         strokeWidth: 2,
                         valueColor: AlwaysStoppedAnimation<Color>(
-                          context.theme.colorScheme.secondary,
+                          context.theme.colorScheme.onTertiaryContainer,
                         ),
                       ),
                     ],

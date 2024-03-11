@@ -53,7 +53,7 @@ class QuranScreen extends StatelessWidget {
                 const SliverAppBar(
                   leading: SizedBox(),
                   backgroundColor: Colors.transparent,
-                  expandedHeight: 110.0,
+                  expandedHeight: 120.0,
                   pinned: false,
                   flexibleSpace: FlexibleSpaceBar(
                     background: KajianHubCard(),

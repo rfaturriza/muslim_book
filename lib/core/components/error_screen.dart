@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:quranku/core/components/spacer.dart';
-import 'package:quranku/core/utils/themes/color.dart';
+import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/generated/locale_keys.g.dart';
 
 class ErrorScreen extends StatelessWidget {
@@ -16,27 +16,30 @@ class ErrorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              message ?? LocaleKeys.defaultErrorMessage.tr(),
-              textAlign: TextAlign.center,
-            ),
-            // icon Refresh
-            if (onRefresh != null) ...[
-              const VSpacer(),
-              IconButton(
-                onPressed: onRefresh,
-                icon: const Icon(Icons.refresh),
-                color: defaultColor.shade50,
+    return GestureDetector(
+      onTap: onRefresh,
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                message ?? LocaleKeys.defaultErrorMessage.tr(),
+                textAlign: TextAlign.center,
               ),
-            ]
-          ],
+              // icon Refresh
+              if (onRefresh != null) ...[
+                const VSpacer(),
+                IconButton(
+                  onPressed: onRefresh,
+                  icon: const Icon(Icons.refresh),
+                  color: context.theme.colorScheme.onSurface,
+                ),
+              ]
+            ],
+          ),
         ),
       ),
     );

@@ -10,7 +10,7 @@ class AssetConst {
   static const String logoAPP = 'assets/svg/logoApp.svg';
   static const String kajianHubLogoLight = 'assets/images/KajianHub-white.png';
   static const String kajianHubTextLogoLight =
-      'assets/svg/KajianHub-white-text.svg';
+      'assets/images/KajianHub-white-text.png';
   static const String kajianHubLogoDark = 'assets/images/KajianHub.png';
   static const String kajianHubTextLogoDark =
       'assets/images/KajianHub-text.png';
