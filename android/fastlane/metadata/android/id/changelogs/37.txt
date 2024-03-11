@@ -1,0 +1,5 @@
+- Memperbaiki perhitungan waktu Imsak
+- Memperbaiki perhitungan waktu Dhuha
+- Mengantikan perhitungan waktu shalat dengan metode Egyptian General Authority Of Survey
+
+Jika Anda menyukai aplikasi ini dan juga pengembangan yang kami lakukan, mohon dukungan Anda dengan mengirimkan ulasan di Play Store. Jazakumullah Khairan Katsiran.
