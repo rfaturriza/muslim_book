@@ -26,9 +26,7 @@ import '../../../domain/usecase/get_shalat_schedule_by_day_usecase.dart';
 import '../../../domain/usecase/get_shalat_schedule_by_month_usecase.dart';
 
 part 'shalat_bloc.freezed.dart';
-
 part 'shalat_event.dart';
-
 part 'shalat_state.dart';
 
 @injectable
@@ -149,7 +147,7 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
       geoLocation.asRight()?.coordinate?.lon ?? 0,
       validate: true,
     );
-    final params = CalculationMethod.umm_al_qura.getParameters();
+    final params = CalculationMethod.egyptian.getParameters();
     params.madhab = Madhab.shafi;
     final prayerTimes = PrayerTimes.today(coordinate, params);
     final Either<Failure, ScheduleByDay> resultSchedule = right(
