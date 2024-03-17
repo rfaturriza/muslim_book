@@ -14,4 +14,5 @@ class AssetConst {
   static const String kajianHubLogoDark = 'assets/images/KajianHub.png';
   static const String kajianHubTextLogoDark =
       'assets/images/KajianHub-text.png';
+  static const String googleMapsIcon = 'assets/svg/google_maps_icon.svg';
 }

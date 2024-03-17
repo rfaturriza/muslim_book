@@ -4,7 +4,13 @@ import 'package:quranku/generated/locale_keys.g.dart';
 
 extension StringExt on String {
   String capitalize() {
-    return "${this[0].toUpperCase()}${substring(1)}";
+   return isEmpty ? this : "${this[0].toUpperCase()}${substring(1)}";
+  }
+
+  String capitalizeEveryWord() {
+    return split(" ")
+        .map((str) => str.isEmpty ? str : "${str[0].toUpperCase()}${str.substring(1)}")
+        .join(" ");
   }
 
   bool get isNotGrantedPermissionLocation {

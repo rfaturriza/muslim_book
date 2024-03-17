@@ -1,73 +1,69 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/features/kajian/presentation/screens/kajianhub_screen.dart';
 
 import '../../../../core/components/spacer.dart';
 import '../../../../core/constants/asset_constants.dart';
 import '../../../../core/utils/themes/color_schemes_material.dart';
-import '../../../shalat/presentation/bloc/shalat/shalat_bloc.dart';
+import '../../../../generated/locale_keys.g.dart';
 
 class KajianHubCard extends StatelessWidget {
   const KajianHubCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final shalatBloc = context.read<ShalatBloc>();
-    return BlocListener<ShalatBloc, ShalatState>(
-      listener: (context, state) {},
-      child: InkWell(
-        onTap: () {
-          context.navigateTo(const KajianHubScreen());
-        },
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          decoration: ShapeDecoration(
-            color: context.isDarkMode
-                ? MaterialTheme.darkScheme().surfaceContainer
-                : MaterialTheme.lightScheme().surfaceContainer,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+    return InkWell(
+      onTap: () {
+        context.navigateTo(const KajianHubScreen());
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        decoration: ShapeDecoration(
+          color: context.isDarkMode
+              ? MaterialTheme.darkScheme().surfaceContainer
+              : MaterialTheme.lightScheme().surfaceContainer,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
-          child: const Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 8,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Flexible(
-                  flex: 4,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Flexible(
-                        flex: 2,
-                        child: _KajianHubLogo(),
+        ),
+        child: const Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 8,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Flexible(
+                flex: 4,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      flex: 2,
+                      child: _KajianHubLogo(),
+                    ),
+                    HSpacer(width: 10),
+                    Flexible(
+                      flex: 5,
+                      child: _RecitationInfo(
+                        masjidName: 'Masjid Al-Ikhlas Panjang Sekaliiiiii',
+                        ustadzName: 'Ustadz Abdul Somad Panjanggg',
+                        time: '19.00 - 21.00',
+                        prayerTime: 'Maghrib',
                       ),
-                      HSpacer(width: 10),
-                      Flexible(
-                        flex: 5,
-                        child: _RecitationInfo(
-                          masjidName: 'Masjid Al-Ikhlas Panjang Sekaliiiiii',
-                          ustadzName: 'Ustadz Abdul Somad Panjanggg',
-                          time: '19.00 - 21.00',
-                          prayerTime: 'Maghrib',
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                Flexible(
-                  flex: 1,
-                  child: TagNavIcon(),
-                ),
-              ],
-            ),
+              ),
+              Flexible(
+                flex: 1,
+                child: TagNavIcon(),
+              ),
+            ],
           ),
         ),
       ),
@@ -165,7 +161,7 @@ class TagNavIcon extends StatelessWidget {
             ),
           ),
           child: Text(
-            'Terdekat',
+            LocaleKeys.nearby.tr(),
             style: context.textTheme.bodySmall?.copyWith(
               color: context.theme.colorScheme.onPrimaryContainer,
             ),

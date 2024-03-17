@@ -10,30 +10,31 @@ class KajianScheduleRequestModel with _$KajianScheduleRequestModel {
     required String type,
 
     /// q: search by judul kajian/nama masjid/nama ustad
-    @JsonKey(name: 'q') required String query,
+    @JsonKey(name: 'q') String? query,
     required int page,
     required int limit,
-    required String orderBy,
-    required String sortBy,
+    @JsonKey(name: 'order_by') required String orderBy,
+    @JsonKey(name: 'sort_by') required String sortBy,
 
     /// relations: ustadz,studyLocation.province,studyLocation.city,dailySchedules,customSchedules,themes
     /// untuk menampilkan resource relasi
     required String relations,
 
     /// 0/1 -> 1 = menampilkan kajian berdasarkan jadwal harian dan mingguan
-    required int isDaily,
+    @JsonKey(name: 'is_daily') int? isDaily,
 
     /// 0/1 -> 1 = menampilkan kajian berdasarkan lokasi anda (terdekat), wajib kirim longitude dan latitude
-    required int isNearest,
-    required double latitude,
-    required double longitude,
+    @JsonKey(name: 'is_nearest') int? isNearest,
+    double? latitude,
+    double? longitude,
 
     /// 0/1 1 = menampilkan kajian yg tidak rutin, kirim date (defaultnya hari ini)
-    required int isByDate,
-    required String date,
+    @JsonKey(name: 'is_by_date') int? isByDate,
+    String? date,
 
     /// filter,{relation}.{field},{operator},{value}
-    required List<String> options,
+    @JsonKey(name: 'options[]')
+    List<String>? options,
   }) = _KajianScheduleRequestModel;
 
   factory KajianScheduleRequestModel.fromJson(Map<String, dynamic> json) =>

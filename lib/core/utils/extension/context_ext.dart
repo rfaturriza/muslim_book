@@ -4,6 +4,8 @@ import 'package:oktoast/oktoast.dart';
 import 'package:quranku/core/components/loading_dialog.dart';
 import 'package:quranku/core/utils/themes/color.dart';
 
+import '../themes/color_schemes_material.dart';
+
 extension ContextExt on BuildContext {
   ThemeData get theme => Theme.of(this);
 
@@ -128,5 +130,13 @@ extension ContextExt on BuildContext {
 
   bool get isDarkMode {
     return theme.brightness == Brightness.dark;
+  }
+}
+
+extension ColorSchemeExt on ColorScheme {
+  Color get surfaceContainer {
+    return brightness == Brightness.dark
+        ? MaterialTheme.darkScheme().surfaceContainer
+        : MaterialTheme.lightScheme().surfaceContainer;
   }
 }

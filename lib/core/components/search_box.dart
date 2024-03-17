@@ -10,14 +10,14 @@ class SearchBox extends StatelessWidget {
     required this.initialValue,
     required this.hintText,
     required this.onChanged,
-    required this.onSubmitted,
+    this.onSubmitted,
     this.isDense = false,
   });
 
   final String initialValue;
   final String hintText;
   final void Function(String) onChanged;
-  final void Function() onSubmitted;
+  final void Function()? onSubmitted;
   final bool isDense;
 
   @override
@@ -46,6 +46,7 @@ class SearchBox extends StatelessWidget {
               onChanged: (val) {
                 debouncer.run(() => onChanged(val));
               },
+              onSaved: (val) => onSubmitted?.call(),
               onFieldSubmitted: (_) => context.dismissKeyboard(),
               textInputAction: TextInputAction.search,
               decoration: InputDecoration(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:quranku/core/constants/font_constants.dart';
+import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/themes/color_schemes_material.dart';
 
 import 'text.dart';
@@ -61,9 +62,12 @@ ThemeData themeData({required bool isDarkMode}) {
           : lightColorScheme.onSurface.withOpacity(0.5),
       dragHandleSize: const Size(32, 4),
       modalElevation: 10,
+      backgroundColor: isDarkMode
+          ? darkColorScheme.surfaceContainer
+          : lightColorScheme.surfaceContainer,
       modalBarrierColor: isDarkMode
-          ? darkColorScheme.background.withOpacity(0.5)
-          : lightColorScheme.background.withOpacity(0.5),
+          ? darkColorScheme.surfaceContainer.withOpacity(0.5)
+          : lightColorScheme.surfaceContainer.withOpacity(0.5),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(20),
@@ -181,6 +185,7 @@ ThemeData themeData({required bool isDarkMode}) {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
+      backgroundColor: Colors.transparent,
     ),
   );
 }
