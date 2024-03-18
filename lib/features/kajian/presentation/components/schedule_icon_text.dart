@@ -18,12 +18,18 @@ class ScheduleIconText extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 16),
+        Icon(
+          icon,
+          size: 16,
+          color: context.theme.colorScheme.onSurfaceVariant,
+        ),
         const HSpacer(width: 5),
         Expanded(
           child: Text(
             text,
-            style: context.textTheme.bodySmall,
+            style: context.textTheme.bodySmall?.copyWith(
+              color: context.theme.colorScheme.onSurfaceVariant,
+            ),
           ),
         ),
       ],

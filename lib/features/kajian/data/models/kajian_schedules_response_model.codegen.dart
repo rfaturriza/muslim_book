@@ -86,7 +86,9 @@ class DataKajianScheduleModel with _$DataKajianScheduleModel {
       dailySchedules: entity.dailySchedules
           .map((e) => DailyScheduleModel.fromEntity(e))
           .toList(),
-      histories: entity.histories.map((e) => HistoryKajianModel.fromEntity(e)).toList(),
+      histories: entity.histories
+          .map((e) => HistoryKajianModel.fromEntity(e))
+          .toList(),
       customSchedules: entity.customSchedules,
     );
   }
@@ -110,7 +112,7 @@ class DataKajianScheduleModel with _$DataKajianScheduleModel {
         }
         return timeEnd!.substring(0, 5);
       }(),
-      prayerSchedule: prayerSchedule ?? emptyString,
+      prayerSchedule: prayerSchedule?.capitalize() ?? emptyString,
       locationId: locationId ?? emptyString,
       studyLocation:
           studyLocation?.toEntity() ?? StudyLocationModel.empty().toEntity(),
@@ -170,6 +172,7 @@ class HistoryKajianModel with _$HistoryKajianModel {
     );
   }
 }
+
 @freezed
 class StudyLocationModel with _$StudyLocationModel {
   const factory StudyLocationModel({

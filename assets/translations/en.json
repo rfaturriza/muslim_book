@@ -149,5 +149,13 @@
   "errorGetDistrict": "Failed to get district",
   "errorGetMosque": "Failed to get mosque",
   "errorGetKajianTheme": "Failed to get study theme",
-  "errorGetUstadz": "Failed to get ustadz"
+  "errorGetUstadz": "Failed to get ustadz",
+  "prayDateSchedule": "Pray Date Schedule",
+  "selectDate": "Select Date",
+  "searchImamHint": "Search Imam...",
+  "searchImamEmpty": "No imam found",
+  "searchKhatibHint": "Search Khatib...",
+  "searchKhatibEmpty": "No khatib found",
+  "filter": "Filter",
+  "play": "Play"
 }

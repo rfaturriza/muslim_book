@@ -15,4 +15,5 @@ class AssetConst {
   static const String kajianHubTextLogoDark =
       'assets/images/KajianHub-text.png';
   static const String googleMapsIcon = 'assets/svg/google_maps_icon.svg';
+  static const String mosqueDummyImageUrl = 'https://kajianhub.com/img/dummy/dummy-masjid.jpg';
 }

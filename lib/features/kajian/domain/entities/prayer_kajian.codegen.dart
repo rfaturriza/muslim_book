@@ -14,8 +14,7 @@ class PrayerKajian with _$PrayerKajian {
 
   const PrayerKajian._();
 
-  static List<PrayerKajian> get prayersId =>
-      <PrayerKajian>[
+  static List<PrayerKajian> get prayersId => <PrayerKajian>[
         const PrayerKajian(id: 'subuh', name: 'Subuh'),
         const PrayerKajian(id: 'dhuha', name: 'Dhuha'),
         const PrayerKajian(id: 'dzuhur', name: 'Dzuhur'),
@@ -24,18 +23,28 @@ class PrayerKajian with _$PrayerKajian {
         const PrayerKajian(id: 'isya', name: 'Isya'),
       ];
 
- static List<PrayerKajian> prayersByLocale(Locale? locale) {
+  static List<PrayerKajian> prayersByLocale(Locale? locale) {
     final prayerName = HelperTimeShalat.prayerNameByLocale(locale);
 
     /// Remove Imsak and Terbit
     prayerName.removeAt(0);
     prayerName.removeAt(1);
 
-    return prayersId
-        .asMap()
-        .entries
-        .map((e) {
+    return prayersId.asMap().entries.map((e) {
       return PrayerKajian(id: e.value.id, name: prayerName[e.key]);
+    }).toList();
+  }
+
+  static List<PrayerKajian> prayersRamadhan() {
+    /// Just Subuh and Tarawih
+    /// 1/2 -> 1 = Tarawih, 2 = Subuh
+    final prayerName = {
+      1: 'Tarawih',
+      2: 'Subuh',
+    };
+
+    return prayerName.entries.map((e) {
+      return PrayerKajian(id: e.key.toString(), name: e.value);
     }).toList();
   }
 }

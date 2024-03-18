@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:quranku/core/constants/asset_constants.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 
 class MosqueImageContainer extends StatelessWidget {
@@ -17,7 +18,7 @@ class MosqueImageContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     var imageUrl = this.imageUrl;
     if (imageUrl.isEmpty) {
-      imageUrl = 'https://kajianhub.com/img/dummy/dummy-masjid.jpg';
+      imageUrl = AssetConst.mosqueDummyImageUrl;
     }
     return CachedNetworkImage(
       imageUrl: imageUrl,

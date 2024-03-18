@@ -216,17 +216,12 @@ class KajianHubRemoteDataSourceImpl implements KajianHubRemoteDataSource {
   }) async {
     const endpoint = 'kajian/prayer-schedules';
     try {
-      final queryParameters = request.toJson();
+      final queryParameters = request.copyWith(
+        options: [...request.options ?? [], 'filter,type_id,equal,2'],
+      ).toJson();
       final response = await dio.get(
         endpoint,
-        queryParameters: queryParameters
-          ..addEntries(
-            [
-              /// Just fetch Ramadhan Schedules,
-              /// 2 is the type_id for Ramadhan
-              const MapEntry('options[]', 'filter,type_id,equal,2'),
-            ],
-          ),
+        queryParameters: queryParameters,
       );
 
       final data = response.data;

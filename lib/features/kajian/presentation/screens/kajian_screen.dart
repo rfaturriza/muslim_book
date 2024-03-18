@@ -17,6 +17,7 @@ import '../../../../core/utils/themes/color_schemes_material.dart';
 import '../../domain/entities/kajian_schedule.codegen.dart';
 import '../../domain/entities/week_kajian.codegen.dart';
 import '../bloc/kajian/kajian_bloc.dart';
+import '../components/item_bottom_sheet.dart';
 import '../components/mosque_image_container.dart';
 import '../components/schedule_icon_text.dart';
 import 'kajian_detail_screen.dart';
@@ -34,8 +35,17 @@ class KajianScreen extends StatelessWidget {
           builder: (context, state) {
             return SearchBox(
               isDense: true,
-              initialValue: state.search,
+              initialValue: state.search ?? emptyString,
               hintText: LocaleKeys.searchKajianHint.tr(),
+              onClear: () {
+                context.read<KajianBloc>().add(
+                      KajianEvent.fetchKajian(
+                        pageNumber: 1,
+                        locale: context.locale,
+                        search: emptyString,
+                      ),
+                    );
+              },
               onChanged: (value) {
                 context.read<KajianBloc>().add(
                       KajianEvent.fetchKajian(
@@ -51,70 +61,58 @@ class KajianScreen extends StatelessWidget {
         const VSpacer(height: 10),
         const _FilterRowSection(),
         Expanded(
-          child: RefreshIndicator(
-            onRefresh: () {
-              context.read<KajianBloc>().add(
-                    KajianEvent.fetchKajian(
-                      locale: context.locale,
-                      pageNumber: 1,
-                    ),
-                  );
-              return Future.delayed(const Duration(milliseconds: 500));
-            },
-            child: BlocBuilder<KajianBloc, KajianState>(
-              builder: (context, state) {
-                final isLoading =
-                    state.status == FormzSubmissionStatus.inProgress;
-                if (state.status == FormzSubmissionStatus.failure) {
-                  return ErrorScreen(
-                    message: LocaleKeys.errorGetKajian.tr(),
-                    onRefresh: () {
-                      context.read<KajianBloc>().add(
-                            KajianEvent.fetchKajian(
-                              locale: context.locale,
-                              pageNumber: 1,
-                            ),
-                          );
-                    },
-                  );
-                }
-                if (state.kajianResult.isEmpty && !isLoading) {
-                  return ErrorScreen(
-                    message: LocaleKeys.searchKajianEmpty.tr(),
-                  );
-                }
-                return NotificationListener<ScrollNotification>(
-                  onNotification: (scrollNotification) {
-                    if (scrollNotification.metrics.pixels ==
-                            scrollNotification.metrics.maxScrollExtent &&
-                        state.status != FormzSubmissionStatus.inProgress) {
-                      context.read<KajianBloc>().add(
-                            KajianEvent.fetchKajian(
-                              locale: context.locale,
-                              pageNumber: state.currentPage + 1,
-                            ),
-                          );
-                    }
-                    return true;
-                  },
-                  child: ListView.builder(
-                    itemCount: isLoading
-                        ? state.kajianResult.length + 1
-                        : state.kajianResult.length,
-                    itemBuilder: (context, index) {
-                      if (isLoading && index == state.kajianResult.length) {
-                        return const Center(
-                          child: LinearProgressIndicator(),
+          child: BlocBuilder<KajianBloc, KajianState>(
+            builder: (context, state) {
+              final isLoading = state.status.isInProgress;
+              if (state.status.isFailure) {
+                return ErrorScreen(
+                  message: LocaleKeys.errorGetKajian.tr(),
+                  onRefresh: () {
+                    context.read<KajianBloc>().add(
+                          KajianEvent.fetchKajian(
+                            locale: context.locale,
+                            pageNumber: 1,
+                          ),
                         );
-                      }
-                      return _KajianTile(
-                        kajian: state.kajianResult.elementAt(index),
-                      );
-                    },
-                  ),
+                  },
                 );
-              },
-            ),
+              }
+              if (state.kajianResult.isEmpty && !isLoading) {
+                return ErrorScreen(
+                  message: LocaleKeys.searchKajianEmpty.tr(),
+                );
+              }
+              return NotificationListener<ScrollNotification>(
+                onNotification: (scrollNotification) {
+                  if (scrollNotification.metrics.pixels ==
+                          scrollNotification.metrics.maxScrollExtent &&
+                      !isLoading) {
+                    context.read<KajianBloc>().add(
+                          KajianEvent.fetchKajian(
+                            locale: context.locale,
+                            pageNumber: state.currentPage + 1,
+                          ),
+                        );
+                  }
+                  return true;
+                },
+                child: ListView.builder(
+                  itemCount: isLoading
+                      ? state.kajianResult.length + 1
+                      : state.kajianResult.length,
+                  itemBuilder: (context, index) {
+                    if (isLoading && index == state.kajianResult.length) {
+                      return const Center(
+                        child: LinearProgressIndicator(),
+                      );
+                    }
+                    return _KajianTile(
+                      kajian: state.kajianResult.elementAt(index),
+                    );
+                  },
+                ),
+              );
+            },
           ),
         ),
       ],
@@ -150,7 +148,6 @@ class _FilterRowSection extends StatelessWidget {
                           selected: state.isNearby,
                           selectedColor:
                               context.theme.colorScheme.secondaryContainer,
-                          showCheckmark: false,
                           onSelected: (bool value) {
                             context.read<KajianBloc>().add(
                                   const KajianEvent.toggleNearby(),
@@ -326,6 +323,7 @@ class _FilterRowSection extends StatelessWidget {
                 elevation: 0,
               ),
               onPressed: () {
+                final filterBefore = context.read<KajianBloc>().state.filter;
                 showModalBottomSheet(
                   isScrollControlled: true,
                   context: context,
@@ -359,12 +357,17 @@ class _FilterRowSection extends StatelessWidget {
                       },
                     ),
                   ),
-                ).whenComplete(() => context.read<KajianBloc>().add(
-                      KajianEvent.fetchKajian(
-                        locale: context.locale,
-                        pageNumber: 1,
-                      ),
-                    ));
+                ).whenComplete(() {
+                  final filterAfter = context.read<KajianBloc>().state.filter;
+                  if (filterBefore != filterAfter) {
+                    context.read<KajianBloc>().add(
+                          KajianEvent.fetchKajian(
+                            locale: context.locale,
+                            pageNumber: 1,
+                          ),
+                        );
+                  }
+                });
               },
               child: const Icon(
                 Icons.settings_input_composite_outlined,
@@ -388,7 +391,6 @@ class _FilterRowSection extends StatelessWidget {
       child: FilterChip(
         label: Text(label),
         selected: true,
-        showCheckmark: false,
         onSelected: (bool value) {
           onSelected();
           context.read<KajianBloc>().add(
@@ -564,41 +566,84 @@ class _KajianBottomSheetFilter extends StatelessWidget {
             child: ListView(
               controller: scrollController,
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              children: const [
-                _ProvinceFilterSection(),
-                VSpacer(height: 10),
-                _CityFilterSection(),
-                VSpacer(height: 10),
-                _MosqueFilterSection(),
-                VSpacer(height: 10),
-                _DayFilterSection(),
-                VSpacer(height: 10),
-                _WeekFilterSection(),
-                VSpacer(height: 10),
-                _PrayerFilterSection(),
-                VSpacer(height: 10),
-                _ThemeFilterSection(),
-                VSpacer(height: 10),
-                _UstadzFilterSection(),
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Text(
+                        LocaleKeys.filter.tr(),
+                        style: context.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible:
+                          context.watch<KajianBloc>().state.filter.isNotEmpty,
+                      child: TextButton(
+                        onPressed: () {
+                          context.read<KajianBloc>().add(
+                                const KajianEvent.resetFilter(),
+                              );
+                          context.read<KajianBloc>().add(
+                                KajianEvent.fetchKajian(
+                                  locale: context.locale,
+                                  pageNumber: 1,
+                                ),
+                              );
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          LocaleKeys.reset.tr(),
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            color: context.theme.colorScheme.primary,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const _ProvinceFilterSection(),
+                const VSpacer(height: 10),
+                const _CityFilterSection(),
+                const VSpacer(height: 10),
+                const _MosqueFilterSection(),
+                const VSpacer(height: 10),
+                const _DayFilterSection(),
+                const VSpacer(height: 10),
+                const _WeekFilterSection(),
+                const VSpacer(height: 10),
+                const _PrayerFilterSection(),
+                const VSpacer(height: 10),
+                const _ThemeFilterSection(),
+                const VSpacer(height: 10),
+                const _UstadzFilterSection(),
+                const VSpacer(height: 10),
               ],
             ),
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              minimumSize: const Size(double.infinity, 50),
-              backgroundColor: context.theme.colorScheme.onPrimary,
-              foregroundColor: context.theme.colorScheme.primary,
+          Container(
+            color: context.theme.colorScheme.surface,
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 40),
+                backgroundColor: context.theme.colorScheme.onPrimary,
+                foregroundColor: context.theme.colorScheme.primary,
+              ),
+              onPressed: () {
+                context.read<KajianBloc>().add(
+                      KajianEvent.fetchKajian(
+                        locale: context.locale,
+                        pageNumber: 1,
+                      ),
+                    );
+                Navigator.pop(context);
+              },
+              child: Text(LocaleKeys.apply.tr()),
             ),
-            onPressed: () {
-              context.read<KajianBloc>().add(
-                    KajianEvent.fetchKajian(
-                      locale: context.locale,
-                      pageNumber: 1,
-                    ),
-                  );
-              Navigator.pop(context);
-            },
-            child: Text(LocaleKeys.apply.tr()),
           ),
         ],
       ),
@@ -619,11 +664,7 @@ class _ProvinceFilterSection extends StatelessWidget {
             previous.provincesStatus != current.provincesStatus;
       },
       builder: (context, state) {
-        if (state.provincesStatus == FormzSubmissionStatus.inProgress) {
-          return const Center(
-            child: LinearProgressIndicator(),
-          );
-        } else if (state.provincesStatus == FormzSubmissionStatus.failure) {
+        if (state.provincesStatus.isFailure) {
           return ErrorScreen(
             message: LocaleKeys.errorGetProvince.tr(),
             onRefresh: () {
@@ -633,13 +674,14 @@ class _ProvinceFilterSection extends StatelessWidget {
             },
           );
         }
-        return _ItemOnBottomSheet(
+        return ItemOnBottomSheet(
           title: LocaleKeys.province.tr(),
           selected: state.filter.studyLocationProvinceId,
           isMultipleSelect: false,
           items: state.provinces
               .map((e) => Pair(e.name, e.id.toString()))
               .toList(),
+          isLoading: state.provincesStatus.isInProgress,
           onSelected: (value) {
             context.read<KajianBloc>().add(
                   KajianEvent.onChangeFilterProvince(
@@ -668,11 +710,7 @@ class _CityFilterSection extends StatelessWidget {
                 current.filter.studyLocationProvinceId;
       },
       builder: (context, state) {
-        if (state.citiesStatus == FormzSubmissionStatus.inProgress) {
-          return const Center(
-            child: LinearProgressIndicator(),
-          );
-        } else if (state.citiesStatus == FormzSubmissionStatus.failure) {
+        if (state.citiesStatus.isFailure) {
           return ErrorScreen(
             message: LocaleKeys.errorGetCity.tr(),
             onRefresh: () {
@@ -690,10 +728,11 @@ class _CityFilterSection extends StatelessWidget {
               .where((e) => e.second.startsWith(selectedProvinceId.second))
               .toList();
         }
-        return _ItemOnBottomSheet(
+        return ItemOnBottomSheet(
           title: LocaleKeys.city.tr(),
           selected: state.filter.studyLocationCityId,
           isMultipleSelect: false,
+          isLoading: state.citiesStatus.isInProgress,
           items: items,
           onSelected: (value) {
             context.read<KajianBloc>().add(
@@ -724,11 +763,7 @@ class _MosqueFilterSection extends StatelessWidget {
                 current.filter.studyLocationProvinceId;
       },
       builder: (context, state) {
-        if (state.mosquesStatus == FormzSubmissionStatus.inProgress) {
-          return const Center(
-            child: LinearProgressIndicator(),
-          );
-        } else if (state.mosquesStatus == FormzSubmissionStatus.failure) {
+        if (state.mosquesStatus.isFailure) {
           return ErrorScreen(
             message: LocaleKeys.errorGetMosque.tr(),
             onRefresh: () {
@@ -756,11 +791,12 @@ class _MosqueFilterSection extends StatelessWidget {
               .map((e) => Pair(e.name.orEmpty(), e.id.toString()))
               .toList();
         }
-        return _ItemOnBottomSheet(
+        return ItemOnBottomSheet(
           title: LocaleKeys.mosque.tr(),
           isMultipleSelect: false,
           countShow: 3,
           selected: state.filter.locationId,
+          isLoading: state.mosquesStatus.isInProgress,
           items: items,
           onSelected: (value) {
             context.read<KajianBloc>().add(
@@ -786,7 +822,7 @@ class _DayFilterSection extends StatelessWidget {
             current.filter.dailySchedulesDayId;
       },
       builder: (context, state) {
-        return _ItemOnBottomSheet(
+        return ItemOnBottomSheet(
           title: LocaleKeys.day.tr(),
           isShowAllButton: false,
           selected: state.filter.dailySchedulesDayId,
@@ -815,7 +851,7 @@ class _WeekFilterSection extends StatelessWidget {
             current.filter.weeklySchedulesWeekId;
       },
       builder: (context, state) {
-        return _ItemOnBottomSheet(
+        return ItemOnBottomSheet(
           title: LocaleKeys.week.tr(),
           isShowAllButton: false,
           selected: state.filter.weeklySchedulesWeekId,
@@ -843,7 +879,7 @@ class _PrayerFilterSection extends StatelessWidget {
         return previous.filter.prayerSchedule != current.filter.prayerSchedule;
       },
       builder: (context, state) {
-        return _ItemOnBottomSheet(
+        return ItemOnBottomSheet(
           title: LocaleKeys.prayerSchedule.tr(),
           isShowAllButton: false,
           selected: state.filter.prayerSchedule,
@@ -875,11 +911,7 @@ class _ThemeFilterSection extends StatelessWidget {
             previous.kajianThemesStatus != current.kajianThemesStatus;
       },
       builder: (context, state) {
-        if (state.kajianThemesStatus == FormzSubmissionStatus.inProgress) {
-          return const Center(
-            child: LinearProgressIndicator(),
-          );
-        } else if (state.kajianThemesStatus == FormzSubmissionStatus.failure) {
+        if (state.kajianThemesStatus.isFailure) {
           return ErrorScreen(
             message: LocaleKeys.errorGetKajianTheme.tr(),
             onRefresh: () {
@@ -889,9 +921,10 @@ class _ThemeFilterSection extends StatelessWidget {
             },
           );
         }
-        return _ItemOnBottomSheet(
+        return ItemOnBottomSheet(
           title: LocaleKeys.theme.tr(),
           selected: state.filter.themesThemeId,
+          isLoading: state.kajianThemesStatus.isInProgress,
           items:
               state.kajianThemes.map((e) => Pair(e.theme, e.themeId)).toList(),
           onSelected: (value) {
@@ -919,11 +952,7 @@ class _UstadzFilterSection extends StatelessWidget {
             previous.ustadzStatus != current.ustadzStatus;
       },
       builder: (context, state) {
-        if (state.ustadzStatus == FormzSubmissionStatus.inProgress) {
-          return const Center(
-            child: LinearProgressIndicator(),
-          );
-        } else if (state.ustadzStatus == FormzSubmissionStatus.failure) {
+        if (state.ustadzStatus.isFailure) {
           return ErrorScreen(
             message: LocaleKeys.errorGetUstadz.tr(),
             onRefresh: () {
@@ -933,10 +962,11 @@ class _UstadzFilterSection extends StatelessWidget {
             },
           );
         }
-        return _ItemOnBottomSheet(
+        return ItemOnBottomSheet(
           title: LocaleKeys.ustadz.tr(),
           countShow: 3,
           selected: state.filter.ustadzUstadzId,
+          isLoading: state.ustadzStatus.isInProgress,
           items:
               state.ustadz.map((e) => Pair(e.name, e.id.toString())).toList(),
           onSelected: (value) {
@@ -948,296 +978,6 @@ class _UstadzFilterSection extends StatelessWidget {
           },
         );
       },
-    );
-  }
-}
-
-class _ItemOnBottomSheet extends StatelessWidget {
-  final String title;
-
-  /// List of items with the
-  /// First value as the display name
-  /// Second value as ID
-  final List<Pair<String, String>> items;
-  final Pair<String, String>? selected;
-  final Function(Pair<String, String>?) onSelected;
-  final int? countShow;
-  final bool isShowAllButton;
-  final bool isMultipleSelect;
-
-  const _ItemOnBottomSheet({
-    required this.title,
-    required this.items,
-    required this.selected,
-    required this.onSelected,
-    this.countShow,
-    this.isShowAllButton = true,
-    this.isMultipleSelect = true,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final showItems = items.take(countShow ?? 5).toList();
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title,
-              style: context.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            if (isShowAllButton) ...[
-              TextButton(
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    enableDrag: true,
-                    isScrollControlled: true,
-                    builder: (_) => DraggableScrollableSheet(
-                      initialChildSize: 0.7,
-                      minChildSize: 0.7,
-                      maxChildSize: 0.9,
-                      expand: false,
-                      builder: (context, scrollController) {
-                        return _SearchItemBottomSheet(
-                          title: title,
-                          items: items,
-                          selected: selected,
-                          onSelected: onSelected,
-                          scrollController: scrollController,
-                          isMultipleSelect: isMultipleSelect,
-                        );
-                      },
-                    ),
-                  );
-                },
-                child: Text(
-                  LocaleKeys.seeAll.tr(),
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    color: context.theme.colorScheme.primary,
-                  ),
-                ),
-              ),
-            ]
-          ],
-        ),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: isShowAllButton
-              ? showItems.map((e) => _buildItem(context, e)).toList()
-              : items.map((e) => _buildItem(context, e)).toList(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildItem(BuildContext context, Pair<String, String> item) {
-    return FilterChip(
-      label: Text(item.first),
-      backgroundColor: context.theme.colorScheme.surfaceContainer,
-      selectedColor: context.theme.colorScheme.primaryContainer,
-      elevation: 0,
-      side: BorderSide(
-        color: context.theme.colorScheme.onSurface,
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4),
-      ),
-      showCheckmark: false,
-      selected: selected?.second.split('|').contains(item.second) ?? false,
-      onSelected: (value) {
-        onSelected(item);
-      },
-    );
-  }
-}
-
-class _SearchItemBottomSheet extends StatefulWidget {
-  final String title;
-  final bool isMultipleSelect;
-
-  /// List of items with the
-  /// First value as the display NAME
-  /// Second value as ID
-  final List<Pair<String, String>> items;
-  final Pair<String, String>? selected;
-  final Function(Pair<String, String>?) onSelected;
-  final ScrollController scrollController;
-
-  const _SearchItemBottomSheet({
-    required this.title,
-    required this.items,
-    required this.selected,
-    required this.onSelected,
-    required this.scrollController,
-    this.isMultipleSelect = true,
-  });
-
-  @override
-  State<_SearchItemBottomSheet> createState() => _SearchItemBottomSheetState();
-}
-
-class _SearchItemBottomSheetState extends State<_SearchItemBottomSheet> {
-  late List<Pair<String, String>> _filteredItems;
-  final _selectedItems = ValueNotifier(<Pair<String, String>>[]);
-
-  @override
-  void initState() {
-    super.initState();
-    _filteredItems = widget.items;
-    for (final item in widget.selected?.second.split('|') ?? []) {
-      _selectedItems.value.add(
-        Pair(
-          widget.items.firstWhere((e) => e.second == item).first,
-          item,
-        ),
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  widget.title,
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    _filteredItems = widget.items;
-                    _selectedItems.value.clear();
-                  });
-                  widget.onSelected(null);
-                },
-                child: Text(
-                  LocaleKeys.reset.tr(),
-                ),
-              )
-            ],
-          ),
-          SearchBox(
-            isDense: true,
-            initialValue: '',
-            hintText: LocaleKeys.search.tr(),
-            onChanged: (value) {
-              setState(() {
-                _filteredItems = widget.items
-                    .where((element) => element.first
-                        .toLowerCase()
-                        .contains(value.toLowerCase()))
-                    .toList();
-              });
-            },
-          ),
-          const VSpacer(height: 10),
-          ValueListenableBuilder(
-              valueListenable: _selectedItems,
-              builder: (context, value, child) {
-                return Expanded(
-                  child: ListView.separated(
-                    controller: widget.scrollController,
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    itemCount: _filteredItems.length,
-                    itemBuilder: (context, index) {
-                      final item = _filteredItems[index];
-                      return ListTile(
-                        title: Text(
-                          item.first,
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        selected: _selectedItems.value
-                            .where((e) => e.second == item.second)
-                            .isNotEmpty,
-                        selectedTileColor:
-                            context.theme.colorScheme.primaryContainer,
-                        onTap: () {
-                          if (!widget.isMultipleSelect) {
-                            widget.onSelected(item);
-                            Navigator.pop(context);
-                            return;
-                          }
-                          setState(() {
-                            if (_selectedItems.value
-                                .where((e) => e.second == item.second)
-                                .isNotEmpty) {
-                              _selectedItems.value.removeWhere(
-                                (e) => e.second == item.second,
-                              );
-                            } else {
-                              _selectedItems.value.add(item);
-                            }
-                          });
-                          widget.onSelected(
-                            _selectedItems.value.isEmpty
-                                ? null
-                                : Pair(
-                                    _selectedItems.value
-                                        .map((e) => e.first)
-                                        .toSet()
-                                        .join('|'),
-                                    _selectedItems.value
-                                        .map((e) => e.second)
-                                        .toSet()
-                                        .join('|'),
-                                  ),
-                          );
-                          // setState(
-                          //   () {
-                          //     if (_selectedIdItems.contains(item.second)) {
-                          //       _selectedIdItems.remove(item.second);
-                          //       _selectedNameItems.remove(item.first);
-                          //     } else {
-                          //       _selectedIdItems.add(item.second);
-                          //       _selectedNameItems.add(item.first);
-                          //     }
-                          //   },
-                          // );
-                          //
-                          // print("selectedIdItems: $_selectedIdItems");
-                          // print("selectedNameItems: $_selectedNameItems");
-                          // widget.onSelected(
-                          //   _selectedIdItems.isEmpty
-                          //       ? null
-                          //       : Pair(
-                          //           _selectedNameItems.toSet().join('|'),
-                          //           _selectedIdItems.toSet().join('|'),
-                          //         ),
-                          // );
-                        },
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return const Divider();
-                    },
-                  ),
-                );
-              }),
-        ],
-      ),
     );
   }
 }

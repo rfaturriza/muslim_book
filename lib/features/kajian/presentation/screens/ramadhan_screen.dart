@@ -5,12 +5,15 @@ import 'package:formz/formz.dart';
 import 'package:quranku/core/components/error_screen.dart';
 import 'package:quranku/core/components/search_box.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
+import 'package:quranku/core/utils/extension/extension.dart';
 import 'package:quranku/core/utils/extension/string_ext.dart';
 import 'package:quranku/generated/locale_keys.g.dart';
 
 import '../../../../core/components/spacer.dart';
 import '../../../../core/utils/pair.dart';
+import '../../domain/entities/prayer_kajian.codegen.dart';
 import '../bloc/prayerSchedule/prayer_schedule_bloc.dart';
+import '../components/item_bottom_sheet.dart';
 import '../components/label_tag.dart';
 import '../components/mosque_image_container.dart';
 import '../components/schedule_icon_text.dart';
@@ -23,154 +26,315 @@ class RamadhanScreen extends StatelessWidget {
     return Column(
       children: [
         const VSpacer(height: 10),
-        SearchBox(
-          isDense: true,
-          initialValue: '',
-          hintText: LocaleKeys.searchRamadhanHint.tr(),
-          onChanged: (value) {},
-          onSubmitted: () {},
+        BlocBuilder<PrayerScheduleBloc, PrayerScheduleState>(
+          buildWhen: (previous, current) {
+            return previous.search != current.search;
+          },
+          builder: (context, state) {
+            return SearchBox(
+              isDense: true,
+              initialValue: state.search ?? emptyString,
+              hintText: LocaleKeys.searchRamadhanHint.tr(),
+              onClear: () {
+                context.read<PrayerScheduleBloc>().add(
+                      PrayerScheduleEvent.fetchRamadhanSchedules(
+                        locale: context.locale,
+                        pageNumber: 1,
+                        search: emptyString,
+                      ),
+                    );
+              },
+              onChanged: (value) {
+                context.read<PrayerScheduleBloc>().add(
+                      PrayerScheduleEvent.fetchRamadhanSchedules(
+                        locale: context.locale,
+                        pageNumber: 1,
+                        search: value,
+                      ),
+                    );
+              },
+            );
+          },
         ),
         const VSpacer(height: 10),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                flex: 9,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      BlocBuilder<PrayerScheduleBloc, PrayerScheduleState>(
-                        buildWhen: (previous, current) =>
-                        previous.isNearby != current.isNearby,
-                        builder: (context, state) {
-                          return InkWell(
-                            onTap: () {
-                              context.read<PrayerScheduleBloc>().add(
-                                const PrayerScheduleEvent.toggleNearby(),
-                              );
-                              context.read<PrayerScheduleBloc>().add(
-                                PrayerScheduleEvent.fetchRamadhanSchedules(
-                                  locale: context.locale,
-                                  pageNumber: 1,
-                                ),
-                              );
-                            },
-                            child: Chip(
-                              label: Text(LocaleKeys.nearby.tr()),
-                              backgroundColor: state.isNearby
-                                  ? context.theme.colorScheme.secondaryContainer
-                                  : null,
-                            ),
-                          );
-                        },
-                      ),
-                      const HSpacer(width: 5),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(4),
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(
-                        color: context.theme.colorScheme.tertiary,
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    foregroundColor: context.theme.colorScheme.tertiary,
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
-                  ),
-                  onPressed: () {},
-                  child: const Icon(
-                    Icons.settings_input_composite_outlined,
-                    size: 20,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+        const _FilterRowSection(),
         Expanded(
-          child: RefreshIndicator(
-            onRefresh: () {
-              context.read<PrayerScheduleBloc>().add(
-                    PrayerScheduleEvent.fetchRamadhanSchedules(
-                      locale: context.locale,
-                      pageNumber: 1,
-                    ),
-                  );
-              return Future.delayed(const Duration(seconds: 500));
-            },
-            child: BlocBuilder<PrayerScheduleBloc, PrayerScheduleState>(
-              builder: (context, state) {
-                final isLoading =
-                    state.status == FormzSubmissionStatus.inProgress;
-                if (state.status == FormzSubmissionStatus.failure) {
-                  return ErrorScreen(
-                    message: LocaleKeys.errorGetRamadhanSchedule.tr(),
-                    onRefresh: () {
-                      context.read<PrayerScheduleBloc>().add(
-                            PrayerScheduleEvent.fetchRamadhanSchedules(
-                              locale: context.locale,
-                              pageNumber: 1,
-                            ),
-                          );
-                    },
-                  );
-                }
-                return NotificationListener<ScrollNotification>(
-                  onNotification: (scrollNotification) {
-                    if (scrollNotification.metrics.pixels ==
-                            scrollNotification.metrics.maxScrollExtent &&
-                        state.status != FormzSubmissionStatus.inProgress) {
-                      context.read<PrayerScheduleBloc>().add(
-                            PrayerScheduleEvent.fetchRamadhanSchedules(
-                              locale: context.locale,
-                              pageNumber: state.currentPage + 1,
-                            ),
-                          );
-                    }
-                    return true;
-                  },
-                  child: ListView.builder(
-                    itemCount: isLoading
-                        ? state.ramadhanSchedules.length + 1
-                        : state.ramadhanSchedules.length,
-                    itemBuilder: (context, index) {
-                      if (isLoading &&
-                          index == state.ramadhanSchedules.length) {
-                        return const Center(
-                          child: LinearProgressIndicator(),
+          child: BlocBuilder<PrayerScheduleBloc, PrayerScheduleState>(
+            builder: (context, state) {
+              final isLoading = state.status.isInProgress;
+              if (state.status.isFailure) {
+                return ErrorScreen(
+                  message: LocaleKeys.errorGetRamadhanSchedule.tr(),
+                  onRefresh: () {
+                    context.read<PrayerScheduleBloc>().add(
+                          PrayerScheduleEvent.fetchRamadhanSchedules(
+                            locale: context.locale,
+                            pageNumber: 1,
+                          ),
                         );
-                      }
-                      final schedule = state.ramadhanSchedules[index];
-                      return _RamadhanTile(
-                        imageUrl:
-                            schedule.studyLocation?.pictureUrl ?? emptyString,
-                        prayerName: schedule.subtypeLabel ?? emptyString,
-                        title: schedule.studyLocation?.name ?? emptyString,
-                        imam: schedule.imam ?? emptyString,
-                        khatib: schedule.khatib ?? emptyString,
-                        date: schedule.prayDate ?? emptyString,
-                        place: schedule.studyLocation?.address ?? emptyString,
-                      );
-                    },
-                  ),
+                  },
                 );
-              },
-            ),
+              }
+              if (state.ramadhanSchedules.isEmpty && !isLoading) {
+                return ErrorScreen(
+                  message: LocaleKeys.searchRamadhanEmpty.tr(),
+                );
+              }
+              return NotificationListener<ScrollNotification>(
+                onNotification: (scrollNotification) {
+                  if (scrollNotification.metrics.pixels ==
+                          scrollNotification.metrics.maxScrollExtent &&
+                      !isLoading) {
+                    context.read<PrayerScheduleBloc>().add(
+                          PrayerScheduleEvent.fetchRamadhanSchedules(
+                            locale: context.locale,
+                            pageNumber: state.currentPage + 1,
+                          ),
+                        );
+                  }
+                  return true;
+                },
+                child: ListView.builder(
+                  itemCount: isLoading
+                      ? state.ramadhanSchedules.length + 1
+                      : state.ramadhanSchedules.length,
+                  itemBuilder: (context, index) {
+                    if (isLoading && index == state.ramadhanSchedules.length) {
+                      return const Center(
+                        child: LinearProgressIndicator(),
+                      );
+                    }
+                    final schedule = state.ramadhanSchedules[index];
+                    return _RamadhanTile(
+                      imageUrl:
+                          schedule.studyLocation?.pictureUrl ?? emptyString,
+                      prayerName: schedule.subtypeLabel ?? emptyString,
+                      title: schedule.studyLocation?.name ?? emptyString,
+                      imam: schedule.imam ?? emptyString,
+                      khatib: schedule.khatib ?? emptyString,
+                      date: schedule.prayDate ?? emptyString,
+                      place: schedule.studyLocation?.address ?? emptyString,
+                    );
+                  },
+                ),
+              );
+            },
           ),
         ),
       ],
+    );
+  }
+}
+
+class _FilterRowSection extends StatelessWidget {
+  const _FilterRowSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            flex: 9,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  BlocBuilder<PrayerScheduleBloc, PrayerScheduleState>(
+                    buildWhen: (previous, current) =>
+                        previous.isNearby != current.isNearby,
+                    builder: (context, state) {
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 5),
+                        child: FilterChip(
+                          label: Text(LocaleKeys.nearby.tr()),
+                          selected: state.isNearby,
+                          selectedColor:
+                              context.theme.colorScheme.secondaryContainer,
+                          onSelected: (bool value) {
+                            context.read<PrayerScheduleBloc>().add(
+                                  const PrayerScheduleEvent.toggleNearby(),
+                                );
+                            context.read<PrayerScheduleBloc>().add(
+                                  PrayerScheduleEvent.fetchRamadhanSchedules(
+                                    locale: context.locale,
+                                    pageNumber: 1,
+                                  ),
+                                );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                  BlocBuilder<PrayerScheduleBloc, PrayerScheduleState>(
+                    buildWhen: (previous, current) =>
+                        previous.filter != current.filter,
+                    builder: (context, state) {
+                      return Row(
+                        children: [
+                          if (state.filter.studyLocationProvinceId != null) ...[
+                            _filterChip(
+                              context: context,
+                              label:
+                                  state.filter.studyLocationProvinceId!.first,
+                              selected: true,
+                              onSelected: () {
+                                context.read<PrayerScheduleBloc>().add(
+                                      const PrayerScheduleEvent
+                                          .onChangeFilterProvince(
+                                        null,
+                                      ),
+                                    );
+                              },
+                            ),
+                          ],
+                          if (state.filter.studyLocationCityId != null) ...[
+                            _filterChip(
+                              context: context,
+                              label: state.filter.studyLocationCityId!.first,
+                              selected: true,
+                              onSelected: () {
+                                context.read<PrayerScheduleBloc>().add(
+                                      const PrayerScheduleEvent
+                                          .onChangeFilterCity(
+                                        null,
+                                      ),
+                                    );
+                              },
+                            ),
+                          ],
+                          if (state.filter.locationId != null) ...[
+                            _filterChip(
+                              context: context,
+                              label: state.filter.locationId!.first,
+                              selected: true,
+                              onSelected: () {
+                                context.read<PrayerScheduleBloc>().add(
+                                      const PrayerScheduleEvent
+                                          .onChangeFilterMosque(
+                                        null,
+                                      ),
+                                    );
+                              },
+                            ),
+                          ],
+                          if (state.filter.prayerSchedule != null) ...[
+                            _filterChip(
+                              context: context,
+                              label: state.filter.prayerSchedule!.first,
+                              selected: true,
+                              onSelected: () {
+                                context.read<PrayerScheduleBloc>().add(
+                                      const PrayerScheduleEvent
+                                          .onChangeFilterSubtype(
+                                        null,
+                                      ),
+                                    );
+                              },
+                            ),
+                          ],
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.all(4),
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(
+                    color: context.theme.colorScheme.tertiary,
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                foregroundColor: context.theme.colorScheme.tertiary,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+              ),
+              onPressed: () {
+                final filterBefore =
+                    context.read<PrayerScheduleBloc>().state.filter;
+                showModalBottomSheet(
+                  isScrollControlled: true,
+                  context: context,
+                  enableDrag: true,
+                  builder: (_) => BlocProvider.value(
+                    value: context.read<PrayerScheduleBloc>()
+                      ..add(
+                        const PrayerScheduleEvent.fetchProvinces(),
+                      )
+                      ..add(
+                        const PrayerScheduleEvent.fetchCities(),
+                      )
+                      ..add(
+                        const PrayerScheduleEvent.fetchMosques(),
+                      ),
+                    child: DraggableScrollableSheet(
+                      initialChildSize: 0.7,
+                      minChildSize: 0.5,
+                      maxChildSize: 0.9,
+                      expand: false,
+                      builder: (context, scrollController) {
+                        return _PrayerScheduleBottomSheetFilter(
+                          scrollController: scrollController,
+                        );
+                      },
+                    ),
+                  ),
+                ).whenComplete(() {
+                  final filterAfter =
+                      context.read<PrayerScheduleBloc>().state.filter;
+                  if (filterBefore != filterAfter) {
+                    context.read<PrayerScheduleBloc>().add(
+                          PrayerScheduleEvent.fetchRamadhanSchedules(
+                            locale: context.locale,
+                            pageNumber: 1,
+                          ),
+                        );
+                  }
+                });
+              },
+              child: const Icon(
+                Icons.settings_input_composite_outlined,
+                size: 20,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _filterChip({
+    required BuildContext context,
+    required String label,
+    required bool selected,
+    required void Function() onSelected,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: FilterChip(
+        label: Text(label),
+        selected: true,
+        onSelected: (bool value) {
+          onSelected();
+          context.read<PrayerScheduleBloc>().add(
+                PrayerScheduleEvent.fetchRamadhanSchedules(
+                  locale: context.locale,
+                  pageNumber: 1,
+                ),
+              );
+        },
+      ),
     );
   }
 }
@@ -255,7 +419,7 @@ class _RamadhanTile extends StatelessWidget {
                         RichText(
                             text: TextSpan(children: [
                           TextSpan(
-                            text: 'Imam: ',
+                            text: '${LocaleKeys.imam.tr()}: ',
                             style: context.textTheme.bodySmall,
                           ),
                           TextSpan(
@@ -267,7 +431,7 @@ class _RamadhanTile extends StatelessWidget {
                         RichText(
                             text: TextSpan(children: [
                           TextSpan(
-                            text: 'Khatib: ',
+                            text: '${LocaleKeys.khatib.tr()}: ',
                             style: context.textTheme.bodySmall,
                           ),
                           TextSpan(
@@ -294,6 +458,477 @@ class _RamadhanTile extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _PrayerScheduleBottomSheetFilter extends StatelessWidget {
+  final ScrollController scrollController;
+
+  const _PrayerScheduleBottomSheetFilter({
+    required this.scrollController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(
+            child: ListView(
+              controller: scrollController,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Text(
+                        LocaleKeys.filter.tr(),
+                        style: context.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: context
+                          .watch<PrayerScheduleBloc>()
+                          .state
+                          .filter
+                          .isNotEmpty(),
+                      child: TextButton(
+                        onPressed: () {
+                          context.read<PrayerScheduleBloc>().add(
+                                const PrayerScheduleEvent.resetFilter(),
+                              );
+                          context.read<PrayerScheduleBloc>().add(
+                                PrayerScheduleEvent.fetchRamadhanSchedules(
+                                  locale: context.locale,
+                                  pageNumber: 1,
+                                ),
+                              );
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          LocaleKeys.reset.tr(),
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            color: context.theme.colorScheme.primary,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const VSpacer(height: 10),
+                const _PrayerDatePickerSection(),
+                const VSpacer(height: 10),
+                const _ProvinceFilterSection(),
+                const VSpacer(height: 10),
+                const _CityFilterSection(),
+                const VSpacer(height: 10),
+                const _MosqueFilterSection(),
+                const VSpacer(height: 10),
+                const _PrayerFilterSection(),
+                const VSpacer(height: 10),
+                const _SearchImamSection(),
+                const VSpacer(height: 10),
+                const _SearchKhatibSection(),
+                const VSpacer(height: 10),
+              ],
+            ),
+          ),
+          Container(
+            color: context.theme.colorScheme.surface,
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 40),
+                backgroundColor: context.theme.colorScheme.onPrimary,
+                foregroundColor: context.theme.colorScheme.primary,
+              ),
+              onPressed: () {
+                context.read<PrayerScheduleBloc>().add(
+                      PrayerScheduleEvent.fetchRamadhanSchedules(
+                        locale: context.locale,
+                        pageNumber: 1,
+                      ),
+                    );
+                Navigator.pop(context);
+              },
+              child: Text(LocaleKeys.apply.tr()),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProvinceFilterSection extends StatelessWidget {
+  const _ProvinceFilterSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<PrayerScheduleBloc, PrayerScheduleState>(
+      buildWhen: (previous, current) {
+        return previous.provinces != current.provinces ||
+            previous.filter.studyLocationProvinceId !=
+                current.filter.studyLocationProvinceId ||
+            previous.provincesStatus != current.provincesStatus;
+      },
+      builder: (context, state) {
+        if (state.provincesStatus.isFailure) {
+          return ErrorScreen(
+            message: LocaleKeys.errorGetProvince.tr(),
+            onRefresh: () {
+              context.read<PrayerScheduleBloc>().add(
+                    const PrayerScheduleEvent.fetchProvinces(),
+                  );
+            },
+          );
+        }
+        return ItemOnBottomSheet(
+          title: LocaleKeys.province.tr(),
+          selected: state.filter.studyLocationProvinceId,
+          isMultipleSelect: false,
+          isLoading: state.provincesStatus.isInProgress,
+          items: state.provinces
+              .map((e) => Pair(e.name, e.id.toString()))
+              .toList(),
+          onSelected: (value) {
+            context.read<PrayerScheduleBloc>().add(
+                  PrayerScheduleEvent.onChangeFilterProvince(
+                    value,
+                  ),
+                );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _CityFilterSection extends StatelessWidget {
+  const _CityFilterSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<PrayerScheduleBloc, PrayerScheduleState>(
+      buildWhen: (previous, current) {
+        return previous.cities != current.cities ||
+            previous.filter.studyLocationCityId !=
+                current.filter.studyLocationCityId ||
+            previous.citiesStatus != current.citiesStatus ||
+            previous.filter.studyLocationProvinceId !=
+                current.filter.studyLocationProvinceId;
+      },
+      builder: (context, state) {
+        if (state.citiesStatus.isFailure) {
+          return ErrorScreen(
+            message: LocaleKeys.errorGetCity.tr(),
+            onRefresh: () {
+              context.read<PrayerScheduleBloc>().add(
+                    const PrayerScheduleEvent.fetchCities(),
+                  );
+            },
+          );
+        }
+        final selectedProvinceId = state.filter.studyLocationProvinceId;
+        var items =
+            state.cities.map((e) => Pair(e.name, e.id.toString())).toList();
+        if (selectedProvinceId != null) {
+          items = items
+              .where((e) => e.second.startsWith(selectedProvinceId.second))
+              .toList();
+        }
+        return ItemOnBottomSheet(
+          title: LocaleKeys.city.tr(),
+          selected: state.filter.studyLocationCityId,
+          isMultipleSelect: false,
+          isLoading: state.citiesStatus.isInProgress,
+          items: items,
+          onSelected: (value) {
+            context.read<PrayerScheduleBloc>().add(
+                  PrayerScheduleEvent.onChangeFilterCity(
+                    value,
+                  ),
+                );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _MosqueFilterSection extends StatelessWidget {
+  const _MosqueFilterSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<PrayerScheduleBloc, PrayerScheduleState>(
+      buildWhen: (previous, current) {
+        return previous.mosques != current.mosques ||
+            previous.filter.locationId != current.filter.locationId ||
+            previous.mosquesStatus != current.mosquesStatus ||
+            previous.filter.studyLocationCityId !=
+                current.filter.studyLocationCityId ||
+            previous.filter.studyLocationProvinceId !=
+                current.filter.studyLocationProvinceId;
+      },
+      builder: (context, state) {
+        if (state.mosquesStatus == FormzSubmissionStatus.failure) {
+          return ErrorScreen(
+            message: LocaleKeys.errorGetMosque.tr(),
+            onRefresh: () {
+              context.read<PrayerScheduleBloc>().add(
+                    const PrayerScheduleEvent.fetchMosques(),
+                  );
+            },
+          );
+        }
+        var items = state.mosques
+            .map((e) => Pair(e.name.orEmpty(), e.id.toString()))
+            .toList();
+        final selectedProvinceId = state.filter.studyLocationProvinceId;
+        if (selectedProvinceId != null) {
+          items = state.mosques
+              .where(
+                  (e) => e.province?.id.toString() == selectedProvinceId.second)
+              .map((e) => Pair(e.name.orEmpty(), e.id.toString()))
+              .toList();
+        }
+        final selectedCityId = state.filter.studyLocationCityId;
+        if (selectedCityId != null) {
+          items = state.mosques
+              .where((e) => e.city?.id.toString() == selectedCityId.second)
+              .map((e) => Pair(e.name.orEmpty(), e.id.toString()))
+              .toList();
+        }
+        return ItemOnBottomSheet(
+          title: LocaleKeys.mosque.tr(),
+          isMultipleSelect: false,
+          countShow: 3,
+          selected: state.filter.locationId,
+          isLoading: state.mosquesStatus.isInProgress,
+          items: items,
+          onSelected: (value) {
+            context.read<PrayerScheduleBloc>().add(
+                  PrayerScheduleEvent.onChangeFilterMosque(
+                    value,
+                  ),
+                );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _PrayerFilterSection extends StatelessWidget {
+  const _PrayerFilterSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<PrayerScheduleBloc, PrayerScheduleState>(
+      buildWhen: (previous, current) {
+        return previous.filter.prayerSchedule != current.filter.prayerSchedule;
+      },
+      builder: (context, state) {
+        return ItemOnBottomSheet(
+          title: LocaleKeys.prayerSchedule.tr(),
+          isShowAllButton: false,
+          selected: state.filter.prayerSchedule,
+          items: PrayerKajian.prayersRamadhan()
+              .map((e) => Pair(e.name, e.id))
+              .toList(),
+          onSelected: (value) {
+            context.read<PrayerScheduleBloc>().add(
+                  PrayerScheduleEvent.onChangeFilterSubtype(
+                    value,
+                  ),
+                );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _PrayerDatePickerSection extends StatelessWidget {
+  const _PrayerDatePickerSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<PrayerScheduleBloc, PrayerScheduleState>(
+      buildWhen: (previous, current) {
+        return previous.filter.prayDate != current.filter.prayDate;
+      },
+      builder: (context, state) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              LocaleKeys.prayDateSchedule.tr(),
+              style: context.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const VSpacer(height: 5),
+            GestureDetector(
+              onTap: () async {
+                final selectedDate = await showDatePicker(
+                  context: context,
+                  initialDate: state.filter.prayDate ?? DateTime.now(),
+                  firstDate:
+                      DateTime.now().subtract(const Duration(days: 365 * 5)),
+                  lastDate: DateTime.now().add(const Duration(days: 365 * 5)),
+                );
+                if (selectedDate != null) {
+                  context.read<PrayerScheduleBloc>().add(
+                        PrayerScheduleEvent.onChangeFilterPrayDate(
+                          selectedDate,
+                        ),
+                      );
+                }
+              },
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: ShapeDecoration(
+                  color: context.theme.colorScheme.surface,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.date_range_outlined),
+                    const HSpacer(width: 5),
+                    Expanded(
+                      child: Text(
+                        state.filter.prayDate?.ddMMMMyyyy(context.locale) ??
+                            LocaleKeys.selectDate.tr(),
+                        style: context.textTheme.bodyMedium,
+                      ),
+                    ),
+                    state.filter.prayDate != null
+                        ? InkWell(
+                            onTap: () {
+                              context.read<PrayerScheduleBloc>().add(
+                                    const PrayerScheduleEvent
+                                        .onChangeFilterPrayDate(
+                                      null,
+                                    ),
+                                  );
+                            },
+                            child: const Icon(Icons.close),
+                          )
+                        : const SizedBox(),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _SearchImamSection extends StatelessWidget {
+  const _SearchImamSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<PrayerScheduleBloc, PrayerScheduleState>(
+      buildWhen: (previous, current) {
+        return previous.filter.imam != current.filter.imam;
+      },
+      builder: (context, state) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              LocaleKeys.imam.tr(),
+              style: context.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const VSpacer(height: 5),
+            SearchBox(
+              padding: EdgeInsets.zero,
+              backgroundColor: context.theme.colorScheme.surface,
+              initialValue: state.filter.imam ?? '',
+              hintText: LocaleKeys.searchImamHint.tr(),
+              onClear: () {
+                context.read<PrayerScheduleBloc>().add(
+                      const PrayerScheduleEvent.onChangeFilterImam(
+                        null,
+                      ),
+                    );
+              },
+              onChanged: (value) {
+                context.read<PrayerScheduleBloc>().add(
+                      PrayerScheduleEvent.onChangeFilterImam(
+                        value,
+                      ),
+                    );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _SearchKhatibSection extends StatelessWidget {
+  const _SearchKhatibSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<PrayerScheduleBloc, PrayerScheduleState>(
+      buildWhen: (previous, current) {
+        return previous.filter.khatib != current.filter.khatib;
+      },
+      builder: (context, state) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              LocaleKeys.khatib.tr(),
+              style: context.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const VSpacer(height: 5),
+            SearchBox(
+              initialValue: state.filter.khatib ?? '',
+              padding: EdgeInsets.zero,
+              backgroundColor: context.theme.colorScheme.surface,
+              hintText: LocaleKeys.searchKhatibHint.tr(),
+              onClear: () {
+                context.read<PrayerScheduleBloc>().add(
+                      const PrayerScheduleEvent.onChangeFilterKhatib(
+                        null,
+                      ),
+                    );
+              },
+              onChanged: (value) {
+                context.read<PrayerScheduleBloc>().add(
+                      PrayerScheduleEvent.onChangeFilterKhatib(
+                        value,
+                      ),
+                    );
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

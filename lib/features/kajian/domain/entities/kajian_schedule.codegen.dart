@@ -31,8 +31,10 @@ class DataKajianSchedule with _$DataKajianSchedule {
     required List<dynamic> customSchedules,
   }) = _DataKajianSchedule;
 
-  static empty() {
-    return const DataKajianSchedule(
+  const DataKajianSchedule._();
+
+  static DataKajianSchedule empty() {
+    return  const DataKajianSchedule(
       id: 0,
       title: '',
       type: '',

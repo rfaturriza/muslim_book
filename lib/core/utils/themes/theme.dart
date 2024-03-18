@@ -21,7 +21,7 @@ ThemeData themeData({required bool isDarkMode}) {
     colorScheme: isDarkMode ? darkColorScheme : lightColorScheme,
     iconTheme: IconThemeData(color: primaryColor),
     scaffoldBackgroundColor:
-        isDarkMode ? darkColorScheme.background : lightColorScheme.background,
+        isDarkMode ? darkColorScheme.surface : lightColorScheme.surface,
     dividerColor: isDarkMode
         ? darkColorScheme.onSurface.withOpacity(0.12)
         : lightColorScheme.onSurface.withOpacity(0.12),
@@ -29,13 +29,13 @@ ThemeData themeData({required bool isDarkMode}) {
     fontFamily: FontConst.lato,
     textTheme: textTheme,
     tabBarTheme: TabBarTheme(
-      labelColor: textTheme.titleMedium?.color,
+      labelColor: primaryColor,
       labelStyle: textTheme.titleMedium?.copyWith(
         fontWeight: FontWeight.w500,
       ),
       unselectedLabelColor: textTheme.titleMedium?.color?.withOpacity(0.5),
       dividerColor: Colors.transparent,
-      indicatorColor: textTheme.titleMedium?.color,
+      indicatorColor: primaryColor,
       indicatorSize: TabBarIndicatorSize.label,
     ),
     appBarTheme: AppBarTheme(
@@ -61,7 +61,7 @@ ThemeData themeData({required bool isDarkMode}) {
           ? darkColorScheme.onSurface.withOpacity(0.5)
           : lightColorScheme.onSurface.withOpacity(0.5),
       dragHandleSize: const Size(32, 4),
-      modalElevation: 10,
+      modalElevation: 0,
       backgroundColor: isDarkMode
           ? darkColorScheme.surfaceContainer
           : lightColorScheme.surfaceContainer,
@@ -115,6 +115,9 @@ ThemeData themeData({required bool isDarkMode}) {
         ),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         foregroundColor: primaryColor,
+        disabledForegroundColor: isDarkMode
+            ? darkColorScheme.onSurface.withOpacity(0.5)
+            : lightColorScheme.onSurface.withOpacity(0.5),
         textStyle: textTheme.titleSmall,
       ),
     ),

@@ -16,6 +16,23 @@ String getCityNameWithoutPrefix(String? city) {
   return city.toLowerCase();
 }
 
+String? extractYouTubeVideoId(String url) {
+  RegExp regExpLiveStream = RegExp(
+    r'(?:https?://)?(?:www\.)?(?:youtube\.com/live/|youtu\.be/)([a-zA-Z0-9_-]{11})');
+RegExp regExpRegularVideo = RegExp(
+    r'(?:https?://)?(?:www\.)?(?:youtube\.com/(?:[^/\n\s]+/\S+/|(?:v|e(?:mbed)?)/|\S*?[?&]v=)|youtu\.be/)([a-zA-Z0-9_-]{11})');
+
+final matchLiveStream = regExpLiveStream.firstMatch(url);
+  final matchRegularVideo = regExpRegularVideo.firstMatch(url);
+
+  if (matchLiveStream != null && matchLiveStream.groupCount >= 1) {
+    return matchLiveStream.group(1);
+  } else if (matchRegularVideo != null && matchRegularVideo.groupCount >= 1) {
+    return matchRegularVideo.group(1);
+  } else {
+    return null;
+  }
+}
 class CurrencyInputFormatter extends TextInputFormatter {
 
   @override

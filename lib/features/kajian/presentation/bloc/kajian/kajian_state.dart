@@ -3,6 +3,9 @@ part of 'kajian_bloc.dart';
 @freezed
 class KajianState with _$KajianState {
   const factory KajianState({
+    @Default(FormzSubmissionStatus.initial)
+    FormzSubmissionStatus statusRecommended,
+    DataKajianSchedule? recommendedKajian,
     @Default(FormzSubmissionStatus.initial) FormzSubmissionStatus status,
     @Default([]) List<DataKajianSchedule> kajianResult,
     @Default(FormzSubmissionStatus.initial)
@@ -22,6 +25,6 @@ class KajianState with _$KajianState {
     int? totalData,
     @Default(true) bool isNearby,
     @Default(FilterKajianSchedule()) FilterKajianSchedule filter,
-    @Default(emptyString) String search,
+    String? search,
   }) = _KajianState;
 }

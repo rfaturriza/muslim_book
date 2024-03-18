@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
-import 'package:quranku/core/utils/themes/color_schemes_material.dart';
 
 import '../utils/debouncer.dart';
 
-class SearchBox extends StatelessWidget {
+class SearchBox extends StatefulWidget {
   const SearchBox({
     super.key,
     required this.initialValue,
@@ -12,24 +11,50 @@ class SearchBox extends StatelessWidget {
     required this.onChanged,
     this.onSubmitted,
     this.isDense = false,
+    this.padding,
+    this.onClear,
+    this.backgroundColor,
   });
 
   final String initialValue;
   final String hintText;
   final void Function(String) onChanged;
   final void Function()? onSubmitted;
+  final Color? backgroundColor;
+
+  /// Callback when clear button is pressed
+  /// If null, clear button will not be shown
+  /// should be null when initialValue is empty
+  final void Function()? onClear;
   final bool isDense;
+  final EdgeInsetsGeometry? padding;
+
+  @override
+  State<SearchBox> createState() => _SearchBoxState();
+}
+
+class _SearchBoxState extends State<SearchBox> {
+  late TextEditingController textController;
+  final debouncer = Debouncer(milliseconds: 500);
+
+  @override
+  void initState() {
+    super.initState();
+    textController = TextEditingController(
+      text: widget.initialValue,
+    );
+    textController.addListener(() {
+      debouncer.run(() => widget.onChanged(textController.text));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final debouncer = Debouncer(milliseconds: 1000);
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      margin: widget.padding ?? const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: context.isDarkMode
-            ? MaterialTheme.darkScheme().surfaceContainer
-            : MaterialTheme.lightScheme().surfaceContainer,
+        color: widget.backgroundColor ?? context.theme.colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -41,24 +66,35 @@ class SearchBox extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: TextFormField(
-              initialValue: initialValue,
+              controller: textController,
               onTapOutside: (_) => context.dismissKeyboard(),
-              onChanged: (val) {
-                debouncer.run(() => onChanged(val));
-              },
-              onSaved: (val) => onSubmitted?.call(),
+              onSaved: (val) => widget.onSubmitted?.call(),
               onFieldSubmitted: (_) => context.dismissKeyboard(),
               textInputAction: TextInputAction.search,
+              textAlignVertical: TextAlignVertical.center,
               decoration: InputDecoration(
-                isDense: isDense,
-                hintText: hintText,
+                isDense: widget.isDense,
+                hintText: widget.hintText,
                 hintStyle: context.theme.textTheme.titleSmall?.copyWith(
                   color: context.theme.colorScheme.onSurface.withOpacity(0.5),
                 ),
+                labelStyle: context.theme.textTheme.titleSmall,
                 border: InputBorder.none,
               ),
             ),
           ),
+          widget.onClear != null && textController.text.isNotEmpty
+              ? InkWell(
+                  onTap: () {
+                    textController.clear();
+                    widget.onClear?.call();
+                  },
+                  child: Icon(
+                    Icons.close,
+                    color: context.theme.colorScheme.onSurface,
+                  ),
+                )
+              : const SizedBox(),
         ],
       ),
     );

@@ -98,7 +98,7 @@ class KajianHubRepositoryImpl extends KajianHubRepository {
         longitude: longitude,
         isNearest: 1,
         page: 1,
-        limit: 5,
+        limit: 1,
         orderBy: 'id',
         sortBy: 'asc',
         relations:

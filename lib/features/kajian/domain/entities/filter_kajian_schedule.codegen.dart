@@ -26,48 +26,11 @@ class FilterKajianSchedule with _$FilterKajianSchedule {
 
   const FilterKajianSchedule._();
 
-  bool get isFilterThemeMultiple {
-    return (themesThemeId?.first.contains('|') ?? false) &&
-        (themesThemeId?.second.contains('|') ?? false);
+  bool get isEmpty {
+    return this == const FilterKajianSchedule();
   }
 
-  bool get isFilterUstadzMultiple {
-    return (ustadzUstadzId?.first.contains('|') ?? false) &&
-        (ustadzUstadzId?.second.contains('|') ?? false);
-  }
-
-  bool get isFilterLocationMultiple {
-    return (locationId?.first.contains('|') ?? false) &&
-        (locationId?.second.contains('|') ?? false);
-  }
-
-  bool get isdailySchedulesDayIdMultiple {
-    return (dailySchedulesDayId?.first.contains('|') ?? false) &&
-        (dailySchedulesDayId?.second.contains('|') ?? false);
-  }
-
-  bool get isweeklySchedulesWeekIdMultiple {
-    return (weeklySchedulesWeekId?.first.contains('|') ?? false) &&
-        (weeklySchedulesWeekId?.second.contains('|') ?? false);
-  }
-
-  bool get isprayerScheduleMultiple {
-    return (prayerSchedule?.first.contains('|') ?? false) &&
-        (prayerSchedule?.second.contains('|') ?? false);
-  }
-
-  bool get isstudyLocationProvinceIdMultiple {
-    return (studyLocationProvinceId?.first.contains('|') ?? false) &&
-        (studyLocationProvinceId?.second.contains('|') ?? false);
-  }
-
-  bool get isstudyLocationCityIdMultiple {
-    return (studyLocationCityId?.first.contains('|') ?? false) &&
-        (studyLocationCityId?.second.contains('|') ?? false);
-  }
-
-  bool get islocationIdMultiple {
-    return (locationId?.first.contains('|') ?? false) &&
-        (locationId?.second.contains('|') ?? false);
+  bool get isNotEmpty {
+    return this != const FilterKajianSchedule();
   }
 }

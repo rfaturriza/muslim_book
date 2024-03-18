@@ -149,5 +149,13 @@
   "errorGetDistrict": "Gagal mendapatkan wilayah",
   "errorGetMosque": "Gagal mendapatkan masjid",
   "errorGetKajianTheme": "Gagal mendapatkan tema kajian",
-  "errorGetUstadz": "Gagal mendapatkan ustadz"
+  "errorGetUstadz": "Gagal mendapatkan ustadz",
+  "prayDateSchedule": "Tanggal Jadwal Sholat",
+  "selectDate": "Pilih Tanggal",
+  "searchImamHint": "Cari Imam...",
+  "searchImamEmpty": "Tidak ada imam yang ditemukan",
+  "searchKhatibHint": "Cari Khatib...",
+  "searchKhatibEmpty": "Tidak ada khatib yang ditemukan",
+  "filter": "Filter",
+  "play": "Putar"
 }

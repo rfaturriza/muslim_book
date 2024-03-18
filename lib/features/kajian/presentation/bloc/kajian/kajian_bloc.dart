@@ -5,7 +5,6 @@ import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:quranku/core/utils/extension/dartz_ext.dart';
-import 'package:quranku/core/utils/extension/string_ext.dart';
 import 'package:quranku/features/kajian/domain/entities/filter_kajian_schedule.codegen.dart';
 import 'package:quranku/features/kajian/domain/entities/kajian_schedule.codegen.dart';
 import 'package:quranku/features/kajian/domain/usecases/get_ustadz_list_usecase.dart';
@@ -82,8 +81,7 @@ class KajianBloc extends Bloc<KajianEvent, KajianState> {
         orderBy: 'id',
         sortBy: 'asc',
         options: [],
-        relations:
-            'ustadz,studyLocation.province,studyLocation.city,dailySchedules,customSchedules,themes',
+        relations: 'ustadz,studyLocation.province,studyLocation.city,dailySchedules,customSchedules,themes,histories',
       );
       if (state.filter.studyLocationProvinceId != null) {
         request = request.copyWith(
@@ -163,6 +161,7 @@ class KajianBloc extends Bloc<KajianEvent, KajianState> {
         request = request.copyWith(
           query: event.search,
         );
+        emit(state.copyWith(search: event.search));
       }
       final result = await _getKajianListUseCase(request);
       result.fold(
@@ -187,7 +186,7 @@ class KajianBloc extends Bloc<KajianEvent, KajianState> {
 
   void _onFetchNearbyKajian(
       _FetchNearbyKajian event, Emitter<KajianState> emit) async {
-    emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
+    emit(state.copyWith(statusRecommended: FormzSubmissionStatus.inProgress));
     try {
       final geoLocation = await _getCurrentLocation(
         GetCurrentLocationParams(locale: event.locale),
@@ -201,20 +200,17 @@ class KajianBloc extends Bloc<KajianEvent, KajianState> {
       );
       result.fold(
         (failure) => emit(
-          state.copyWith(status: FormzSubmissionStatus.failure),
+          state.copyWith(statusRecommended: FormzSubmissionStatus.failure),
         ),
         (data) {
           emit(state.copyWith(
-            status: FormzSubmissionStatus.success,
-            kajianResult: data.data,
-            currentPage: data.meta.currentPage ?? 0,
-            lastPage: data.meta.lastPage ?? 0,
-            totalData: data.meta.total ?? 0,
+            statusRecommended: FormzSubmissionStatus.success,
+            recommendedKajian: data.data.isNotEmpty ? data.data.first : null,
           ));
         },
       );
     } catch (e) {
-      emit(state.copyWith(status: FormzSubmissionStatus.failure));
+      emit(state.copyWith(statusRecommended: FormzSubmissionStatus.failure));
     }
   }
 
