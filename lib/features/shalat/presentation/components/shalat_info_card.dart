@@ -72,8 +72,8 @@ class ShalatInfoCard extends StatelessWidget {
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [
-                  context.theme.colorScheme.surface.withOpacity(0.85),
-                  context.theme.colorScheme.surface.withOpacity(0.2),
+                  context.theme.colorScheme.surfaceContainer.withAlpha(200),
+                  context.theme.colorScheme.surfaceContainer.withAlpha(180)
                 ], // Customize your gradient colors
               ),
               shape: RoundedRectangleBorder(
