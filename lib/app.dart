@@ -61,7 +61,7 @@ class App extends StatelessWidget {
         radius: 5,
         position: ToastPosition.bottom,
         child: ChangeNotifierProvider(
-          create: (context) => ThemeProvider()..init(),
+          create: (context) => sl<ThemeProvider>()..init(),
           child: Consumer<ThemeProvider>(
             builder: (context, themeProvider, child) {
               return MaterialApp(
