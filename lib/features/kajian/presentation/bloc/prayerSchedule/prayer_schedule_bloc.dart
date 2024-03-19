@@ -127,8 +127,13 @@ class PrayerScheduleBloc
         );
       }
       if (state.filter.prayDate != null) {
+        final date = DateFormat('yyyy-MM-dd').format(state.filter.prayDate!);
         request = request.copyWith(
-          prayDate: DateFormat('yyyy-MM-dd').format(state.filter.prayDate!),
+          options: [
+            ...?request.options,
+            'filter,pray_date,equal,$date',
+          ],
+          prayDate: date,
         );
       }
       if (event.search != null) {
@@ -156,9 +161,10 @@ class PrayerScheduleBloc
         ),
         (data) {
           final currentData = state.ramadhanSchedules;
+          final newData = (currentData + (data?.data ?? [])).toSet().toList();
           emit(state.copyWith(
             status: FormzSubmissionStatus.success,
-            ramadhanSchedules: currentData + (data?.data ?? []),
+            ramadhanSchedules: newData,
             currentPage: data?.meta.currentPage ?? 0,
             totalData: data?.meta.total ?? 0,
             lastPage: data?.meta.lastPage ?? 0,

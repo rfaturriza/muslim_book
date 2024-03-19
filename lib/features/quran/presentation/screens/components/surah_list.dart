@@ -58,9 +58,6 @@ class SurahList extends StatelessWidget {
                   onChanged: (val) {
                     surahBloc.add(SurahFetchSearchEvent(query: val));
                   },
-                  onSubmitted: () {
-                    context.dismissKeyboard();
-                  },
                 ),
               );
             }

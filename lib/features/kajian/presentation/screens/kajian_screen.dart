@@ -46,7 +46,7 @@ class KajianScreen extends StatelessWidget {
                       ),
                     );
               },
-              onChanged: (value) {
+              onSubmitted: (value) {
                 context.read<KajianBloc>().add(
                       KajianEvent.fetchKajian(
                         pageNumber: 1,
@@ -86,7 +86,8 @@ class KajianScreen extends StatelessWidget {
                 onNotification: (scrollNotification) {
                   if (scrollNotification.metrics.pixels ==
                           scrollNotification.metrics.maxScrollExtent &&
-                      !isLoading) {
+                      !isLoading &&
+                      state.kajianResult.isNotEmpty) {
                     context.read<KajianBloc>().add(
                           KajianEvent.fetchKajian(
                             locale: context.locale,

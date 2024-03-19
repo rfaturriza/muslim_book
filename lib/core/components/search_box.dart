@@ -8,7 +8,7 @@ class SearchBox extends StatefulWidget {
     super.key,
     required this.initialValue,
     required this.hintText,
-    required this.onChanged,
+    this.onChanged,
     this.onSubmitted,
     this.isDense = false,
     this.padding,
@@ -18,8 +18,8 @@ class SearchBox extends StatefulWidget {
 
   final String initialValue;
   final String hintText;
-  final void Function(String) onChanged;
-  final void Function()? onSubmitted;
+  final void Function(String)? onChanged;
+  final void Function(String?)? onSubmitted;
   final Color? backgroundColor;
 
   /// Callback when clear button is pressed
@@ -43,9 +43,6 @@ class _SearchBoxState extends State<SearchBox> {
     textController = TextEditingController(
       text: widget.initialValue,
     );
-    textController.addListener(() {
-      debouncer.run(() => widget.onChanged(textController.text));
-    });
   }
 
   @override
@@ -54,7 +51,8 @@ class _SearchBoxState extends State<SearchBox> {
       margin: widget.padding ?? const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: widget.backgroundColor ?? context.theme.colorScheme.surfaceContainer,
+        color: widget.backgroundColor ??
+            context.theme.colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -68,10 +66,16 @@ class _SearchBoxState extends State<SearchBox> {
             child: TextFormField(
               controller: textController,
               onTapOutside: (_) => context.dismissKeyboard(),
-              onSaved: (val) => widget.onSubmitted?.call(),
-              onFieldSubmitted: (_) => context.dismissKeyboard(),
+              onFieldSubmitted: widget.onSubmitted,
               textInputAction: TextInputAction.search,
               textAlignVertical: TextAlignVertical.center,
+              onChanged: widget.onChanged != null
+                  ? (val) {
+                      debouncer.run(() {
+                        widget.onChanged?.call(val);
+                      });
+                    }
+                  : null,
               decoration: InputDecoration(
                 isDense: widget.isDense,
                 hintText: widget.hintText,

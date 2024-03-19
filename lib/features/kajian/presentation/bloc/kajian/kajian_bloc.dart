@@ -170,9 +170,10 @@ class KajianBloc extends Bloc<KajianEvent, KajianState> {
         ),
         (data) {
           final currentData = state.kajianResult;
+          final newData = (currentData + data.data).toSet().toList();
           emit(state.copyWith(
             status: FormzSubmissionStatus.success,
-            kajianResult: currentData + data.data,
+            kajianResult: newData,
             currentPage: data.meta.currentPage ?? 0,
             lastPage: data.meta.lastPage ?? 0,
             totalData: data.meta.total ?? 0,

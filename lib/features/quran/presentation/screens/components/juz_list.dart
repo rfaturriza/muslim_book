@@ -55,9 +55,6 @@ class JuzList extends StatelessWidget {
                   onChanged: (val) {
                     juzBloc.searchJuz(val);
                   },
-                  onSubmitted: () {
-                    context.dismissKeyboard();
-                  },
                 ),
               );
             }
