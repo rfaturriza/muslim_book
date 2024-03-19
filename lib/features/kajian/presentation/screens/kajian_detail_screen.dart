@@ -67,6 +67,9 @@ class _ImageSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final imageUrl = this.imageUrl.isNotEmpty
+        ? this.imageUrl
+        : AssetConst.mosqueDummyImageUrl;
     return Stack(
       children: [
         Container(
