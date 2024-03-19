@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:injectable/injectable.dart';
 import 'package:quranku/core/constants/hive_constants.dart';
 
 import 'core/utils/themes/color_schemes.dart';
 
+@singleton
 class ThemeProvider with ChangeNotifier {
   late ThemeMode _themeMode = ThemeMode.system;
   late ColorScheme _darkScheme = darkColorScheme;
