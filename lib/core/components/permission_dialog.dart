@@ -28,10 +28,7 @@ class PermissionDialog extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
           child: Text(LocaleKeys.cancel.tr()),
         ),
-        TextButton(
-          style: TextButton.styleFrom(
-            backgroundColor: context.theme.colorScheme.primary,
-          ),
+        ElevatedButton(
           onPressed: () {
             onOk();
             Navigator.pop(context);
