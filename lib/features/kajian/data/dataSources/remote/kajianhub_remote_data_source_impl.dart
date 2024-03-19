@@ -17,11 +17,11 @@ import 'kajianhub_remote_data_source.dart';
 
 @LazySingleton(as: KajianHubRemoteDataSource)
 class KajianHubRemoteDataSourceImpl implements KajianHubRemoteDataSource {
-  final Dio dio;
+  final Dio _dio;
 
-  KajianHubRemoteDataSourceImpl({required this.dio}) : super() {
-    dio.options.baseUrl = NetworkConfig.baseUrlKajianHub;
-  }
+  KajianHubRemoteDataSourceImpl() : _dio = NetworkConfig.getDioCustom(
+    NetworkConfig.baseUrlKajianHub,
+  );
 
   @override
   Future<Either<Exception, KajianSchedulesResponseModel>> getKajianSchedules({
@@ -30,7 +30,7 @@ class KajianHubRemoteDataSourceImpl implements KajianHubRemoteDataSource {
     const endpoint = 'kajian/schedules';
     try {
       final queryParameters = request.toJson();
-      final response = await dio.get(
+      final response = await _dio.get(
         endpoint,
         queryParameters: queryParameters,
       );
@@ -49,7 +49,7 @@ class KajianHubRemoteDataSourceImpl implements KajianHubRemoteDataSource {
   }) async {
     final endpoint = 'kajian/schedules/$id';
     try {
-      final response = await dio.get(
+      final response = await _dio.get(
         endpoint,
         queryParameters: {
           'relations': relations ??
@@ -73,7 +73,7 @@ class KajianHubRemoteDataSourceImpl implements KajianHubRemoteDataSource {
   }) async {
     const endpoint = 'public/cities';
     try {
-      final response = await dio.get(
+      final response = await _dio.get(
         endpoint,
         queryParameters: {
           'type': type ?? 'collection',
@@ -98,7 +98,7 @@ class KajianHubRemoteDataSourceImpl implements KajianHubRemoteDataSource {
   }) async {
     const endpoint = 'kajian/themes';
     try {
-      final response = await dio.get(
+      final response = await _dio.get(
         endpoint,
         queryParameters: {
           'type': type ?? 'collection',
@@ -123,7 +123,7 @@ class KajianHubRemoteDataSourceImpl implements KajianHubRemoteDataSource {
   }) async {
     const endpoint = 'kajian/study-locations';
     try {
-      final response = await dio.get(
+      final response = await _dio.get(
         endpoint,
         queryParameters: {
           'type': type ?? 'collection',
@@ -149,7 +149,7 @@ class KajianHubRemoteDataSourceImpl implements KajianHubRemoteDataSource {
   }) async {
     const endpoint = 'public/provinces';
     try {
-      final response = await dio.get(
+      final response = await _dio.get(
         endpoint,
         queryParameters: {
           'type': type ?? 'collection',
@@ -168,12 +168,12 @@ class KajianHubRemoteDataSourceImpl implements KajianHubRemoteDataSource {
 
   @override
   Future<Either<Exception, RamadhanSchedulesByMosqueResponseModel>>
-      getRamadhanSchedulesByMosque({
+  getRamadhanSchedulesByMosque({
     required RamadhanScheduleByMosqueRequestModel request,
   }) async {
     const endpoint = 'kajian/prayer-schedules/ramadhan';
     try {
-      final response = await dio.get(
+      final response = await _dio.get(
         endpoint,
         queryParameters: request.toJson(),
       );
@@ -193,7 +193,7 @@ class KajianHubRemoteDataSourceImpl implements KajianHubRemoteDataSource {
   }) async {
     const endpoint = 'kajian/ustadz';
     try {
-      final response = await dio.get(
+      final response = await _dio.get(
         endpoint,
         queryParameters: {
           'type': type ?? 'collection',
@@ -211,7 +211,7 @@ class KajianHubRemoteDataSourceImpl implements KajianHubRemoteDataSource {
 
   @override
   Future<Either<Exception, RamadhanSchedulesResponseModel>>
-      getRamadhanSchedules({
+  getRamadhanSchedules({
     required RamadhanScheduleRequestModel request,
   }) async {
     const endpoint = 'kajian/prayer-schedules';
@@ -219,7 +219,7 @@ class KajianHubRemoteDataSourceImpl implements KajianHubRemoteDataSource {
       final queryParameters = request.copyWith(
         options: [...request.options ?? [], 'filter,type_id,equal,2'],
       ).toJson();
-      final response = await dio.get(
+      final response = await _dio.get(
         endpoint,
         queryParameters: queryParameters,
       );

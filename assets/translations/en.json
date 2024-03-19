@@ -159,5 +159,6 @@
   "filter": "Filter",
   "play": "Play",
   "requestAccessLocation": "Request Location Permission",
-  "tryAgain": "Try Again"
+  "tryAgain": "Try Again",
+  "notAvailableInYourCountry": "Not available in your country"
 }

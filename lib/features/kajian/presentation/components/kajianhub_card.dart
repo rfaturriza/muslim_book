@@ -16,60 +16,92 @@ import '../../../../injection.dart';
 import '../../../shalat/presentation/bloc/shalat/shalat_bloc.dart';
 
 class KajianHubCard extends StatelessWidget {
-  const KajianHubCard({super.key});
+  final bool isNotAvailable;
+
+  const KajianHubCard({
+    super.key,
+    this.isNotAvailable = true,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        context.navigateTo(const KajianHubScreen());
+    return BlocBuilder<ShalatBloc, ShalatState>(
+      buildWhen: (previous, current) {
+        return previous.locationStatus != current.locationStatus ||
+            previous.geoLocation != current.geoLocation;
       },
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        decoration: ShapeDecoration(
-          color: context.theme.colorScheme.surfaceContainer,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 8,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Flexible(
-                flex: 4,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Flexible(
-                      flex: 2,
-                      child: _KajianHubLogo(),
-                    ),
-                    const HSpacer(width: 10),
-                    Flexible(
-                      flex: 5,
-                      child: BlocProvider<KajianBloc>(
-                        create: (context) => sl<KajianBloc>(),
-                        child: const _RecitationInfo(),
-                      ),
-                    ),
-                  ],
-                ),
+      builder: (context, state) {
+        final isLocationNotGranted =
+            state.locationStatus?.status.isNotGranted == true;
+        final isNotIndonesia =
+            state.geoLocation?.country?.toLowerCase() != 'indonesia';
+        return InkWell(
+          onTap: isLocationNotGranted || isNotIndonesia
+              ? null
+              : () {
+                  context.navigateTo(const KajianHubScreen());
+                },
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            decoration: ShapeDecoration(
+              color: context.theme.colorScheme.surfaceContainer,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
-              const Flexible(
-                flex: 1,
-                child: TagNavIcon(),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 8,
               ),
-            ],
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Flexible(
+                    flex: 4,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Flexible(
+                          flex: 2,
+                          child: _KajianHubLogo(),
+                        ),
+                        const HSpacer(width: 10),
+                        if (isNotAvailable) ...[
+                          Flexible(
+                            flex: 5,
+                            child: Center(
+                              child: Text(
+                                LocaleKeys.notAvailableInYourCountry.tr(),
+                                style: context.theme.textTheme.titleSmall,
+                              ),
+                            ),
+                          )
+                        ],
+                        if (!isNotAvailable) ...[
+                          Flexible(
+                            flex: 5,
+                            child: BlocProvider<KajianBloc>(
+                              create: (context) => sl<KajianBloc>(),
+                              child: const _RecitationInfo(),
+                            ),
+                          ),
+                        ]
+                      ],
+                    ),
+                  ),
+                  const Flexible(
+                    flex: 1,
+                    child: TagNavIcon(),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
