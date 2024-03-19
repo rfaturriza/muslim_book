@@ -107,6 +107,7 @@ class _PrayTimeInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final shalatBloc = context.read<ShalatBloc>();
     return BlocBuilder<LanguageSettingBloc, LanguageSettingState>(
       buildWhen: (p, c) => p.languagePrayerTime != c.languagePrayerTime,
       builder: (context, languageSettingState) {
@@ -163,16 +164,31 @@ class _PrayTimeInfo extends StatelessWidget {
                         ),
                       ],
                       if (state.scheduleByDay?.isLeft() == true) ...[
-                        Expanded(
-                          child: IconButton(
-                            onPressed: () {
-                              context.read<ShalatBloc>().add(
-                                    const ShalatEvent
-                                        .getShalatScheduleByDayEvent(),
-                                  );
-                            },
-                            icon: const Icon(Icons.refresh),
-                          ),
+                        IconButton(
+                          onPressed: () {
+                            context.read<ShalatBloc>().add(
+                                  const ShalatEvent
+                                      .getShalatScheduleByDayEvent(),
+                                );
+                          },
+                          icon: const Icon(Icons.refresh),
+                        ),
+                      ],
+                      if (state.locationStatus?.status.isNotGranted ==
+                          true) ...[
+                        IconButton(
+                          onPressed: () async {
+                            final p = await Geolocator.requestPermission();
+                            shalatBloc.add(
+                              ShalatEvent.onChangedLocationStatusEvent(
+                                status: LocationStatus(
+                                  true,
+                                  p,
+                                ),
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.autorenew_rounded),
                         ),
                       ],
                     ],
@@ -196,6 +212,17 @@ class _PrayTimeInfo extends StatelessWidget {
                       if (state.scheduleByDay?.isRight() == true) ...[
                         Text(
                           place,
+                          style: context.textTheme.titleSmall?.copyWith(
+                            color: context.theme.colorScheme.onSurface,
+                          ),
+                          textAlign: TextAlign.end,
+                          overflow: TextOverflow.clip,
+                        ),
+                      ],
+                      if (state.locationStatus?.status.isNotGranted ==
+                          true) ...[
+                        Text(
+                          LocaleKeys.requestAccessLocation.tr(),
                           style: context.textTheme.titleSmall?.copyWith(
                             color: context.theme.colorScheme.onSurface,
                           ),

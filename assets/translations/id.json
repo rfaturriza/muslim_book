@@ -157,5 +157,7 @@
   "searchKhatibHint": "Cari Khatib...",
   "searchKhatibEmpty": "Tidak ada khatib yang ditemukan",
   "filter": "Filter",
-  "play": "Putar"
+  "play": "Putar",
+  "requestAccessLocation": "Izinkan akses lokasi",
+  "tryAgain": "Coba lagi"
 }

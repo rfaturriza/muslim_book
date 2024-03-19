@@ -157,5 +157,7 @@
   "searchKhatibHint": "Search Khatib...",
   "searchKhatibEmpty": "No khatib found",
   "filter": "Filter",
-  "play": "Play"
+  "play": "Play",
+  "requestAccessLocation": "Request Location Permission",
+  "tryAgain": "Try Again"
 }
