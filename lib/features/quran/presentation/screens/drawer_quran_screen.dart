@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:provider/provider.dart';
 import 'package:quranku/core/constants/url_constants.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/features/setting/presentation/screens/styling_setting_screen.dart';
@@ -9,8 +10,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/components/button_drawer.dart';
 import '../../../../core/components/spacer.dart';
-import '../../../../core/utils/themes/color.dart';
 import '../../../../generated/locale_keys.g.dart';
+import '../../../../theme_provider.dart';
 import '../../../payment/presentation/screens/donation_screen.dart';
 import '../../../setting/presentation/screens/language_setting_screen.dart';
 
@@ -70,7 +71,7 @@ class _ListItemMenu extends StatelessWidget {
           child: Text(
             LocaleKeys.setting.tr(),
             style: context.textTheme.titleSmall?.copyWith(
-              color: secondaryColor.shade500,
+              color: context.theme.colorScheme.onSurface,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -180,23 +181,32 @@ class _AppInfoState extends State<_AppInfo> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            _packageInfo.appName,
-            style: context.textTheme.titleMedium?.copyWith(
-              color: defaultColor.shade50,
-              fontWeight: FontWeight.bold,
-            ),
+      child: ListTile(
+        contentPadding: EdgeInsets.zero,
+        title: Text(
+          _packageInfo.appName,
+          style: context.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
           ),
-          Text(
-            LocaleKeys.version.tr(args: [_packageInfo.version]),
-            style: context.textTheme.bodySmall?.apply(
-              color: defaultColor.shade50,
-            ),
-          ),
-        ],
+        ),
+        subtitle: Text(
+          LocaleKeys.version.tr(args: [_packageInfo.version]),
+          style: context.textTheme.bodySmall,
+        ),
+        trailing: IconButton(
+          icon: context.isDarkMode
+              ? const Icon(Icons.light_mode)
+              : const Icon(Icons.dark_mode),
+          onPressed: () {
+            final themeProvider =
+                Provider.of<ThemeProvider>(context, listen: false);
+            if (context.isDarkMode) {
+              themeProvider.setThemeMode(ThemeMode.light);
+              return;
+            }
+            themeProvider.setThemeMode(ThemeMode.dark);
+          },
+        ),
       ),
     );
   }

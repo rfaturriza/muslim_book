@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
-import 'package:quranku/core/utils/themes/color.dart';
 
 import '../../../../../core/components/divider.dart';
 import '../../../../../core/utils/extension/string_ext.dart';
@@ -30,9 +29,7 @@ class LanguageChooseBottomSheet extends StatelessWidget {
             child: Text(
               title,
               textAlign: TextAlign.start,
-              style: context.textTheme.titleLarge?.copyWith(
-                color: secondaryColor.shade500,
-              ),
+              style: context.textTheme.titleLarge,
             ),
           ),
           Expanded(

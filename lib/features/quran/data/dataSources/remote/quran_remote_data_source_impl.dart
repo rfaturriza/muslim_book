@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -20,7 +21,12 @@ class QuranRemoteDataSourceImpl implements QuranRemoteDataSource {
     const endpoint = 'surah';
     try {
       final result = await dio.get(endpoint);
-      return SurahResponseModel.fromJson(result.data);
+      var data = result.data;
+      if (result.headers.map['content-type']![0] ==
+          'text/html; charset=utf-8') {
+        data = jsonDecode(result.data);
+      }
+      return SurahResponseModel.fromJson(data);
     } on SocketException catch (e) {
       throw ServerException(e);
     } on DioException catch (e) {
@@ -35,7 +41,12 @@ class QuranRemoteDataSourceImpl implements QuranRemoteDataSource {
     final endpoint = 'surah/$surahNumber';
     try {
       final result = await dio.get(endpoint);
-      return DetailSurahResponseModel.fromJson(result.data);
+      var data = result.data;
+      if (result.headers.map['content-type']![0] ==
+          'text/html; charset=utf-8') {
+        data = jsonDecode(result.data);
+      }
+      return DetailSurahResponseModel.fromJson(data);
     } on SocketException catch (e) {
       throw ServerException(e);
     } on DioException catch (e) {
@@ -50,7 +61,12 @@ class QuranRemoteDataSourceImpl implements QuranRemoteDataSource {
     final endpoint = 'juz/$juzNumber';
     try {
       final result = await dio.get(endpoint);
-      return DetailJuzResponseModel.fromJson(result.data);
+      var data = result.data;
+      if (result.headers.map['content-type']![0] ==
+          'text/html; charset=utf-8') {
+        data = jsonDecode(result.data);
+      }
+      return DetailJuzResponseModel.fromJson(data);
     } on SocketException catch (e) {
       throw ServerException(e);
     } on DioException catch (e) {

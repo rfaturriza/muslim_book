@@ -13,9 +13,7 @@ import '../../../domain/entities/juz.codegen.dart';
 import '../../../domain/entities/verses.codegen.dart';
 
 part 'share_verse_bloc.freezed.dart';
-
 part 'share_verse_event.dart';
-
 part 'share_verse_state.dart';
 
 @injectable
@@ -28,7 +26,9 @@ class ShareVerseBloc extends Bloc<ShareVerseEvent, ShareVerseState> {
     on<_OnInit>(_onInit);
     on<_OnChangeBackgroundColor>(_onChangeBackgroundColor);
     on<_OnChangeRandomImageUrl>(_onChangeRandomImageUrl);
-    on<_OnChangeFontSize>(_onChangeFontSize);
+    on<_OnChangeArabicFontSize>(_onChangeArabicFontSize);
+    on<_OnChangeLatinFontSize>(_onChangeLatinFontSize);
+    on<_OnChangeTranslationFontSize>(_onChangeTranslationFontSize);
     on<_OnToggleArabicVisibility>(_onToggleArabicVisibility);
     on<_OnToggleLatinVisibility>(_onToggleLatinVisibility);
     on<_OnToggleTranslationVisibility>(_onToggleTranslationVisibility);
@@ -70,11 +70,25 @@ class ShareVerseBloc extends Bloc<ShareVerseEvent, ShareVerseState> {
     ));
   }
 
-  void _onChangeFontSize(
-    _OnChangeFontSize event,
+  void _onChangeTranslationFontSize(
+    _OnChangeTranslationFontSize event,
     Emitter<ShareVerseState> emit,
   ) {
-    emit(state.copyWith(fontSize: event.fontSize));
+    emit(state.copyWith(translationFontSize: event.fontSize));
+  }
+
+  void _onChangeArabicFontSize(
+    _OnChangeArabicFontSize event,
+    Emitter<ShareVerseState> emit,
+  ) {
+    emit(state.copyWith(arabicFontSize: event.fontSize));
+  }
+
+  void _onChangeLatinFontSize(
+    _OnChangeLatinFontSize event,
+    Emitter<ShareVerseState> emit,
+  ) {
+    emit(state.copyWith(latinFontSize: event.fontSize));
   }
 
   void _onToggleArabicVisibility(

@@ -8,4 +8,12 @@ class AssetConst {
   static const String imageRandomUrl =
       'https://source.unsplash.com/random/1080x1920?nature';
   static const String logoAPP = 'assets/svg/logoApp.svg';
+  static const String kajianHubLogoLight = 'assets/images/KajianHub-white.png';
+  static const String kajianHubTextLogoLight =
+      'assets/images/KajianHub-white-text.png';
+  static const String kajianHubLogoDark = 'assets/images/KajianHub.png';
+  static const String kajianHubTextLogoDark =
+      'assets/images/KajianHub-text.png';
+  static const String googleMapsIcon = 'assets/svg/google_maps_icon.svg';
+  static const String mosqueDummyImageUrl = 'https://kajianhub.com/img/dummy/dummy-masjid.jpg';
 }

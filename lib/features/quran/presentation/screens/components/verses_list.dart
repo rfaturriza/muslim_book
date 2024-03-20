@@ -60,22 +60,22 @@ class _VersesListState extends State<VersesList> {
   final _itemScrollController = ItemScrollController();
   final _itemPositionsListener = ItemPositionsListener.create();
 
-  void _listener() {
-    _itemPositionsListener.itemPositions.addListener(() {
-      final value = _itemPositionsListener.itemPositions.value
-          .map((e) => e.index)
-          .toList();
-      final verseNumberVisible = value.isNotEmpty ? (value.last + 1) : 0;
-      _progress.value = verseNumberVisible / widget.listVerses.length;
-      debugPrint('listener ${_itemPositionsListener.itemPositions.value}');
-      debugPrint('listener progress ${_progress}');
-    });
+  void _onListener() {
+    final value =
+        _itemPositionsListener.itemPositions.value.map((e) => e.index).toList();
+    final verseNumberVisible = value.isNotEmpty ? (value.last + 1) : 0;
+    final progressValue = verseNumberVisible / widget.listVerses.length;
+    if (progressValue >= 1.0) {
+      _progress.value = 1.0;
+      return;
+    }
+    _progress.value = progressValue;
   }
 
   @override
   void initState() {
     super.initState();
-    _listener();
+    _itemPositionsListener.itemPositions.addListener(_onListener);
     WidgetsBinding.instance.addPostFrameCallback(_scrollTo);
   }
 
@@ -126,7 +126,7 @@ class _VersesListState extends State<VersesList> {
 
   @override
   void dispose() {
-    _itemPositionsListener.itemPositions.removeListener(() {});
+    _itemPositionsListener.itemPositions.removeListener(_onListener);
     super.dispose();
   }
 
@@ -175,7 +175,7 @@ class _VersesListState extends State<VersesList> {
                 TextButton(
                   style: TextButton.styleFrom(
                     backgroundColor: context.theme.colorScheme.primary,
-                    foregroundColor: defaultColor.shade50,
+                    foregroundColor: context.theme.colorScheme.onPrimary,
                   ),
                   onPressed: () {
                     if (widget.view == ViewMode.juz) {
@@ -259,11 +259,47 @@ class _VersesListState extends State<VersesList> {
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: LinearProgressIndicator(
-                        borderRadius: BorderRadius.circular(10),
-                        value: value,
-                        backgroundColor: primaryColor.shade500.withOpacity(0.3),
-                        minHeight: onDrag ? 5 : 2,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          SliderTheme(
+                            data: SliderThemeData(
+                              trackHeight: onDrag ? 3 : 1,
+                              thumbShape: RoundSliderThumbShape(
+                                enabledThumbRadius: onDrag ? 6 : 3,
+                              ),
+                              overlayShape: const RoundSliderOverlayShape(
+                                overlayRadius: 0,
+                              ),
+                            ),
+                            child: Slider(
+                              value: value,
+                              onChanged: (value) {
+                                _itemScrollController.jumpTo(
+                                  index: (value * widget.listVerses.length)
+                                      .toInt(),
+                                );
+                              },
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: context.theme.colorScheme.primaryContainer,
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(2),
+                              ),
+                            ),
+                            child: Text(
+                              '${(value * 100).toStringAsFixed(0)}%',
+                              style: context.textTheme.bodySmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: context
+                                    .theme.colorScheme.onPrimaryContainer,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   );
@@ -350,7 +386,7 @@ class ListTileVerses extends StatelessWidget {
         final isVersePlaying = state.audioVersePlaying == verses.audio;
         return Container(
           color: isVersePlaying
-              ? secondaryColor.shade500.withOpacity(0.2)
+              ? context.theme.colorScheme.primaryContainer
               : Colors.transparent,
           child: Column(
             children: [
@@ -552,7 +588,7 @@ class ListTileTransliteration extends StatelessWidget {
       builder: (context, state) {
         if (!state.isShowLatin) return const SizedBox();
         final textStyle = context.textTheme.bodySmall?.copyWith(
-          color: primaryColor.shade400,
+          color: context.theme.colorScheme.primary,
           fontSize: state.latinFontSize,
         );
         return Padding(

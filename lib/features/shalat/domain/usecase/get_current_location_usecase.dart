@@ -62,7 +62,7 @@ class GetCurrentLocationUseCase
     final placemarks = await placemarkFromCoordinates(
       resultLocator.latitude,
       resultLocator.longitude,
-      localeIdentifier: "$languageCode$countryCode",
+      localeIdentifier: "${languageCode}_$countryCode",
     );
 
     return GeoLocation(

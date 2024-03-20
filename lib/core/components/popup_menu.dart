@@ -1,32 +1,30 @@
 import 'package:flutter/material.dart';
-
-import '../utils/themes/color.dart';
+import 'package:quranku/core/utils/extension/context_ext.dart';
 
 class PopupMenuHorizontal extends StatelessWidget {
   final List<Widget> children;
+
   const PopupMenuHorizontal({super.key, required this.children});
 
   @override
   Widget build(BuildContext context) {
-    return  PopupMenuButton(
+    return PopupMenuButton(
       padding: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(5),
         side: BorderSide(
-          color: secondaryColor.shade700,
-          width: 3,
+          color: context.theme.colorScheme.primary,
+          width: 2,
         ),
       ),
       offset: const Offset(42, -10),
-      color: secondaryColor.shade500,
       icon: const Icon(
         Icons.more_horiz,
-        color: secondaryColor,
       ),
       itemBuilder: (BuildContext context) {
         return [
           PopupMenuWidget(
-            height: 40,
+            height: 20,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -38,7 +36,6 @@ class PopupMenuHorizontal extends StatelessWidget {
     );
   }
 }
-
 
 class PopupMenuWidget<T> extends PopupMenuEntry<T> {
   const PopupMenuWidget({Key? key, required this.height, required this.child})
@@ -64,4 +61,3 @@ class _PopupMenuWidgetState extends State<PopupMenuWidget> {
   @override
   Widget build(BuildContext context) => widget.child;
 }
-

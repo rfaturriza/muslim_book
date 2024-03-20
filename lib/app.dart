@@ -1,9 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:provider/provider.dart';
 import 'package:quranku/core/network/networkInfo/network_info_bloc.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/themes/theme.dart';
@@ -13,6 +13,7 @@ import 'package:quranku/features/quran/presentation/screens/quran_screen.dart';
 import 'package:quranku/features/shalat/presentation/bloc/shalat/shalat_bloc.dart';
 import 'package:quranku/generated/locale_keys.g.dart';
 import 'package:quranku/injection.dart';
+import 'package:quranku/theme_provider.dart';
 
 import 'features/quran/presentation/bloc/surah/surah_bloc.dart';
 import 'features/setting/presentation/bloc/language_setting/language_setting_bloc.dart';
@@ -24,10 +25,6 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locale = context.locale;
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
-    );
-
     return MultiBlocProvider(
       providers: [
         BlocProvider<NetworkInfoBloc>(
@@ -63,17 +60,26 @@ class App extends StatelessWidget {
         textPadding: const EdgeInsets.all(10),
         radius: 5,
         position: ToastPosition.bottom,
-        child: MaterialApp(
-          title: LocaleKeys.appName.tr(),
-          debugShowCheckedModeBanner: false,
-          theme: themeData,
-          localizationsDelegates: [
-            for (var delegate in context.localizationDelegates) delegate,
-            const LocaleNamesLocalizationsDelegate(),
-          ],
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
-          home: const ScaffoldConnection(),
+        child: ChangeNotifierProvider(
+          create: (context) => sl<ThemeProvider>()..init(),
+          child: Consumer<ThemeProvider>(
+            builder: (context, themeProvider, child) {
+              return MaterialApp(
+                title: LocaleKeys.appName.tr(),
+                debugShowCheckedModeBanner: false,
+                theme: themeData(isDarkMode: false),
+                darkTheme: themeData(isDarkMode: true),
+                themeMode: themeProvider.themeMode,
+                localizationsDelegates: [
+                  for (var delegate in context.localizationDelegates) delegate,
+                  const LocaleNamesLocalizationsDelegate(),
+                ],
+                supportedLocales: context.supportedLocales,
+                locale: context.locale,
+                home: const ScaffoldConnection(),
+              );
+            },
+          ),
         ),
       ),
     );

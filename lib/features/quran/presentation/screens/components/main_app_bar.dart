@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../../../../core/utils/themes/color.dart';
+import 'package:quranku/core/utils/extension/context_ext.dart';
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MainAppBar({
@@ -22,7 +21,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
           onPressed: onPressedQibla,
           icon: Icon(
             Icons.explore_outlined,
-            color: defaultColor.shade50,
+            color: context.theme.colorScheme.onSurface,
           ),
         ),
       ],

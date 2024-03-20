@@ -4,6 +4,8 @@ import 'package:oktoast/oktoast.dart';
 import 'package:quranku/core/components/loading_dialog.dart';
 import 'package:quranku/core/utils/themes/color.dart';
 
+import '../themes/color_schemes_material.dart';
+
 extension ContextExt on BuildContext {
   ThemeData get theme => Theme.of(this);
 
@@ -83,8 +85,10 @@ extension ContextExt on BuildContext {
     return showToast(
       message,
       context: this,
-      backgroundColor: theme.colorScheme.error,
-      textStyle: textTheme.bodySmall,
+      backgroundColor: theme.colorScheme.errorContainer,
+      textStyle: textTheme.bodySmall?.copyWith(
+        color: theme.colorScheme.onErrorContainer,
+      ),
     );
   }
 
@@ -92,8 +96,10 @@ extension ContextExt on BuildContext {
     return showToast(
       message,
       context: this,
-      textStyle: textTheme.bodySmall,
-      backgroundColor: secondaryColor.shade800,
+      textStyle: textTheme.bodySmall?.copyWith(
+        color: theme.colorScheme.onTertiaryContainer,
+      ),
+      backgroundColor: theme.colorScheme.tertiaryContainer,
     );
   }
 
@@ -122,5 +128,17 @@ extension ContextExt on BuildContext {
         duration: const Duration(seconds: 3),
       ),
     );
+  }
+
+  bool get isDarkMode {
+    return theme.brightness == Brightness.dark;
+  }
+}
+
+extension ColorSchemeExt on ColorScheme {
+  Color get surfaceContainer {
+    return brightness == Brightness.dark
+        ? MaterialTheme.darkScheme().surfaceContainer
+        : MaterialTheme.lightScheme().surfaceContainer;
   }
 }
