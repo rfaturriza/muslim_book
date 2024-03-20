@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -23,7 +26,7 @@ void main() async {
   await Hive.initFlutter();
   await configureDependencies();
   await dotenv.load(fileName: ".env");
-  MobileAds.instance.initialize();
+  unawaited(MobileAds.instance.initialize());
   MobileAds.instance.updateRequestConfiguration(
     RequestConfiguration(
       testDeviceIds: kDebugMode ? AdMobConst.testDevice : [],
@@ -32,10 +35,14 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await initializeFCM();
-  configureFCMListeners();
-  FirebaseMessaging.onBackgroundMessage(backgroundHandler);
-  await sl<LocalNotification>().init();
+  /// iOS skip this step because it's need Account in Apple Developer
+  /// iOS also need to upload key to firebase
+  if (Platform.isAndroid) {
+    await initializeFCM();
+    configureFCMListeners();
+    FirebaseMessaging.onBackgroundMessage(backgroundHandler);
+    await sl<LocalNotification>().init();
+  }
   timeago.setLocaleMessages('id', timeago.IdMessages());
   timeago.setLocaleMessages('en', timeago.EnMessages());
   if (kDebugMode) {
