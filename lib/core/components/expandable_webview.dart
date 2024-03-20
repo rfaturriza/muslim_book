@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -29,6 +31,10 @@ class _ExpandableWebViewState extends State<ExpandableWebView> {
     defaultFontSize = context.textTheme.bodyMedium?.fontSize ?? 14;
   }
 
+  bool isStillContainLoadingInHtml(String html) {
+    return html.contains('Loading');
+  }
+
   @override
   void initState() {
     super.initState();
@@ -38,8 +44,11 @@ class _ExpandableWebViewState extends State<ExpandableWebView> {
         'extents',
         onMessageReceived: (JavaScriptMessage message) {
           debugPrint('[webView/javascriptChannels] ${message.message}');
+          final height = Platform.isIOS
+              ? double.parse(message.message)
+              : double.parse(message.message) / pixelRatio;
           setState(() {
-            contentHeight = double.parse(message.message) / pixelRatio;
+            contentHeight = height;
           });
         },
       )
@@ -51,6 +60,20 @@ class _ExpandableWebViewState extends State<ExpandableWebView> {
           },
           onPageStarted: (String url) {},
           onPageFinished: (String url) async {
+            if (Platform.isIOS) {
+              Future<bool> isContainLoadingInHtml() async =>
+                  await webViewController
+                      .runJavaScriptReturningResult(
+                        "document.documentElement.innerHTML.includes('Loading');",
+                      )
+                      .then((value) => value.toString() == 'true');
+              var isLoading = await isContainLoadingInHtml();
+              print('isContainLoadingInHtml: $isLoading');
+              while (isLoading) {
+                await Future.delayed(const Duration(milliseconds: 500));
+                isLoading = await isContainLoadingInHtml();
+              }
+            }
             debugPrint('[webView/onPageFinished] finished loading "$url"');
             await webViewController.runJavaScript(
               "document.querySelectorAll('*:not(script):not(style)').forEach((text) => {text.style.fontSize = '${defaultFontSize}px';});",
