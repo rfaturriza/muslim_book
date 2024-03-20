@@ -262,23 +262,25 @@ class _VersesListState extends State<VersesList> {
                       child: Stack(
                         alignment: Alignment.center,
                         children: [
-                          // LinearProgressIndicator(
-                          //   borderRadius: BorderRadius.circular(10),
-                          //   value: value,
-                          //   backgroundColor:
-                          //       primaryColor.shade500.withOpacity(0.3),
-                          //   minHeight: onDrag ? 5 : 2,
-                          // ),
                           SliderTheme(
                             data: SliderThemeData(
                               trackHeight: onDrag ? 3 : 1,
                               thumbShape: RoundSliderThumbShape(
-                                  enabledThumbRadius: onDrag ? 6 : 3),
-                              overlayShape:
-                                  RoundSliderOverlayShape(overlayRadius: 0),
+                                enabledThumbRadius: onDrag ? 6 : 3,
+                              ),
+                              overlayShape: const RoundSliderOverlayShape(
+                                overlayRadius: 0,
+                              ),
                             ),
-                            child: Slider.adaptive(
-                                value: value, onChanged: (value) {}),
+                            child: Slider(
+                              value: value,
+                              onChanged: (value) {
+                                _itemScrollController.jumpTo(
+                                  index: (value * widget.listVerses.length)
+                                      .toInt(),
+                                );
+                              },
+                            ),
                           ),
                           Container(
                             padding: const EdgeInsets.all(2),
