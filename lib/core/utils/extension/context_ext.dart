@@ -85,8 +85,10 @@ extension ContextExt on BuildContext {
     return showToast(
       message,
       context: this,
-      backgroundColor: theme.colorScheme.error,
-      textStyle: textTheme.bodySmall,
+      backgroundColor: theme.colorScheme.errorContainer,
+      textStyle: textTheme.bodySmall?.copyWith(
+        color: theme.colorScheme.onErrorContainer,
+      ),
     );
   }
 
