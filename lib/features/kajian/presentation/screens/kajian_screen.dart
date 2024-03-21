@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:quranku/core/components/search_box.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
+import 'package:quranku/core/utils/extension/extension.dart';
 import 'package:quranku/core/utils/extension/string_ext.dart';
 import 'package:quranku/features/kajian/domain/entities/day_kajian.codegen.dart';
 import 'package:quranku/features/kajian/domain/entities/prayer_kajian.codegen.dart';
@@ -61,10 +62,22 @@ class KajianScreen extends StatelessWidget {
         const VSpacer(height: 10),
         const _FilterRowSection(),
         Expanded(
-          child: BlocBuilder<KajianBloc, KajianState>(
+          child: BlocConsumer<KajianBloc, KajianState>(
+            listenWhen: (previous, current) {
+              return previous.status != current.status &&
+                  current.status.isFailure &&
+                  current.kajianResult.isNotEmpty;
+            },
+            listener: (context, state) {
+              if (state.status.isFailure && state.kajianResult.isNotEmpty) {
+                context.showErrorToast(
+                  LocaleKeys.errorGetKajian.tr(),
+                );
+              }
+            },
             builder: (context, state) {
               final isLoading = state.status.isInProgress;
-              if (state.status.isFailure) {
+              if (state.status.isFailure && state.kajianResult.isEmpty) {
                 return ErrorScreen(
                   message: LocaleKeys.errorGetKajian.tr(),
                   onRefresh: () {
@@ -140,24 +153,17 @@ class _FilterRowSection extends StatelessWidget {
                 children: [
                   BlocBuilder<KajianBloc, KajianState>(
                     buildWhen: (previous, current) =>
-                        previous.isNearby != current.isNearby,
+                        previous.filter.isNearby != current.filter.isNearby,
                     builder: (context, state) {
                       return Padding(
                         padding: const EdgeInsets.only(right: 5),
-                        child: FilterChip(
-                          label: Text(LocaleKeys.nearby.tr()),
-                          selected: state.isNearby,
-                          selectedColor:
-                              context.theme.colorScheme.secondaryContainer,
-                          onSelected: (bool value) {
+                        child: _filterChip(
+                          context: context,
+                          label: LocaleKeys.nearby.tr(),
+                          selected: state.filter.isNearby,
+                          onSelected: (_) {
                             context.read<KajianBloc>().add(
                                   const KajianEvent.toggleNearby(),
-                                );
-                            context.read<KajianBloc>().add(
-                                  KajianEvent.fetchKajian(
-                                    locale: context.locale,
-                                    pageNumber: 1,
-                                  ),
                                 );
                           },
                         ),
@@ -170,22 +176,30 @@ class _FilterRowSection extends StatelessWidget {
                     builder: (context, state) {
                       return Row(
                         children: [
+                          if (state.filter.date != null) ...[
+                            _filterChip(
+                              context: context,
+                              label: state.filter.date
+                                      ?.ddMMMMyyyy(context.locale) ??
+                                  emptyString,
+                              onSelected: (_) {
+                                context.read<KajianBloc>().add(
+                                      const KajianEvent.onChangeFilterDate(
+                                        null,
+                                      ),
+                                    );
+                              },
+                            ),
+                          ],
                           if (state.filter.studyLocationProvinceId != null) ...[
                             _filterChip(
                               context: context,
                               label:
                                   state.filter.studyLocationProvinceId!.first,
-                              selected: true,
-                              onSelected: () {
+                              onSelected: (_) {
                                 context.read<KajianBloc>().add(
                                       const KajianEvent.onChangeFilterProvince(
                                           null),
-                                    );
-                                context.read<KajianBloc>().add(
-                                      KajianEvent.fetchKajian(
-                                        locale: context.locale,
-                                        pageNumber: 1,
-                                      ),
                                     );
                               },
                             ),
@@ -194,16 +208,10 @@ class _FilterRowSection extends StatelessWidget {
                             _filterChip(
                               context: context,
                               label: state.filter.studyLocationCityId!.first,
-                              selected: true,
-                              onSelected: () {
+                              onSelected: (_) {
                                 context.read<KajianBloc>().add(
                                       const KajianEvent.onChangeFilterCity(
-                                          null),
-                                    );
-                                context.read<KajianBloc>().add(
-                                      KajianEvent.fetchKajian(
-                                        locale: context.locale,
-                                        pageNumber: 1,
+                                        null,
                                       ),
                                     );
                               },
@@ -213,17 +221,10 @@ class _FilterRowSection extends StatelessWidget {
                             _filterChip(
                               context: context,
                               label: state.filter.locationId!.first,
-                              selected: true,
-                              onSelected: () {
+                              onSelected: (_) {
                                 context.read<KajianBloc>().add(
                                       const KajianEvent.onChangeFilterMosque(
                                         null,
-                                      ),
-                                    );
-                                context.read<KajianBloc>().add(
-                                      KajianEvent.fetchKajian(
-                                        locale: context.locale,
-                                        pageNumber: 1,
                                       ),
                                     );
                               },
@@ -233,8 +234,7 @@ class _FilterRowSection extends StatelessWidget {
                             _filterChip(
                               context: context,
                               label: state.filter.dailySchedulesDayId!.first,
-                              selected: true,
-                              onSelected: () {
+                              onSelected: (_) {
                                 context.read<KajianBloc>().add(
                                       const KajianEvent
                                           .onChangeDailySchedulesDayId(
@@ -248,8 +248,7 @@ class _FilterRowSection extends StatelessWidget {
                             _filterChip(
                               context: context,
                               label: state.filter.weeklySchedulesWeekId!.first,
-                              selected: true,
-                              onSelected: () {
+                              onSelected: (_) {
                                 context.read<KajianBloc>().add(
                                       const KajianEvent
                                           .onChangeWeeklySchedulesWeekId(
@@ -263,8 +262,7 @@ class _FilterRowSection extends StatelessWidget {
                             _filterChip(
                               context: context,
                               label: state.filter.prayerSchedule!.first,
-                              selected: true,
-                              onSelected: () {
+                              onSelected: (_) {
                                 context.read<KajianBloc>().add(
                                       const KajianEvent.onChangePrayerSchedule(
                                         null,
@@ -277,11 +275,11 @@ class _FilterRowSection extends StatelessWidget {
                             _filterChip(
                               context: context,
                               label: state.filter.themesThemeId!.first,
-                              selected: true,
-                              onSelected: () {
+                              onSelected: (_) {
                                 context.read<KajianBloc>().add(
                                       const KajianEvent.onChangeFilterTheme(
-                                          null),
+                                        null,
+                                      ),
                                     );
                               },
                             ),
@@ -290,11 +288,11 @@ class _FilterRowSection extends StatelessWidget {
                             _filterChip(
                               context: context,
                               label: state.filter.ustadzUstadzId!.first,
-                              selected: true,
-                              onSelected: () {
+                              onSelected: (_) {
                                 context.read<KajianBloc>().add(
                                       const KajianEvent.onChangeFilterUstadz(
-                                          null),
+                                        null,
+                                      ),
                                     );
                               },
                             ),
@@ -347,7 +345,7 @@ class _FilterRowSection extends StatelessWidget {
                         const KajianEvent.fetchUstadz(),
                       ),
                     child: DraggableScrollableSheet(
-                      initialChildSize: 0.5,
+                      initialChildSize: 0.7,
                       minChildSize: 0.5,
                       maxChildSize: 0.9,
                       expand: false,
@@ -384,16 +382,16 @@ class _FilterRowSection extends StatelessWidget {
   Widget _filterChip({
     required BuildContext context,
     required String label,
-    required bool selected,
-    required void Function() onSelected,
+    bool selected = true,
+    required void Function(bool) onSelected,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: FilterChip(
         label: Text(label),
-        selected: true,
+        selected: selected,
         onSelected: (bool value) {
-          onSelected();
+          onSelected(value);
           context.read<KajianBloc>().add(
                 KajianEvent.fetchKajian(
                   locale: context.locale,
@@ -606,6 +604,8 @@ class _KajianBottomSheetFilter extends StatelessWidget {
                     ),
                   ],
                 ),
+                const _DatePickerSection(),
+                const VSpacer(height: 10),
                 const _ProvinceFilterSection(),
                 const VSpacer(height: 10),
                 const _CityFilterSection(),
@@ -648,6 +648,94 @@ class _KajianBottomSheetFilter extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _DatePickerSection extends StatelessWidget {
+  const _DatePickerSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = context.read<KajianBloc>();
+    return BlocBuilder<KajianBloc, KajianState>(
+      buildWhen: (previous, current) {
+        return previous.filter.date != current.filter.date;
+      },
+      builder: (context, state) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Text(
+                LocaleKeys.kajianDateSchedule.tr(),
+                style: context.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const VSpacer(height: 8),
+            GestureDetector(
+              onTap: () async {
+                final selectedDate = await showDatePicker(
+                  context: context,
+                  initialDate: state.filter.date ?? DateTime.now(),
+                  firstDate:
+                      DateTime.now().subtract(const Duration(days: 365 * 5)),
+                  lastDate: DateTime.now().add(const Duration(days: 365 * 5)),
+                );
+                if (selectedDate != null) {
+                  bloc.add(
+                    KajianEvent.onChangeFilterDate(
+                      selectedDate,
+                    ),
+                  );
+                }
+              },
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: ShapeDecoration(
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                        color: context.theme.colorScheme.onSurface, width: 0.5),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.date_range_outlined,
+                      color: context.theme.colorScheme.onSurface,
+                    ),
+                    const HSpacer(width: 5),
+                    Expanded(
+                      child: Text(
+                        state.filter.date?.ddMMMMyyyy(context.locale) ??
+                            LocaleKeys.selectDate.tr(),
+                        style: context.textTheme.bodyMedium,
+                      ),
+                    ),
+                    state.filter.date != null
+                        ? InkWell(
+                            onTap: () {
+                              context.read<KajianBloc>().add(
+                                    const KajianEvent.onChangeFilterDate(
+                                      null,
+                                    ),
+                                  );
+                            },
+                            child: const Icon(Icons.close),
+                          )
+                        : const SizedBox(),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

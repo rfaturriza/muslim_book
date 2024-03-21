@@ -22,6 +22,8 @@ class FilterKajianSchedule with _$FilterKajianSchedule {
 
     /// can multiple ustadz id
     Pair<String, String>? ustadzUstadzId,
+    DateTime? date,
+    @Default(false) bool isNearby,
   }) = _FilterKajianSchedule;
 
   const FilterKajianSchedule._();

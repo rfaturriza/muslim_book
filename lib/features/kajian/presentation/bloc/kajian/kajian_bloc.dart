@@ -5,6 +5,7 @@ import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:quranku/core/utils/extension/dartz_ext.dart';
+import 'package:quranku/core/utils/extension/extension.dart';
 import 'package:quranku/features/kajian/domain/entities/filter_kajian_schedule.codegen.dart';
 import 'package:quranku/features/kajian/domain/entities/kajian_schedule.codegen.dart';
 import 'package:quranku/features/kajian/domain/usecases/get_ustadz_list_usecase.dart';
@@ -45,7 +46,12 @@ class KajianBloc extends Bloc<KajianEvent, KajianState> {
     this._getCitiesUseCase,
     this._getMosquesUseCase,
     this._getUstadzListUseCase,
-  ) : super(const KajianState()) {
+  ) : super(KajianState(
+          filter: FilterKajianSchedule(
+            date: DateTime.now(),
+            isNearby: true,
+          ),
+        )) {
     on<_FetchKajian>(_onFetchKajian);
     on<_FetchNearbyKajian>(_onFetchNearbyKajian);
     on<_ToggleNearby>(_onToggleNearby);
@@ -62,6 +68,7 @@ class KajianBloc extends Bloc<KajianEvent, KajianState> {
     on<_OnChangePrayerSchedule>(_onChangePrayerSchedule);
     on<_OnChangeDailySchedulesDayId>(_onChangeDailySchedulesDayId);
     on<_OnChangeWeeklySchedulesWeekId>(_onChangeWeeklySchedulesWeekId);
+    on<_OnChangeFilterDate>(_onChangeFilterDate);
     on<_ResetFilter>(_onResetFilter);
   }
 
@@ -81,7 +88,8 @@ class KajianBloc extends Bloc<KajianEvent, KajianState> {
         orderBy: 'id',
         sortBy: 'asc',
         options: [],
-        relations: 'ustadz,studyLocation.province,studyLocation.city,dailySchedules,customSchedules,themes,histories',
+        relations:
+            'ustadz,studyLocation.province,studyLocation.city,dailySchedules,customSchedules,themes,histories',
       );
       if (state.filter.studyLocationProvinceId != null) {
         request = request.copyWith(
@@ -147,7 +155,11 @@ class KajianBloc extends Bloc<KajianEvent, KajianState> {
           ],
         );
       }
-      if (state.isNearby) {
+      if (state.filter.date != null) {
+        request =
+            request.copyWith(isByDate: 1, date: state.filter.date.yyyyMMdd);
+      }
+      if (state.filter.isNearby) {
         final geoLocation = await _getCurrentLocation(
           GetCurrentLocationParams(locale: event.locale),
         );
@@ -216,7 +228,9 @@ class KajianBloc extends Bloc<KajianEvent, KajianState> {
   }
 
   void _onToggleNearby(_ToggleNearby event, Emitter<KajianState> emit) async {
-    emit(state.copyWith(isNearby: !state.isNearby));
+    emit(state.copyWith(
+      filter: state.filter.copyWith(isNearby: !state.filter.isNearby),
+    ));
   }
 
   void _onFetchKajianThemes(
@@ -673,6 +687,13 @@ class KajianBloc extends Bloc<KajianEvent, KajianState> {
       weeklySchedulesWeekId: event.weeklySchedulesWeekId,
     );
     emit(state.copyWith(filter: filter));
+  }
+
+  void _onChangeFilterDate(
+    _OnChangeFilterDate event,
+    Emitter<KajianState> emit,
+  ) {
+    emit(state.copyWith(filter: state.filter.copyWith(date: event.date)));
   }
 
   void _onResetFilter(

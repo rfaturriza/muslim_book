@@ -41,7 +41,12 @@ class PrayerScheduleBloc
     this._getProvincesUseCase,
     this._getCitiesUseCase,
     this._getMosquesUseCase,
-  ) : super(const PrayerScheduleState()) {
+  ) : super(PrayerScheduleState(
+          filter: FilterPrayerSchedule(
+            prayDate: DateTime.now(),
+            isNearby: true,
+          ),
+        )) {
     on<_FetchRamadhanSchedules>(_onFetchRamadhanSchedules);
     on<_ToggleNearby>(_onToggleNearby);
     on<_FetchProvinces>(_onFetchProvinces);
@@ -142,7 +147,7 @@ class PrayerScheduleBloc
         );
         emit(state.copyWith(search: event.search));
       }
-      if (state.isNearby) {
+      if (state.filter.isNearby) {
         final geoLocation = await _getCurrentLocation(
           GetCurrentLocationParams(locale: event.locale),
         );
@@ -181,7 +186,9 @@ class PrayerScheduleBloc
     _ToggleNearby event,
     Emitter<PrayerScheduleState> emit,
   ) async {
-    emit(state.copyWith(isNearby: !state.isNearby));
+    emit(state.copyWith(
+      filter: state.filter.copyWith(isNearby: !state.filter.isNearby),
+    ));
   }
 
   void _onFetchProvinces(

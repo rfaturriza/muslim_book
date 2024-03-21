@@ -14,6 +14,8 @@ class SearchBox extends StatefulWidget {
     this.padding,
     this.onClear,
     this.backgroundColor,
+    this.border,
+    this.borderRadius,
   });
 
   final String initialValue;
@@ -21,6 +23,8 @@ class SearchBox extends StatefulWidget {
   final void Function(String)? onChanged;
   final void Function(String?)? onSubmitted;
   final Color? backgroundColor;
+  final BoxBorder? border;
+  final BorderRadius? borderRadius;
 
   /// Callback when clear button is pressed
   /// If null, clear button will not be shown
@@ -53,7 +57,8 @@ class _SearchBoxState extends State<SearchBox> {
       decoration: BoxDecoration(
         color: widget.backgroundColor ??
             context.theme.colorScheme.surfaceContainer,
-        borderRadius: BorderRadius.circular(8),
+        border: widget.border,
+        borderRadius: widget.borderRadius ?? BorderRadius.circular(8),
       ),
       child: Row(
         children: [
@@ -68,7 +73,6 @@ class _SearchBoxState extends State<SearchBox> {
               onTapOutside: (_) => context.dismissKeyboard(),
               onFieldSubmitted: widget.onSubmitted,
               textInputAction: TextInputAction.search,
-              textAlignVertical: TextAlignVertical.center,
               onChanged: widget.onChanged != null
                   ? (val) {
                       debouncer.run(() {

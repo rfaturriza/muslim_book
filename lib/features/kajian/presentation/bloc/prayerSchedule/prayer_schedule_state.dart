@@ -15,7 +15,6 @@ class PrayerScheduleState with _$PrayerScheduleState {
     @Default(1) int currentPage,
     int? lastPage,
     int? totalData,
-    @Default(true) bool isNearby,
     @Default(FilterPrayerSchedule()) FilterPrayerSchedule filter,
     String? search,
   }) = _PrayerScheduleState;

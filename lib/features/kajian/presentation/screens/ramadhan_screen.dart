@@ -59,10 +59,23 @@ class RamadhanScreen extends StatelessWidget {
         const VSpacer(height: 10),
         const _FilterRowSection(),
         Expanded(
-          child: BlocBuilder<PrayerScheduleBloc, PrayerScheduleState>(
+          child: BlocConsumer<PrayerScheduleBloc, PrayerScheduleState>(
+            listenWhen: (previous, current) {
+              return previous.status != current.status &&
+                  current.status.isFailure &&
+                  current.ramadhanSchedules.isNotEmpty;
+            },
+            listener: (context, state) {
+              if (state.status.isFailure &&
+                  state.ramadhanSchedules.isNotEmpty) {
+                context.showErrorToast(
+                  LocaleKeys.errorGetRamadhanSchedule.tr(),
+                );
+              }
+            },
             builder: (context, state) {
               final isLoading = state.status.isInProgress;
-              if (state.status.isFailure) {
+              if (state.status.isFailure && state.ramadhanSchedules.isEmpty) {
                 return ErrorScreen(
                   message: LocaleKeys.errorGetRamadhanSchedule.tr(),
                   onRefresh: () {
@@ -146,24 +159,17 @@ class _FilterRowSection extends StatelessWidget {
                 children: [
                   BlocBuilder<PrayerScheduleBloc, PrayerScheduleState>(
                     buildWhen: (previous, current) =>
-                        previous.isNearby != current.isNearby,
+                        previous.filter.isNearby != current.filter.isNearby,
                     builder: (context, state) {
                       return Padding(
                         padding: const EdgeInsets.only(right: 5),
-                        child: FilterChip(
-                          label: Text(LocaleKeys.nearby.tr()),
-                          selected: state.isNearby,
-                          selectedColor:
-                              context.theme.colorScheme.secondaryContainer,
-                          onSelected: (bool value) {
+                        child: _filterChip(
+                          context: context,
+                          label: LocaleKeys.nearby.tr(),
+                          selected: state.filter.isNearby,
+                          onSelected: () {
                             context.read<PrayerScheduleBloc>().add(
                                   const PrayerScheduleEvent.toggleNearby(),
-                                );
-                            context.read<PrayerScheduleBloc>().add(
-                                  PrayerScheduleEvent.fetchRamadhanSchedules(
-                                    locale: context.locale,
-                                    pageNumber: 1,
-                                  ),
                                 );
                           },
                         ),
@@ -182,7 +188,6 @@ class _FilterRowSection extends StatelessWidget {
                               label: state.filter.prayDate
                                       ?.ddMMMMyyyy(context.locale) ??
                                   emptyString,
-                              selected: true,
                               onSelected: () {
                                 context.read<PrayerScheduleBloc>().add(
                                       const PrayerScheduleEvent
@@ -198,7 +203,6 @@ class _FilterRowSection extends StatelessWidget {
                               context: context,
                               label:
                                   state.filter.studyLocationProvinceId!.first,
-                              selected: true,
                               onSelected: () {
                                 context.read<PrayerScheduleBloc>().add(
                                       const PrayerScheduleEvent
@@ -213,7 +217,6 @@ class _FilterRowSection extends StatelessWidget {
                             _filterChip(
                               context: context,
                               label: state.filter.studyLocationCityId!.first,
-                              selected: true,
                               onSelected: () {
                                 context.read<PrayerScheduleBloc>().add(
                                       const PrayerScheduleEvent
@@ -228,7 +231,6 @@ class _FilterRowSection extends StatelessWidget {
                             _filterChip(
                               context: context,
                               label: state.filter.locationId!.first,
-                              selected: true,
                               onSelected: () {
                                 context.read<PrayerScheduleBloc>().add(
                                       const PrayerScheduleEvent
@@ -243,7 +245,6 @@ class _FilterRowSection extends StatelessWidget {
                             _filterChip(
                               context: context,
                               label: state.filter.prayerSchedule!.first,
-                              selected: true,
                               onSelected: () {
                                 context.read<PrayerScheduleBloc>().add(
                                       const PrayerScheduleEvent
@@ -259,7 +260,6 @@ class _FilterRowSection extends StatelessWidget {
                               context: context,
                               label:
                                   '${LocaleKeys.imam.tr()}: ${state.filter.imam}',
-                              selected: true,
                               onSelected: () {
                                 context.read<PrayerScheduleBloc>().add(
                                       const PrayerScheduleEvent
@@ -275,7 +275,6 @@ class _FilterRowSection extends StatelessWidget {
                               context: context,
                               label:
                                   '${LocaleKeys.khatib.tr()}: ${state.filter.khatib}',
-                              selected: true,
                               onSelected: () {
                                 context.read<PrayerScheduleBloc>().add(
                                       const PrayerScheduleEvent
@@ -367,14 +366,14 @@ class _FilterRowSection extends StatelessWidget {
   Widget _filterChip({
     required BuildContext context,
     required String label,
-    required bool selected,
+    bool selected = true,
     required void Function() onSelected,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: FilterChip(
         label: Text(label),
-        selected: true,
+        selected: selected,
         onSelected: (bool value) {
           onSelected();
           context.read<PrayerScheduleBloc>().add(
@@ -574,7 +573,6 @@ class _PrayerScheduleBottomSheetFilter extends StatelessWidget {
                     ),
                   ],
                 ),
-                const VSpacer(height: 10),
                 const _PrayerDatePickerSection(),
                 const VSpacer(height: 10),
                 const _ProvinceFilterSection(),
@@ -814,6 +812,7 @@ class _PrayerDatePickerSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = context.read<PrayerScheduleBloc>();
     return BlocBuilder<PrayerScheduleBloc, PrayerScheduleState>(
       buildWhen: (previous, current) {
         return previous.filter.prayDate != current.filter.prayDate;
@@ -823,13 +822,16 @@ class _PrayerDatePickerSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              LocaleKeys.prayDateSchedule.tr(),
-              style: context.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Text(
+                LocaleKeys.prayDateSchedule.tr(),
+                style: context.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-            const VSpacer(height: 5),
+            const VSpacer(height: 8),
             GestureDetector(
               onTap: () async {
                 final selectedDate = await showDatePicker(
@@ -840,24 +842,30 @@ class _PrayerDatePickerSection extends StatelessWidget {
                   lastDate: DateTime.now().add(const Duration(days: 365 * 5)),
                 );
                 if (selectedDate != null) {
-                  context.read<PrayerScheduleBloc>().add(
-                        PrayerScheduleEvent.onChangeFilterPrayDate(
-                          selectedDate,
-                        ),
-                      );
+                  bloc.add(
+                    PrayerScheduleEvent.onChangeFilterPrayDate(
+                      selectedDate,
+                    ),
+                  );
                 }
               },
               child: Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(8),
                 decoration: ShapeDecoration(
-                  color: context.theme.colorScheme.surface,
                   shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: context.theme.colorScheme.onSurface,
+                      width: 0.5,
+                    ),
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.date_range_outlined),
+                    Icon(
+                      Icons.date_range_outlined,
+                      color: context.theme.colorScheme.onSurface,
+                    ),
                     const HSpacer(width: 5),
                     Expanded(
                       child: Text(
@@ -904,16 +912,24 @@ class _SearchImamSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              LocaleKeys.imam.tr(),
-              style: context.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Text(
+                LocaleKeys.imam.tr(),
+                style: context.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-            const VSpacer(height: 5),
+            const VSpacer(height: 8),
             SearchBox(
+              isDense: true,
+              borderRadius: BorderRadius.circular(4),
               padding: EdgeInsets.zero,
-              backgroundColor: context.theme.colorScheme.surface,
+              border: Border.all(
+                color: context.theme.colorScheme.onSurface,
+                width: 0.5,
+              ),
               initialValue: state.filter.imam ?? '',
               hintText: LocaleKeys.searchImamHint.tr(),
               onClear: () {
@@ -960,9 +976,14 @@ class _SearchKhatibSection extends StatelessWidget {
             ),
             const VSpacer(height: 5),
             SearchBox(
-              initialValue: state.filter.khatib ?? '',
+              isDense: true,
+              borderRadius: BorderRadius.circular(4),
               padding: EdgeInsets.zero,
-              backgroundColor: context.theme.colorScheme.surface,
+              border: Border.all(
+                color: context.theme.colorScheme.onSurface,
+                width: 0.5,
+              ),
+              initialValue: state.filter.khatib ?? '',
               hintText: LocaleKeys.searchKhatibHint.tr(),
               onClear: () {
                 context.read<PrayerScheduleBloc>().add(

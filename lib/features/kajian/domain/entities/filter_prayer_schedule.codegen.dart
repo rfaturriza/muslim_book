@@ -15,6 +15,7 @@ class FilterPrayerSchedule with _$FilterPrayerSchedule {
     DateTime? prayDate,
     String? imam,
     String? khatib,
+    @Default(false) bool isNearby,
   }) = _FilterPrayerSchedule;
 
   const FilterPrayerSchedule._();

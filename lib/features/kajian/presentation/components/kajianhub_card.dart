@@ -220,7 +220,11 @@ class _RecitationInfo extends StatelessWidget {
               }
               if (state.statusRecommended.isSuccess &&
                   state.recommendedKajian == null) {
-                return Center(child: Text(LocaleKeys.noData.tr()));
+                return Center(
+                  child: Text(
+                    LocaleKeys.nearbyKajianEmptyToday.tr(),
+                  ),
+                );
               }
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
