@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -104,6 +105,9 @@ class _DonationPaymentScreen extends StatelessWidget {
             title: LocaleKeys.sincerelyDonation.tr(),
             onTap: () async {
               try {
+                sl<FirebaseAnalytics>().logScreenView(
+                  screenName: 'Saweria',
+                );
                 await launchUrl(
                   Uri.parse(UrlConst.urlSaweria),
                   mode: LaunchMode.inAppBrowserView,

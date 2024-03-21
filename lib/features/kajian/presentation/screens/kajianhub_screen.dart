@@ -69,11 +69,6 @@ class _KajianHubScaffoldState extends State<KajianHubScaffold>
               );
         } else {
           context.read<PrayerScheduleBloc>().add(
-                PrayerScheduleEvent.onChangeFilterPrayDate(
-                  DateTime.now(),
-                ),
-              );
-          context.read<PrayerScheduleBloc>().add(
                 PrayerScheduleEvent.fetchRamadhanSchedules(
                   locale: context.locale,
                   pageNumber: 1,

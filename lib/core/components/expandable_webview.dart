@@ -68,7 +68,6 @@ class _ExpandableWebViewState extends State<ExpandableWebView> {
                       )
                       .then((value) => value.toString() == 'true');
               var isLoading = await isContainLoadingInHtml();
-              print('isContainLoadingInHtml: $isLoading');
               while (isLoading) {
                 await Future.delayed(const Duration(milliseconds: 500));
                 isLoading = await isContainLoadingInHtml();

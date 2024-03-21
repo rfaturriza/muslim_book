@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:hive/hive.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -27,4 +28,7 @@ abstract class AppModule {
 
   @injectable
   FirebaseRemoteConfig get remoteConfig => FirebaseRemoteConfig.instance;
+
+  @injectable
+  FirebaseAnalytics get firebaseAnalytics => FirebaseAnalytics.instance;
 }

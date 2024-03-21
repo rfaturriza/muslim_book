@@ -314,7 +314,7 @@ class _HistoryTile extends StatelessWidget {
       if (history.publishedAt.isEmpty) {
         return emptyString;
       }
-      return DateTime.parse(history.publishedAt).EEEEddMMMMyyyy(context.locale);
+      return DateTime.parse(history.publishedAt).toEEEEddMMMMyyyy(context.locale);
     }();
     return GestureDetector(
       onTap: () async {

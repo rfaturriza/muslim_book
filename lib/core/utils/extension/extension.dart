@@ -36,6 +36,17 @@ extension DateTimeExt on DateTime? {
     }
   }
 
+  /// Format date to dd-MM-yyyy
+  /// ex: 01-01-2021
+  String get ddMMyyyy {
+    try {
+      if (this == null) return '';
+      return DateFormat('dd-MM-yyyy').format(this!);
+    } catch (e) {
+      return '';
+    }
+  }
+
   /// Format date to dd MMMM yyyy
   /// ex: 01 January 2021
   String? ddMMMMyyyy(Locale? locale) {
@@ -52,7 +63,7 @@ extension DateTimeExt on DateTime? {
 
   /// Format date to day, dd MMMM yyyy
   /// Rabu, 15 Mei 2023
-  String? EEEEddMMMMyyyy(Locale? locale) {
+  String? toEEEEddMMMMyyyy(Locale? locale) {
     try {
       if (this == null) return null;
       if (locale == null || locale.languageCode.isEmpty) {

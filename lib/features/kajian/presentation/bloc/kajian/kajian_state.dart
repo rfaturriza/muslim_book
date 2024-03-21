@@ -23,7 +23,6 @@ class KajianState with _$KajianState {
     @Default(1) int currentPage,
     int? lastPage,
     int? totalData,
-    @Default(true) bool isNearby,
     @Default(FilterKajianSchedule()) FilterKajianSchedule filter,
     String? search,
   }) = _KajianState;

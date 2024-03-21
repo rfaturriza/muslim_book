@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -21,7 +22,9 @@ import '../../../domain/usecases/get_provinces_usecase.dart';
 import '../../../domain/usecases/get_ramadhan_schedules_usecase.dart';
 
 part 'prayer_schedule_bloc.freezed.dart';
+
 part 'prayer_schedule_event.dart';
+
 part 'prayer_schedule_state.dart';
 
 @injectable
@@ -32,6 +35,7 @@ class PrayerScheduleBloc
   final GetProvincesUseCase _getProvincesUseCase;
   final GetCitiesUseCase _getCitiesUseCase;
   final GetMosquesUseCase _getMosquesUseCase;
+  final FirebaseAnalytics _firebaseAnalytics;
 
   final int limit = 10;
 
@@ -41,7 +45,14 @@ class PrayerScheduleBloc
     this._getProvincesUseCase,
     this._getCitiesUseCase,
     this._getMosquesUseCase,
-  ) : super(const PrayerScheduleState()) {
+    this._firebaseAnalytics,
+  ) : super(PrayerScheduleState(
+          filter: FilterPrayerSchedule(
+            prayDate: DateTime.now(),
+            isNearby: true,
+          ),
+        )) {
+    _firebaseAnalytics.logScreenView(screenName: 'Jadwal Ramadhan Screen');
     on<_FetchRamadhanSchedules>(_onFetchRamadhanSchedules);
     on<_ToggleNearby>(_onToggleNearby);
     on<_FetchProvinces>(_onFetchProvinces);
@@ -142,7 +153,7 @@ class PrayerScheduleBloc
         );
         emit(state.copyWith(search: event.search));
       }
-      if (state.isNearby) {
+      if (state.filter.isNearby) {
         final geoLocation = await _getCurrentLocation(
           GetCurrentLocationParams(locale: event.locale),
         );
@@ -152,6 +163,10 @@ class PrayerScheduleBloc
           isNearest: 1,
         );
       }
+      _firebaseAnalytics.logEvent(
+        name: 'fetch_ramadhan_schedules',
+        parameters: request.toJson(),
+      );
       final result = await _getRamadhanSchedulesUseCase(
         request,
       );
@@ -181,7 +196,9 @@ class PrayerScheduleBloc
     _ToggleNearby event,
     Emitter<PrayerScheduleState> emit,
   ) async {
-    emit(state.copyWith(isNearby: !state.isNearby));
+    emit(state.copyWith(
+      filter: state.filter.copyWith(isNearby: !state.filter.isNearby),
+    ));
   }
 
   void _onFetchProvinces(
