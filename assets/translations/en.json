@@ -162,5 +162,6 @@
   "play": "Play",
   "requestAccessLocation": "Request Location Permission",
   "tryAgain": "Try Again",
-  "notAvailableInYourCountry": "Sorry, this feature is not available in your country"
+  "notAvailableInYourCountry": "Sorry, this feature is not available in your country",
+  "shareAppDescription": "Check out {}, an app that helps you read the Quran and find prayer times. Download it at {}"
 }

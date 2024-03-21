@@ -162,5 +162,6 @@
   "play": "Putar",
   "requestAccessLocation": "Izinkan akses lokasi",
   "tryAgain": "Coba lagi",
-  "notAvailableInYourCountry": "Maaf, layanan ini tidak tersedia di negara Anda"
+  "notAvailableInYourCountry": "Maaf, layanan ini tidak tersedia di negara Anda",
+  "shareAppDescription": "Coba aplikasi {}, aplikasi Al-Qur'an dan waktu sholat yang sangat membantu. Unduh di {}"
 }
