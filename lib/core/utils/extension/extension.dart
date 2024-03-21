@@ -63,7 +63,7 @@ extension DateTimeExt on DateTime? {
 
   /// Format date to day, dd MMMM yyyy
   /// Rabu, 15 Mei 2023
-  String? EEEEddMMMMyyyy(Locale? locale) {
+  String? toEEEEddMMMMyyyy(Locale? locale) {
     try {
       if (this == null) return null;
       if (locale == null || locale.languageCode.isEmpty) {

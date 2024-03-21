@@ -409,7 +409,7 @@ class _RamadhanTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheduledDate = DateTime.parse(date).EEEEddMMMMyyyy(context.locale);
+    final scheduledDate = DateTime.parse(date).toEEEEddMMMMyyyy(context.locale);
     final Pair<Color, Color> prayerColor = () {
       switch (prayerName.toLowerCase()) {
         case 'subuh':

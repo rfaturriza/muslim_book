@@ -15,7 +15,10 @@ class NumberPin extends StatelessWidget {
       children: [
         SvgPicture.asset(
           AssetConst.starSvg,
-          color: context.theme.colorScheme.primary,
+          colorFilter: ColorFilter.mode(
+            context.theme.colorScheme.primary,
+            BlendMode.srcIn,
+          ),
         ),
         Text(
           number,
