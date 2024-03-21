@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -35,6 +36,7 @@ class KajianBloc extends Bloc<KajianEvent, KajianState> {
   final GetCitiesUseCase _getCitiesUseCase;
   final GetMosquesUseCase _getMosquesUseCase;
   final GetUstadzListUseCase _getUstadzListUseCase;
+  final FirebaseAnalytics _firebaseAnalytics;
   final int limit = 10;
 
   KajianBloc(
@@ -46,12 +48,14 @@ class KajianBloc extends Bloc<KajianEvent, KajianState> {
     this._getCitiesUseCase,
     this._getMosquesUseCase,
     this._getUstadzListUseCase,
+    this._firebaseAnalytics,
   ) : super(KajianState(
           filter: FilterKajianSchedule(
             date: DateTime.now(),
             isNearby: true,
           ),
         )) {
+    _firebaseAnalytics.logScreenView(screenName: 'Kajian Screen');
     on<_FetchKajian>(_onFetchKajian);
     on<_FetchNearbyKajian>(_onFetchNearbyKajian);
     on<_ToggleNearby>(_onToggleNearby);
@@ -175,6 +179,10 @@ class KajianBloc extends Bloc<KajianEvent, KajianState> {
         );
         emit(state.copyWith(search: event.search));
       }
+      _firebaseAnalytics.logEvent(
+        name: 'fetch_kajian',
+        parameters: request.toJson(),
+      );
       final result = await _getKajianListUseCase(request);
       result.fold(
         (failure) => emit(
