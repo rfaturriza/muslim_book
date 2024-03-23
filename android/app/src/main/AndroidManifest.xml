@@ -6,7 +6,8 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+    <uses-permission android:name="android.permission.Ad_ID" />
+    <uses-permission android:name="com.google.android.gms.permissions.AD_ID" />
     <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
