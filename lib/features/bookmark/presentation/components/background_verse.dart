@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../../../core/utils/themes/color.dart';
+import 'package:quranku/core/utils/extension/context_ext.dart';
 
 class BackgroundVerse extends StatelessWidget {
   const BackgroundVerse({super.key});
@@ -16,9 +15,7 @@ class BackgroundVerse extends StatelessWidget {
         'sesungguhnya beserta kesulitan itu ada kemudahan.\n'
         'QS 94 : 1',
         textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: defaultColor.shade100,
-            ),
+        style: context.theme.textTheme.bodySmall,
       ),
     );
   }

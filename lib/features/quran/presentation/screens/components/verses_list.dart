@@ -15,7 +15,6 @@ import 'package:quranku/generated/locale_keys.g.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../../../../../core/utils/extension/string_ext.dart';
-import '../../../../../core/utils/themes/color.dart';
 import '../../../../../injection.dart';
 import '../../../../setting/presentation/bloc/language_setting/language_setting_bloc.dart';
 import '../../../../setting/presentation/bloc/styling_setting/styling_setting_bloc.dart';
@@ -319,8 +318,7 @@ class _VersesListState extends State<VersesList> {
                     if (isPreBismillah && index == 0) {
                       return const Divider(color: Colors.transparent);
                     }
-                    return Divider(
-                        color: secondaryColor.shade500, thickness: 0.1);
+                    return const Divider(thickness: 0.1);
                   },
                   itemBuilder: (context, index) {
                     if (index == 0 && isPreBismillah) {
