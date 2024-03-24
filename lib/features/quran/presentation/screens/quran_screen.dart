@@ -16,7 +16,7 @@ import 'components/surah_list.dart';
 import 'drawer_quran_screen.dart';
 
 class QuranScreen extends StatelessWidget {
-  const QuranScreen({Key? key}) : super(key: key);
+  const QuranScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

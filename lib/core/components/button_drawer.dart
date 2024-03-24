@@ -9,13 +9,13 @@ class ButtonDrawer extends StatelessWidget {
   final bool withDecoration;
 
   const ButtonDrawer({
-    Key? key,
+    super.key,
     required this.icon,
     required this.title,
     this.subtitle,
     required this.onTap,
     this.withDecoration = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

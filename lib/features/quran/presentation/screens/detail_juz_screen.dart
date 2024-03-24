@@ -20,8 +20,7 @@ class DetailJuzScreen extends StatelessWidget {
   final JuzConstant? juz;
   final int? jumpToVerse;
 
-  const DetailJuzScreen({Key? key, this.juz, this.jumpToVerse})
-      : super(key: key);
+  const DetailJuzScreen({super.key, this.juz, this.jumpToVerse});
 
   @override
   Widget build(BuildContext context) {

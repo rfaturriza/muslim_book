@@ -5,7 +5,7 @@ import 'package:quranku/core/utils/extension/context_ext.dart';
 class LoadingDialog extends StatelessWidget {
   final String? message;
 
-  const LoadingDialog({Key? key, this.message}) : super(key: key);
+  const LoadingDialog({super.key, this.message});
 
   @override
   Widget build(BuildContext context) {

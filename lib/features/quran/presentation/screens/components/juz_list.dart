@@ -16,7 +16,7 @@ import '../../../../../injection.dart';
 import '../../bloc/audioVerse/audio_verse_bloc.dart';
 
 class JuzList extends StatelessWidget {
-  const JuzList({Key? key}) : super(key: key);
+  const JuzList({super.key});
 
   @override
   Widget build(BuildContext context) {
