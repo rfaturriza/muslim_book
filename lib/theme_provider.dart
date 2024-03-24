@@ -10,9 +10,39 @@ class ThemeProvider with ChangeNotifier {
   late ThemeMode _themeMode = ThemeMode.system;
   late ColorScheme _darkScheme = darkColorScheme;
   late ColorScheme _lightScheme = lightColorScheme;
+  late bool _dynamicColor = false;
 
   void init() {
+    getDynamicColor();
     getThemeMode();
+  }
+
+  bool get dynamicColor => _dynamicColor;
+
+  void setDynamicColor(bool value) {
+    try {
+      var box = Hive.box(HiveConst.themeModeBox);
+      const key = HiveConst.dynamicColorKey;
+      box.put(key, value);
+      _dynamicColor = value;
+      notifyListeners();
+    } catch (e) {
+      _dynamicColor = false;
+    }
+    notifyListeners();
+  }
+
+  void getDynamicColor() async {
+    try {
+      var box = await Hive.openBox(HiveConst.themeModeBox);
+      const key = HiveConst.dynamicColorKey;
+      final bool dynamicColor = box.get(key, defaultValue: false);
+      _dynamicColor = dynamicColor;
+      notifyListeners();
+    } catch (e) {
+      _dynamicColor = false;
+    }
+    notifyListeners();
   }
 
   void getThemeMode() async {

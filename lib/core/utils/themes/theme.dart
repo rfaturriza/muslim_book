@@ -6,7 +6,10 @@ import 'package:quranku/core/utils/themes/color_schemes_material.dart';
 
 import 'text.dart';
 
-ThemeData themeData({required bool isDarkMode}) {
+ThemeData themeData({
+  required bool isDarkMode,
+  required ColorScheme? colorScheme,
+}) {
   final lightColorScheme = MaterialTheme.lightScheme().toColorScheme();
   final darkColorScheme = MaterialTheme.darkScheme().toColorScheme();
   final defaultColor =
@@ -18,7 +21,8 @@ ThemeData themeData({required bool isDarkMode}) {
   final textTheme = textThemeStyle(isDarkMode: isDarkMode);
   return ThemeData(
     useMaterial3: true,
-    colorScheme: isDarkMode ? darkColorScheme : lightColorScheme,
+    colorScheme:
+        colorScheme ?? (isDarkMode ? darkColorScheme : lightColorScheme),
     iconTheme: IconThemeData(color: primaryColor),
     scaffoldBackgroundColor:
         isDarkMode ? darkColorScheme.surface : lightColorScheme.surface,
@@ -167,13 +171,13 @@ ThemeData themeData({required bool isDarkMode}) {
     snackBarTheme: SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(8),
       ),
-      backgroundColor: isDarkMode
-          ? darkColorScheme.primary
-          : lightColorScheme.primary.withOpacity(0.9),
+      backgroundColor: secondaryColor,
       contentTextStyle: textTheme.titleSmall?.copyWith(
-        fontWeight: FontWeight.bold,
+        color: isDarkMode
+            ? darkColorScheme.onSecondary
+            : lightColorScheme.onSecondary,
       ),
     ),
     chipTheme: ChipThemeData(
