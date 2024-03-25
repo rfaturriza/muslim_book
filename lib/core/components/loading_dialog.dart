@@ -24,11 +24,15 @@ class LoadingDialog extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const CircularProgressIndicator(),
+            CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(
+                context.theme.colorScheme.onBackground,
+              ),
+            ),
             const VSpacer(),
             Text(message ?? 'Loading...',
                 style: context.textTheme.labelMedium?.copyWith(
-                  color: context.theme.colorScheme.secondary,
+                  color: context.theme.colorScheme.onBackground,
                 )),
           ],
         ),

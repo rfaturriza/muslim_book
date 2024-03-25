@@ -10,6 +10,7 @@ class HiveConst {
   static const String detailJuzBox = 'detailJuzBox';
   static const String languageBox = 'quranLanguageBox';
   static const String settingBox = 'settingBox';
+  static const String themeModeBox = 'themeModeBox';
   static const String quranLanguageKey = 'quranLanguageKey';
   static const String latinLanguageKey = 'latinLanguageKey';
   static const String prayerTimeLanguageKey = 'prayerTimeLanguageKey';
@@ -20,4 +21,5 @@ class HiveConst {
   static const String lastReadJuzBox = 'lastReadJuzBox';
   static const String lastReadSurahBox = 'lastReadSurahBox';
   static const String lastReadRemindersKey = 'lastReadRemindersKey';
+  static const String themeModeKey = 'themeModeKey';
 }

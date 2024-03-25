@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 
-import '../../../../../core/utils/themes/color.dart';
-
 class AppBarDetailScreen extends StatelessWidget
     implements PreferredSizeWidget {
   const AppBarDetailScreen({
@@ -18,10 +16,12 @@ class AppBarDetailScreen extends StatelessWidget
       centerTitle: true,
       backgroundColor: Colors.transparent,
       elevation: 0,
-      title: Text(title,
-          style: context.textTheme.titleLarge?.copyWith(
-            color: secondaryColor.shade400,
-          )),
+      title: Text(
+        title,
+        style: context.textTheme.titleLarge?.copyWith(
+          color: context.theme.colorScheme.onSurface,
+        ),
+      ),
     );
   }
 
@@ -54,7 +54,7 @@ class SliverAppBarDetailScreen extends StatelessWidget
         title,
         style: context.textTheme.titleLarge?.copyWith(
           fontWeight: FontWeight.w700,
-          color: secondaryColor.shade400,
+          color: context.theme.colorScheme.onSurface,
         ),
       ),
       actions: [
@@ -62,14 +62,15 @@ class SliverAppBarDetailScreen extends StatelessWidget
           padding: const EdgeInsets.only(right: 8),
           child: IconButton(
             onPressed: onPressedBookmark,
-            icon: (){
-              if(isBookmarked){
-                return const Icon(Icons.bookmark);
+              icon: () {
+                if (isBookmarked) {
+                  return const Icon(Icons.bookmark);
               }
               return const Icon(Icons.bookmark_border);
             }(),
-            color: secondaryColor,
-          ),
+              color: context.theme.colorScheme.tertiary,
+              disabledColor:
+                  context.theme.colorScheme.tertiary.withOpacity(0.5)),
         ),
       ],
     );

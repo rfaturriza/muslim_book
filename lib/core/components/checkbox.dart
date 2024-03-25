@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:quranku/core/utils/extension/context_ext.dart';
-
-import '../utils/themes/color.dart';
 
 class CheckBoxListTileMuslimBook extends StatelessWidget {
   final String title;
@@ -22,15 +19,6 @@ class CheckBoxListTileMuslimBook extends StatelessWidget {
         Checkbox(
           value: value,
           onChanged: onChanged,
-          checkColor: defaultColor.shade50,
-          activeColor: context.theme.primaryColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
-          side: BorderSide(
-            color: defaultColor.shade50,
-            width: 2,
-          ),
         ),
         Text(title),
       ],

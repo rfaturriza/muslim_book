@@ -49,13 +49,11 @@ class JuzList extends StatelessWidget {
               return Padding(
                 padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
                 child: SearchBox(
+                  isDense: true,
                   initialValue: state.query ?? emptyString,
                   hintText: LocaleKeys.search.tr(),
                   onChanged: (val) {
                     juzBloc.searchJuz(val);
-                  },
-                  onSubmitted: () {
-                    context.dismissKeyboard();
                   },
                 ),
               );

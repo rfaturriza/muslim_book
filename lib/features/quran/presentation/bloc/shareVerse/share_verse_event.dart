@@ -14,8 +14,14 @@ class ShareVerseEvent with _$ShareVerseEvent {
   const factory ShareVerseEvent.onChangeRandomImageUrl() =
       _OnChangeRandomImageUrl;
 
-  const factory ShareVerseEvent.onChangeFontSize(double fontSize) =
-      _OnChangeFontSize;
+  const factory ShareVerseEvent.onChangeArabicFontSize(double fontSize) =
+      _OnChangeArabicFontSize;
+
+  const factory ShareVerseEvent.onChangeLatinFontSize(double fontSize) =
+      _OnChangeLatinFontSize;
+
+  const factory ShareVerseEvent.onChangeTranslationFontSize(double fontSize) =
+      _OnChangeTranslationFontSize;
 
   const factory ShareVerseEvent.onToggleArabicVisibility(bool? value) =
       _OnToggleArabicVisibility;

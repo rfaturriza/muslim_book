@@ -1,9 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:quranku/core/components/expandable_webview.dart';
 import 'package:quranku/core/components/loading_screen.dart';
 import 'package:quranku/core/constants/url_constants.dart';
+import 'package:quranku/core/network/remote_config.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/features/payment/presentation/bloc/in_app_purchase/in_app_purchase_bloc.dart';
 import 'package:quranku/features/payment/presentation/bloc/midtrans/midtrans_bloc.dart';
@@ -59,28 +62,39 @@ class _DonationPaymentScreen extends StatelessWidget {
           if (state.purchaseStatus == PurchaseStatus.pending) {
             return const LoadingScreen();
           }
-          return ListView(
-            physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.all(20),
-            children: state.products
-                .map(
-                  (e) => ListTile(
-                    title: Text(e.title),
-                    subtitle: Text(e.description),
-                    trailing: Text(
-                      e.price,
-                      style: context.textTheme.titleMedium?.copyWith(
-                        color: defaultColor.shade50,
-                      ),
-                    ),
-                    onTap: () {
-                      context
-                          .read<InAppPurchaseBloc>()
-                          .add(InAppPurchaseEvent.purchaseConsumable(e));
-                    },
-                  ),
-                )
-                .toList(),
+          return Column(
+            children: [
+              ExpandableWebView(
+                sl<RemoteConfigService>().webViewDonationUrl,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+              ),
+              const Divider(),
+              Expanded(
+                child: ListView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.all(20),
+                  children: state.products
+                      .map(
+                        (e) => ListTile(
+                          title: Text(e.title),
+                          subtitle: Text(e.description),
+                          trailing: Text(
+                            e.price,
+                            style: context.textTheme.titleMedium?.copyWith(
+                              color: defaultColor.shade50,
+                            ),
+                          ),
+                          onTap: () {
+                            context
+                                .read<InAppPurchaseBloc>()
+                                .add(InAppPurchaseEvent.purchaseConsumable(e));
+                          },
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+            ],
           );
         },
       ),
@@ -91,6 +105,9 @@ class _DonationPaymentScreen extends StatelessWidget {
             title: LocaleKeys.sincerelyDonation.tr(),
             onTap: () async {
               try {
+                sl<FirebaseAnalytics>().logScreenView(
+                  screenName: 'Saweria',
+                );
                 await launchUrl(
                   Uri.parse(UrlConst.urlSaweria),
                   mode: LaunchMode.inAppBrowserView,

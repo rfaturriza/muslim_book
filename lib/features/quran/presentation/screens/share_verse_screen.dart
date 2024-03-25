@@ -8,11 +8,9 @@ import 'package:quranku/core/components/spacer.dart';
 import 'package:quranku/core/constants/admob_constants.dart';
 import 'package:quranku/core/constants/asset_constants.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
-import 'package:quranku/core/utils/themes/color.dart';
 import 'package:quranku/features/setting/presentation/bloc/styling_setting/styling_setting_bloc.dart';
 import 'package:quranku/generated/locale_keys.g.dart';
 
-import '../../../../core/components/checkbox.dart';
 import '../../../../core/utils/extension/string_ext.dart';
 import '../../../setting/presentation/bloc/language_setting/language_setting_bloc.dart';
 import '../bloc/shareVerse/share_verse_bloc.dart';
@@ -89,7 +87,6 @@ class _CanvasPreview extends StatelessWidget {
     return BlocBuilder<ShareVerseBloc, ShareVerseState>(
       builder: (context, state) {
         final verse = state.verse;
-        final fontSize = state.fontSize;
         return SafeArea(
           child: RepaintBoundary(
             key: canvasGlobalKey,
@@ -130,8 +127,9 @@ class _CanvasPreview extends StatelessWidget {
                               return Text(
                                 verse?.text?.arab ?? emptyString,
                                 style: context.textTheme.titleMedium?.copyWith(
-                                  fontSize: fontSize * 1.5,
+                                  fontSize: state.arabicFontSize * 1.5,
                                   fontFamily: stylingState.fontFamilyArabic,
+                                  color: Colors.white,
                                 ),
                                 textAlign: TextAlign.center,
                               );
@@ -152,9 +150,9 @@ class _CanvasPreview extends StatelessWidget {
                                     ) ??
                                     emptyString,
                                 style: context.textTheme.bodySmall?.copyWith(
-                                  fontSize: fontSize / 1.2,
-                                  color: primaryColor.shade100,
+                                  fontSize: state.latinFontSize,
                                   fontWeight: FontWeight.w500,
+                                  color: Colors.white,
                                 ),
                                 textAlign: TextAlign.center,
                               );
@@ -175,8 +173,9 @@ class _CanvasPreview extends StatelessWidget {
                                     ) ??
                                     emptyString,
                                 style: context.textTheme.bodySmall?.copyWith(
-                                  fontSize: fontSize,
+                                  fontSize: state.translationFontSize,
                                   fontWeight: FontWeight.w500,
+                                  color: Colors.white,
                                 ),
                                 textAlign: TextAlign.center,
                               );
@@ -191,8 +190,9 @@ class _CanvasPreview extends StatelessWidget {
                             ': ${LocaleKeys.verses.tr().capitalize()} '
                             '${state.verse?.number?.inQuran ?? emptyString})',
                             style: context.textTheme.bodySmall?.copyWith(
-                              fontSize: fontSize / 1.2,
+                              fontSize: state.translationFontSize / 1.2,
                               fontWeight: FontWeight.w500,
+                              color: Colors.white,
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -213,8 +213,9 @@ class _CanvasPreview extends StatelessWidget {
                                 ': ${LocaleKeys.verses.tr().capitalize()} '
                                 '${state.verse?.number?.inSurah ?? emptyString})',
                                 style: context.textTheme.bodySmall?.copyWith(
-                                  fontSize: fontSize / 1.2,
+                                  fontSize: state.translationFontSize / 1.2,
                                   fontWeight: FontWeight.w500,
+                                  color: Colors.white,
                                 ),
                                 textAlign: TextAlign.center,
                               );
@@ -258,6 +259,7 @@ class _CopyRightMuslimBook extends StatelessWidget {
             LocaleKeys.appName.tr(),
             style: context.textTheme.titleSmall?.copyWith(
               fontSize: 10,
+              color: Colors.white,
             ),
             textAlign: TextAlign.center,
           ),
@@ -283,9 +285,7 @@ class _SettingPreviewBottomSheet extends StatelessWidget {
           children: [
             _RowListColorSetting(),
             VSpacer(),
-            _SettingFont(),
-            VSpacer(),
-            _SettingShowingText(),
+            _SettingText(),
           ],
         ),
       ),
@@ -398,100 +398,123 @@ class _RowListColorSetting extends StatelessWidget {
   }
 }
 
-class _SettingFont extends StatelessWidget {
-  const _SettingFont();
+class _SettingText extends StatelessWidget {
+  const _SettingText();
 
   @override
   Widget build(BuildContext context) {
     final shareBloc = context.read<ShareVerseBloc>();
-    return Row(
+    return Column(
       children: [
-        const Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Icon(Icons.text_format),
-        ),
-        Expanded(
-          child: BlocBuilder<ShareVerseBloc, ShareVerseState>(
+        ListTile(
+          dense: true,
+          title: Text(LocaleKeys.arabic.tr()),
+          subtitle: BlocBuilder<ShareVerseBloc, ShareVerseState>(
             buildWhen: (previous, current) {
-              return previous.fontSize != current.fontSize;
+              return previous.arabicFontSize != current.arabicFontSize;
             },
             builder: (context, state) {
               return Slider(
-                value: state.fontSize,
+                value: state.arabicFontSize,
                 min: 0,
-                max: 30,
+                max: 50,
                 onChanged: (value) {
                   shareBloc.add(
-                    ShareVerseEvent.onChangeFontSize(value),
+                    ShareVerseEvent.onChangeArabicFontSize(value),
+                  );
+                },
+              );
+            },
+          ),
+          trailing: BlocBuilder<ShareVerseBloc, ShareVerseState>(
+            buildWhen: (previous, current) {
+              return previous.isArabicVisible != current.isArabicVisible;
+            },
+            builder: (context, state) {
+              return Checkbox(
+                value: state.isArabicVisible,
+                onChanged: (value) {
+                  shareBloc.add(
+                    ShareVerseEvent.onToggleArabicVisibility(value),
                   );
                 },
               );
             },
           ),
         ),
-      ],
-    );
-  }
-}
-
-class _SettingShowingText extends StatelessWidget {
-  const _SettingShowingText();
-
-  @override
-  Widget build(BuildContext context) {
-    final shareBloc = context.read<ShareVerseBloc>();
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        BlocBuilder<ShareVerseBloc, ShareVerseState>(
-          buildWhen: (previous, current) {
-            return previous.isArabicVisible != current.isArabicVisible;
-          },
-          builder: (context, state) {
-            return CheckBoxListTileMuslimBook(
-              title: LocaleKeys.arabic.tr(),
-              value: state.isArabicVisible,
-              onChanged: (value) {
-                shareBloc.add(
-                  ShareVerseEvent.onToggleArabicVisibility(value),
-                );
-              },
-            );
-          },
+        ListTile(
+          dense: true,
+          title: Text(LocaleKeys.latin.tr()),
+          subtitle: BlocBuilder<ShareVerseBloc, ShareVerseState>(
+            buildWhen: (previous, current) {
+              return previous.latinFontSize != current.latinFontSize;
+            },
+            builder: (context, state) {
+              return Slider(
+                value: state.latinFontSize,
+                min: 0,
+                max: 50,
+                onChanged: (value) {
+                  shareBloc.add(
+                    ShareVerseEvent.onChangeLatinFontSize(value),
+                  );
+                },
+              );
+            },
+          ),
+          trailing: BlocBuilder<ShareVerseBloc, ShareVerseState>(
+            buildWhen: (previous, current) {
+              return previous.isLatinVisible != current.isLatinVisible;
+            },
+            builder: (context, state) {
+              return Checkbox(
+                value: state.isLatinVisible,
+                onChanged: (value) {
+                  shareBloc.add(
+                    ShareVerseEvent.onToggleLatinVisibility(value),
+                  );
+                },
+              );
+            },
+          ),
         ),
-        BlocBuilder<ShareVerseBloc, ShareVerseState>(
-          buildWhen: (previous, current) {
-            return previous.isLatinVisible != current.isLatinVisible;
-          },
-          builder: (context, state) {
-            return CheckBoxListTileMuslimBook(
-              title: LocaleKeys.latin.tr(),
-              value: state.isLatinVisible,
-              onChanged: (value) {
-                shareBloc.add(
-                  ShareVerseEvent.onToggleLatinVisibility(value),
-                );
-              },
-            );
-          },
-        ),
-        BlocBuilder<ShareVerseBloc, ShareVerseState>(
-          buildWhen: (previous, current) {
-            return previous.isTranslationVisible !=
-                current.isTranslationVisible;
-          },
-          builder: (context, state) {
-            return CheckBoxListTileMuslimBook(
-              title: LocaleKeys.translation.tr(),
-              value: state.isTranslationVisible,
-              onChanged: (value) {
-                shareBloc.add(
-                  ShareVerseEvent.onToggleTranslationVisibility(value),
-                );
-              },
-            );
-          },
+        ListTile(
+          dense: true,
+          title: Text(LocaleKeys.translation.tr()),
+          subtitle: BlocBuilder<ShareVerseBloc, ShareVerseState>(
+            buildWhen: (previous, current) {
+              return previous.translationFontSize !=
+                  current.translationFontSize;
+            },
+            builder: (context, state) {
+              return Slider(
+                value: state.translationFontSize,
+                min: 0,
+                max: 50,
+                onChanged: (value) {
+                  shareBloc.add(
+                    ShareVerseEvent.onChangeTranslationFontSize(value),
+                  );
+                },
+              );
+            },
+          ),
+          trailing: BlocBuilder<ShareVerseBloc, ShareVerseState>(
+            buildWhen: (previous, current) {
+              return previous.isTranslationVisible !=
+                  current.isTranslationVisible;
+            },
+            builder: (context, state) {
+              return Checkbox(
+                value: state.isTranslationVisible,
+                onChanged: (value) {
+                  shareBloc.add(
+                    ShareVerseEvent.onToggleTranslationVisibility(value),
+                  );
+                },
+              );
+            },
+          ),
         ),
       ],
     );

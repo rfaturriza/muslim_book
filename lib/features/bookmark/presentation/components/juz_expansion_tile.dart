@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
-import 'package:quranku/core/utils/themes/color.dart';
 import 'package:quranku/generated/locale_keys.g.dart';
 
 import '../../../quran/presentation/screens/components/list_tile_juz.dart';
@@ -24,19 +23,19 @@ class JuzExpansionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
-      backgroundColor: secondaryColor.shade500,
-      collapsedBackgroundColor: secondaryColor.shade500,
+      backgroundColor: context.theme.colorScheme.background,
+      collapsedBackgroundColor: context.theme.colorScheme.surfaceVariant,
       initiallyExpanded: isExpanded,
       trailing: isExpanded
           ? Icon(
               Icons.expand_circle_down,
-              color: defaultColor.shade300,
+              color: context.theme.colorScheme.onSurfaceVariant,
             )
           : RotatedBox(
               quarterTurns: 3,
               child: Icon(
                 Icons.expand_circle_down_outlined,
-                color: defaultColor.shade300,
+                color: context.theme.colorScheme.onSurfaceVariant,
               ),
             ),
       onExpansionChanged: (value) {
@@ -50,7 +49,7 @@ class JuzExpansionTile extends StatelessWidget {
       title: Text(
         LocaleKeys.juz.tr(),
         style: context.textTheme.titleMedium?.copyWith(
-          color: defaultColor.shade300,
+          color: context.theme.colorScheme.onSurfaceVariant,
         ),
       ),
       children: [

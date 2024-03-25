@@ -5,11 +5,12 @@ import 'package:injectable/injectable.dart';
 class NetworkConfig {
   static const baseUrlQuran = 'https://rizz-quran-api.vercel.app/';
   static const baseUrlShalat = 'https://api.myquran.com/';
+  static const baseUrlKajianHub = 'https://kajianhub.com/api/';
 
   static final _baseOptions = BaseOptions(
     baseUrl: baseUrlQuran,
     connectTimeout: const Duration(seconds: 5),
-    receiveTimeout: const Duration(seconds: 3),
+    receiveTimeout: const Duration(seconds: 5),
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',

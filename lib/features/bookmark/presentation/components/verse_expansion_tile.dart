@@ -27,19 +27,19 @@ class VerseExpansionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
-      backgroundColor: secondaryColor.shade500,
-      collapsedBackgroundColor: secondaryColor.shade500,
+      backgroundColor: context.theme.colorScheme.background,
+      collapsedBackgroundColor: context.theme.colorScheme.surfaceVariant,
       initiallyExpanded: isExpanded,
       trailing: isExpanded
           ? Icon(
               Icons.expand_circle_down,
-              color: defaultColor.shade300,
+              color: context.theme.colorScheme.onSurfaceVariant,
             )
           : RotatedBox(
               quarterTurns: 3,
               child: Icon(
                 Icons.expand_circle_down_outlined,
-                color: defaultColor.shade300,
+                color: context.theme.colorScheme.onSurfaceVariant,
               ),
             ),
       onExpansionChanged: (value) {
@@ -53,7 +53,7 @@ class VerseExpansionTile extends StatelessWidget {
       title: Text(
         LocaleKeys.verses.tr(),
         style: context.textTheme.titleMedium?.copyWith(
-          color: defaultColor.shade300,
+          color: context.theme.colorScheme.onSurfaceVariant,
         ),
       ),
       children: [

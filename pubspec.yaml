@@ -49,6 +49,9 @@ dependencies:
   firebase_analytics: ^10.8.0
   in_app_review: ^2.0.8
   timeago: ^3.6.1
+  provider: ^6.1.2
+  webview_flutter: ^4.4.4
+  firebase_remote_config: ^4.3.8
 
 dev_dependencies:
   flutter_test:
@@ -66,6 +69,7 @@ flutter:
     - assets/translations/
     - assets/lottie/
     - assets/svg/
+    - assets/images/
   fonts:
     - family: Lato
       fonts:
