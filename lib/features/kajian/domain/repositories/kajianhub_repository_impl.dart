@@ -97,6 +97,7 @@ class KajianHubRepositoryImpl extends KajianHubRepository {
         latitude: latitude,
         longitude: longitude,
         isNearest: 1,
+        isDaily: 1,
         isByDate: 1,
         page: 1,
         limit: 1,
