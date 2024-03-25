@@ -22,9 +22,7 @@ import '../../../domain/usecases/get_provinces_usecase.dart';
 import '../../../domain/usecases/get_ramadhan_schedules_usecase.dart';
 
 part 'prayer_schedule_bloc.freezed.dart';
-
 part 'prayer_schedule_event.dart';
-
 part 'prayer_schedule_state.dart';
 
 @injectable
@@ -165,7 +163,7 @@ class PrayerScheduleBloc
       }
       _firebaseAnalytics.logEvent(
         name: 'fetch_ramadhan_schedules',
-        parameters: request.toJson(),
+        parameters: request.toAnalytic(),
       );
       final result = await _getRamadhanSchedulesUseCase(
         request,

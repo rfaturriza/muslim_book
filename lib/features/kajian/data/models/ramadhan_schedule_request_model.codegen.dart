@@ -23,20 +23,6 @@ class RamadhanScheduleByMosqueRequestModel
       _$RamadhanScheduleByMosqueRequestModelFromJson(json);
 }
 
-// q:
-// type:pagination
-// page:1
-// limit:10
-// order_by:pray_date
-// relations:studyLocation
-// sort_by:desc
-// options[]:filter,type_id,equal,2
-// //options[]:filter,pray_date,equal,2024-03-15
-// options[]:filter,subtype_id,equal,1
-// //pray_date:2024-03-15
-// //is_nearest:1
-// //latitude:3.588107
-// //longitude:98.6197142
 @freezed
 class RamadhanScheduleRequestModel with _$RamadhanScheduleRequestModel {
   const factory RamadhanScheduleRequestModel({
@@ -65,6 +51,21 @@ class RamadhanScheduleRequestModel with _$RamadhanScheduleRequestModel {
     List<String>? options,
   }) = _RamadhanScheduleRequestModel;
 
+  const RamadhanScheduleRequestModel._();
+
   factory RamadhanScheduleRequestModel.fromJson(Map<String, dynamic> json) =>
       _$RamadhanScheduleRequestModelFromJson(json);
+
+  Map<String, dynamic> toAnalytic() {
+    final json = toJson();
+    json.update(
+      'options[]',
+      (v) => (v as List<String>).join(','),
+      ifAbsent: () => null,
+    );
+    json['options'] = json['options[]'];
+    json.remove('options[]');
+    json.removeWhere((k, v) => v == null);
+    return json;
+  }
 }

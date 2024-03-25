@@ -181,7 +181,7 @@ class KajianBloc extends Bloc<KajianEvent, KajianState> {
       }
       _firebaseAnalytics.logEvent(
         name: 'fetch_kajian',
-        parameters: request.toJson(),
+        parameters: request.toAnalytic(),
       );
       final result = await _getKajianListUseCase(request);
       result.fold(
