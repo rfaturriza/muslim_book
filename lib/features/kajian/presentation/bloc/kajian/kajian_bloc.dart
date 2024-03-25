@@ -160,8 +160,11 @@ class KajianBloc extends Bloc<KajianEvent, KajianState> {
         );
       }
       if (state.filter.date != null) {
-        request =
-            request.copyWith(isByDate: 1, date: state.filter.date.yyyyMMdd);
+        request = request.copyWith(
+          isByDate: 1,
+          date: state.filter.date.yyyyMMdd,
+          isDaily: 1,
+        );
       }
       if (state.filter.isNearby) {
         final geoLocation = await _getCurrentLocation(
