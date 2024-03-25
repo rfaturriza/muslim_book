@@ -1,3 +1,4 @@
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -64,19 +65,31 @@ class App extends StatelessWidget {
           create: (context) => sl<ThemeProvider>()..init(),
           child: Consumer<ThemeProvider>(
             builder: (context, themeProvider, child) {
-              return MaterialApp(
-                title: LocaleKeys.appName.tr(),
-                debugShowCheckedModeBanner: false,
-                theme: themeData(isDarkMode: false),
-                darkTheme: themeData(isDarkMode: true),
-                themeMode: themeProvider.themeMode,
-                localizationsDelegates: [
-                  for (var delegate in context.localizationDelegates) delegate,
-                  const LocaleNamesLocalizationsDelegate(),
-                ],
-                supportedLocales: context.supportedLocales,
-                locale: context.locale,
-                home: const ScaffoldConnection(),
+              final isDynamicColor = themeProvider.dynamicColor;
+              return DynamicColorBuilder(
+                builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+                  return MaterialApp(
+                    title: LocaleKeys.appName.tr(),
+                    debugShowCheckedModeBanner: false,
+                    theme: themeData(
+                      isDarkMode: false,
+                      colorScheme: isDynamicColor ? lightDynamic : null,
+                    ),
+                    darkTheme: themeData(
+                      isDarkMode: true,
+                      colorScheme: isDynamicColor ? darkDynamic : null,
+                    ),
+                    themeMode: themeProvider.themeMode,
+                    localizationsDelegates: [
+                      for (var delegate in context.localizationDelegates)
+                        delegate,
+                      const LocaleNamesLocalizationsDelegate(),
+                    ],
+                    supportedLocales: context.supportedLocales,
+                    locale: context.locale,
+                    home: const ScaffoldConnection(),
+                  );
+                },
               );
             },
           ),
