@@ -33,10 +33,24 @@ class KajianScheduleRequestModel with _$KajianScheduleRequestModel {
     String? date,
 
     /// filter,{relation}.{field},{operator},{value}
-    @JsonKey(name: 'options[]')
-    List<String>? options,
+    @JsonKey(name: 'options[]') List<String>? options,
   }) = _KajianScheduleRequestModel;
+
+  const KajianScheduleRequestModel._();
 
   factory KajianScheduleRequestModel.fromJson(Map<String, dynamic> json) =>
       _$KajianScheduleRequestModelFromJson(json);
+
+  Map<String, dynamic> toAnalytic() {
+    final json = toJson();
+    json.update(
+      'options[]',
+      (v) => (v as List<String>).join(','),
+      ifAbsent: () => null,
+    );
+    json['options'] = json['options[]'];
+    json.remove('options[]');
+    json.removeWhere((k, v) => v == null);
+    return json;
+  }
 }
