@@ -117,7 +117,7 @@ class BarHeaderPersistentDelegate extends SliverPersistentHeaderDelegate {
   @override
   double get minExtent {
     if (_bar is PreferredSizeWidget) {
-      return (_bar as PreferredSizeWidget).preferredSize.height;
+      return (_bar).preferredSize.height;
     } else {
       return 0;
     }
