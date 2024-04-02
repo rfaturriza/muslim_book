@@ -22,22 +22,24 @@ class ShareVerseScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     GlobalKey canvasGlobalKey = GlobalKey();
 
+    void showSettingBottomSheet() {
+      showModalBottomSheet(
+        context: context,
+        enableDrag: true,
+        builder: (_) => BlocProvider.value(
+          value: context.read<ShareVerseBloc>(),
+          child: const _SettingPreviewBottomSheet(),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         forceMaterialTransparency: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                enableDrag: true,
-                builder: (_) => BlocProvider.value(
-                  value: context.read<ShareVerseBloc>(),
-                  child: const _SettingPreviewBottomSheet(),
-                ),
-              );
-            },
+            onPressed: showSettingBottomSheet,
           ),
           Padding(
             padding: const EdgeInsets.only(right: 16),
@@ -67,10 +69,17 @@ class ShareVerseScreen extends StatelessWidget {
           )
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 50.0),
-        child: _CanvasPreview(
-          canvasGlobalKey: canvasGlobalKey,
+      body: GestureDetector(
+        onVerticalDragUpdate: (details) {
+          if (details.delta.dy < -10) {
+            showSettingBottomSheet();
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 50.0),
+          child: _CanvasPreview(
+            canvasGlobalKey: canvasGlobalKey,
+          ),
         ),
       ),
     );
