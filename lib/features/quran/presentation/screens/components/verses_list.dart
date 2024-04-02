@@ -220,6 +220,10 @@ class _VersesListState extends State<VersesList> {
         if (didPop) {
           return;
         }
+        if (widget.view == ViewMode.setting) {
+          Navigator.of(context).pop();
+          return;
+        }
         showReminderDialog();
       },
       child: BlocListener<AudioVerseBloc, AudioVerseState>(
