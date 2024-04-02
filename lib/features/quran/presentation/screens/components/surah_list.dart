@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quranku/core/components/error_screen.dart';
 import 'package:quranku/core/components/search_box.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
-import 'package:quranku/core/utils/themes/color.dart';
 import 'package:quranku/features/quran/presentation/bloc/detailSurah/detail_surah_bloc.dart';
 import 'package:quranku/features/quran/presentation/bloc/surah/surah_bloc.dart';
 
@@ -31,7 +30,7 @@ class SurahList extends StatelessWidget {
             if (index == 0) {
               return const Divider(color: Colors.transparent);
             }
-            return Divider(color: secondaryColor.shade500, thickness: 0.1);
+            return const Divider(thickness: 0.1);
           },
           itemCount: () {
             if (state is SurahLoadingState) {

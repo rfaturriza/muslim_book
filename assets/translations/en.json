@@ -163,5 +163,10 @@
   "requestAccessLocation": "Request Location Permission",
   "tryAgain": "Try Again",
   "notAvailableInYourCountry": "Sorry, this feature is not available in your country",
-  "shareAppDescription": "Check out {}, an app that helps you read the Quran and find prayer times. Download it at {}"
+  "shareAppDescription": "Check out {}, an app that helps you read the Quran and find prayer times. Download it at {}",
+  "lightMode": "Light Mode",
+  "darkMode": "Dark Mode",
+  "systemMode": "System Mode",
+  "dynamicColor": "Dynamic Color",
+  "dynamicColorDescription": "Change the color of the app according to the wallpaper. Only works on Android S+"
 }

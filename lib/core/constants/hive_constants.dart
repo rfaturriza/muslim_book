@@ -22,4 +22,5 @@ class HiveConst {
   static const String lastReadSurahBox = 'lastReadSurahBox';
   static const String lastReadRemindersKey = 'lastReadRemindersKey';
   static const String themeModeKey = 'themeModeKey';
+  static const String dynamicColorKey = 'dynamicColorKey';
 }

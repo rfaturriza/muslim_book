@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 
-import '../../../../../core/components/divider.dart';
 import '../../../../../core/utils/extension/string_ext.dart';
 import '../../../../../core/utils/pair.dart';
 
@@ -57,7 +56,7 @@ class LanguageChooseBottomSheet extends StatelessWidget {
                         );
                       },
                     ),
-                    const DividerMuslimBook(),
+                    const Divider(),
                   ],
                 );
               },

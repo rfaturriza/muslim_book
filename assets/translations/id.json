@@ -163,5 +163,10 @@
   "requestAccessLocation": "Izinkan akses lokasi",
   "tryAgain": "Coba lagi",
   "notAvailableInYourCountry": "Maaf, layanan ini tidak tersedia di negara Anda",
-  "shareAppDescription": "Coba aplikasi {}, aplikasi Al-Qur'an dan waktu sholat yang sangat membantu. Unduh di {}"
+  "shareAppDescription": "Coba aplikasi {}, aplikasi Al-Qur'an dan waktu sholat yang sangat membantu. Unduh di {}",
+  "lightMode": "Mode Terang",
+  "darkMode": "Mode Gelap",
+  "systemMode": "Mode Sistem",
+  "dynamicColor": "Warna Dinamis",
+  "dynamicColorDescription": "Ubah warna aplikasi sesuai dengan wallpaper. Hanya berfungsi pada Android S+"
 }
