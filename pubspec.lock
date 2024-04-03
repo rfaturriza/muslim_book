@@ -518,14 +518,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.3.1"
-  flutter_compass:
+  flutter_compass_v2:
     dependency: transitive
     description:
-      name: flutter_compass
-      sha256: be642484f9f6975c1c6edff568281b001f2f1e604de27ecea18d97eebbdef22f
+      name: flutter_compass_v2
+      sha256: c17b1533a43f5192e73d2f475ec2c142cc1e193eba6a9b49433d1ab68d70606b
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.0"
+    version: "1.0.3"
   flutter_dotenv:
     dependency: "direct main"
     description:
@@ -583,10 +583,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_qiblah
-      sha256: cdcf87353c2d2d6d0cfdf937d39f628794e2360a683bc41355c5121ea2e84513
+      sha256: "6840caf98f8023d5d3eba3e57a80260ee2c9ed1a7054bc54785b529302f04835"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.1"
+    version: "3.0.3"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -673,10 +673,10 @@ packages:
     dependency: "direct main"
     description:
       name: geolocator
-      sha256: f4efb8d3c4cdcad2e226af9661eb1a0dd38c71a9494b22526f9da80ab79520e5
+      sha256: "694ec58afe97787b5b72b8a0ab78c1a9244811c3c10e72c4362ef3c0ceb005cd"
       url: "https://pub.dev"
     source: hosted
-    version: "10.1.1"
+    version: "11.0.0"
   geolocator_android:
     dependency: transitive
     description:
@@ -705,10 +705,10 @@ packages:
     dependency: transitive
     description:
       name: geolocator_web
-      sha256: "102e7da05b48ca6bf0a5bda0010f886b171d1a08059f01bfe02addd0175ebece"
+      sha256: "49d8f846ebeb5e2b6641fe477a7e97e5dd73f03cbfef3fd5c42177b7300fb0ed"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.1"
+    version: "3.0.0"
   geolocator_windows:
     dependency: transitive
     description:

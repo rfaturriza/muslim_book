@@ -30,7 +30,7 @@ if (flutterCompileSdkVersion == null) {
 
 def flutterMinSdkVersion = localProperties.getProperty('flutter.minSdkVersion')
 if (flutterMinSdkVersion == null) {
-    flutterMinSdkVersion = '23'
+    flutterMinSdkVersion = '21'
 }
 
 def flutterTargetSdkVersion = localProperties.getProperty('flutter.targetSdkVersion')
@@ -45,16 +45,17 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
+    namespace 'com.rizz.quranku'
     compileSdkVersion flutterCompileSdkVersion.toInteger()
     ndkVersion flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = '11'
+        jvmTarget = '17'
     }
 
     sourceSets {
