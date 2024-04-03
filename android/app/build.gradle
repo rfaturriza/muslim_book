@@ -84,7 +84,7 @@ android {
             resValue "string", "app_name", "Muslim Book (Debug)"
         }
         profile {
-            applicationIdSuffix ".profile"
+            applicationIdSuffix ".debug"
             resValue "string", "app_name", "Muslim Book (Profile)"
         }
         release {
