@@ -565,7 +565,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.8.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.rizz.quranku;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rizz.muslimbook;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
