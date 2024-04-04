@@ -4,6 +4,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:injectable/injectable.dart';
 import 'package:quranku/core/utils/extension/dartz_ext.dart';
 import 'package:quranku/core/utils/extension/extension.dart';
@@ -212,14 +213,12 @@ class KajianBloc extends Bloc<KajianEvent, KajianState> {
       _FetchNearbyKajian event, Emitter<KajianState> emit) async {
     emit(state.copyWith(statusRecommended: FormzSubmissionStatus.inProgress));
     try {
-      final geoLocation = await _getCurrentLocation(
-        GetCurrentLocationParams(locale: event.locale),
-      );
+      final geoLocation = await Geolocator.getLastKnownPosition();
 
       final result = await _getNearbyKajianListUseCase(
         GetNearbyKajianListUseCaseParams(
-          latitude: geoLocation.asRight()?.coordinate?.lat ?? 0,
-          longitude: geoLocation.asRight()?.coordinate?.lon ?? 0,
+          latitude: geoLocation?.latitude ?? 0,
+          longitude: geoLocation?.longitude ?? 0,
         ),
       );
       result.fold(
