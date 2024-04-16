@@ -16,7 +16,7 @@ import '../detail_surah_screen.dart';
 import 'list_tile_surah.dart';
 
 class SurahList extends StatelessWidget {
-  const SurahList({Key? key}) : super(key: key);
+  const SurahList({super.key});
 
   @override
   Widget build(BuildContext context) {

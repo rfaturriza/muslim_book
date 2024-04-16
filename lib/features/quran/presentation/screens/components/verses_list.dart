@@ -213,8 +213,18 @@ class _VersesListState extends State<VersesList> {
       return true;
     }
 
-    return WillPopScope(
-      onWillPop: showReminderDialog,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          return;
+        }
+        if (widget.view == ViewMode.setting) {
+          Navigator.of(context).pop();
+          return;
+        }
+        showReminderDialog();
+      },
       child: BlocListener<AudioVerseBloc, AudioVerseState>(
         listener: (context, state) {
           if (state.audioVersePlaying != null) {

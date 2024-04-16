@@ -16,7 +16,7 @@ import 'components/surah_list.dart';
 import 'drawer_quran_screen.dart';
 
 class QuranScreen extends StatelessWidget {
-  const QuranScreen({Key? key}) : super(key: key);
+  const QuranScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +117,7 @@ class BarHeaderPersistentDelegate extends SliverPersistentHeaderDelegate {
   @override
   double get minExtent {
     if (_bar is PreferredSizeWidget) {
-      return (_bar as PreferredSizeWidget).preferredSize.height;
+      return (_bar).preferredSize.height;
     } else {
       return 0;
     }
