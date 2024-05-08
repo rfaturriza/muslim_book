@@ -50,9 +50,11 @@ class StylingSettingBottomSheet extends StatelessWidget {
                                 context: context,
                                 tiles: LastReadReminderModes.values.map((mode) {
                                   return ListTile(
-                                    tileColor: state.lastReadReminderMode == mode
-                                        ? context.theme.primaryColor.withOpacity(0.1)
-                                        : null,
+                                    tileColor:
+                                        state.lastReadReminderMode == mode
+                                            ? context.theme.primaryColor
+                                                .withOpacity(0.1)
+                                            : null,
                                     title: Text(
                                       mode.toTitle(),
                                       style: context.textTheme.bodyMedium
@@ -85,8 +87,12 @@ class StylingSettingBottomSheet extends StatelessWidget {
                           color: context.theme.primaryColor,
                         ),
                       ),
-                      child: Text(state.lastReadReminderMode.toTitle(),
-                          style: context.textTheme.bodyMedium),
+                      child: Text(
+                        state.lastReadReminderMode.toTitle(),
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 );
