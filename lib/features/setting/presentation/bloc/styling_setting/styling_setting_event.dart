@@ -31,7 +31,7 @@ class StylingSettingEvent with _$StylingSettingEvent {
       _GetTranslationFontSize;
 
   const factory StylingSettingEvent.setLastReadReminder({
-    required bool isOn,
+    required LastReadReminderModes mode,
   }) = _SetLastReadReminder;
 
   const factory StylingSettingEvent.getLastReadReminder() =
@@ -48,4 +48,11 @@ class StylingSettingEvent with _$StylingSettingEvent {
   }) = _SetShowTranslation;
 
   const factory StylingSettingEvent.getShowTranslation() = _GetShowTranslation;
+
+  const factory StylingSettingEvent.setColoredTajweedStatus({
+    required bool isColoredTajweedEnabled,
+  }) = _SetColoredTajweedStatus;
+
+  const factory StylingSettingEvent.getColoredTajweedStatus() =
+      _GetColoredTajweedStatus;
 }

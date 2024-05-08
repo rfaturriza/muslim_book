@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quranku/core/constants/font_constants.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
+import 'package:quranku/features/setting/domain/entities/last_read_reminder_mode_entity.dart';
 import 'package:quranku/generated/locale_keys.g.dart';
 
 import '../../../../../core/components/spacer.dart';
@@ -30,17 +31,81 @@ class StylingSettingBottomSheet extends StatelessWidget {
           children: [
             BlocBuilder<StylingSettingBloc, StylingSettingState>(
               buildWhen: (p, c) =>
-                  p.isLastReadReminderOn != c.isLastReadReminderOn,
+                  p.lastReadReminderMode != c.lastReadReminderMode,
               builder: (context, state) {
-                return CheckboxListTile(
+                return ListTile(
                   contentPadding: EdgeInsets.zero,
-                  title: Text(LocaleKeys.warningLastReading.tr()),
-                  subtitle: Text(LocaleKeys.warningLastReadingDescription.tr()),
-                  value: state.isLastReadReminderOn,
+                  title: Text(LocaleKeys.settingLastReading.tr()),
+                  subtitle: Text(LocaleKeys.settingLastReadingDescription.tr()),
+                  trailing: InkWell(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return Dialog(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: ListTile.divideTiles(
+                                color: context.theme.dividerColor,
+                                context: context,
+                                tiles: LastReadReminderModes.values.map((mode) {
+                                  return ListTile(
+                                    tileColor: state.lastReadReminderMode == mode
+                                        ? context.theme.primaryColor.withOpacity(0.1)
+                                        : null,
+                                    title: Text(
+                                      mode.toTitle(),
+                                      style: context.textTheme.bodyMedium
+                                          ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    subtitle: Text(mode.toDescription()),
+                                    onTap: () {
+                                      stylingBloc.add(
+                                        StylingSettingEvent.setLastReadReminder(
+                                          mode: mode,
+                                        ),
+                                      );
+                                      Navigator.pop(context);
+                                    },
+                                  );
+                                }).toList(),
+                              ).toList(),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: context.theme.primaryColor,
+                        ),
+                      ),
+                      child: Text(state.lastReadReminderMode.toTitle(),
+                          style: context.textTheme.bodyMedium),
+                    ),
+                  ),
+                );
+              },
+            ),
+            const VSpacer(),
+            BlocBuilder<StylingSettingBloc, StylingSettingState>(
+              buildWhen: (p, c) =>
+                  p.isColoredTajweedEnabled != c.isColoredTajweedEnabled,
+              builder: (context, state) {
+                return SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(LocaleKeys.coloredTajweed.tr()),
+                  subtitle: Text(LocaleKeys.coloredTajweedDescription.tr()),
+                  value: state.isColoredTajweedEnabled,
                   onChanged: (value) {
                     stylingBloc.add(
-                      StylingSettingEvent.setLastReadReminder(
-                        isOn: value ?? true,
+                      StylingSettingEvent.setColoredTajweedStatus(
+                        isColoredTajweedEnabled: value,
                       ),
                     );
                   },
@@ -91,12 +156,12 @@ class StylingSettingBottomSheet extends StatelessWidget {
                       );
                     },
                   ),
-                  trailing: Checkbox(
+                  trailing: Switch(
                     value: state.isShowLatin,
                     onChanged: (value) {
                       stylingBloc.add(
                         StylingSettingEvent.setShowLatin(
-                          isShow: value ?? true,
+                          isShow: value,
                         ),
                       );
                     },
@@ -110,31 +175,32 @@ class StylingSettingBottomSheet extends StatelessWidget {
                   p.isShowTranslation != c.isShowTranslation,
               builder: (context, state) {
                 return ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    dense: true,
-                    title: Text(LocaleKeys.translation.tr()),
-                    subtitle: Slider(
-                      value: state.translationFontSize,
-                      min: 12,
-                      max: 30,
-                      onChanged: (size) {
-                        stylingBloc.add(
-                          StylingSettingEvent.setTranslationFontSize(
-                            fontSize: size,
-                          ),
-                        );
-                      },
-                    ),
-                    trailing: Checkbox(
-                      value: state.isShowTranslation,
-                      onChanged: (value) {
-                        stylingBloc.add(
-                          StylingSettingEvent.setShowTranslation(
-                            isShow: value ?? true,
-                          ),
-                        );
-                      },
-                    ));
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  title: Text(LocaleKeys.translation.tr()),
+                  subtitle: Slider(
+                    value: state.translationFontSize,
+                    min: 12,
+                    max: 30,
+                    onChanged: (size) {
+                      stylingBloc.add(
+                        StylingSettingEvent.setTranslationFontSize(
+                          fontSize: size,
+                        ),
+                      );
+                    },
+                  ),
+                  trailing: Switch(
+                    value: state.isShowTranslation,
+                    onChanged: (value) {
+                      stylingBloc.add(
+                        StylingSettingEvent.setShowTranslation(
+                          isShow: value,
+                        ),
+                      );
+                    },
+                  ),
+                );
               },
             ),
             ListTile(

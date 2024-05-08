@@ -109,8 +109,8 @@
   "saveLastReadingDescription": "Apakah Anda ingin menyimpan ayat ini sebagai bacaan terakhir?\n{}, ayat {}\n\n Anda dapat mematikan pengingat ini di pengaturan tampilan.",
   "yes": "Ya",
   "no": "Tidak",
-  "warningLastReading": "Pengingat Bacaan Terakhir",
-  "warningLastReadingDescription": "Jika Nyala, Anda akan diperingati setiap keluar dari halaman Surah/Juz.",
+  "settingLastReading": "Pengingat Bacaan Terakhir",
+  "settingLastReadingDescription": "Pilih opsi untuk menyimpan bacaan terakhir saat keluar dari halaman Surah/Juz",
   "deleted": "{} akan dihapus...",
   "undo": "Batal",
   "nearby": "Terdekat",
@@ -168,5 +168,17 @@
   "darkMode": "Mode Gelap",
   "systemMode": "Mode Sistem",
   "dynamicColor": "Warna Dinamis",
-  "dynamicColorDescription": "Ubah warna aplikasi sesuai dengan wallpaper. Hanya berfungsi pada Android S+"
+  "dynamicColorDescription": "Ubah warna aplikasi sesuai dengan wallpaper. Hanya berfungsi pada Android S+",
+  "coloredTajweed": "Tajwid Berwarna",
+  "coloredTajweedDescription": "Warnai huruf sesuai dengan tajwid",
+  "lastReadingReminderMode": {
+    "auto": "Otomatis",
+    "warnMe": "Ingatkan saya",
+    "off": "Matikan"
+  },
+  "lastReadingReminderModeDescription": {
+    "auto": "Otomatis simpan bacaan terakhir saat keluar dari halaman Surah/Juz",
+    "warnMe": "Simpan bacaan terakhir dan ingatkan saat keluar dari halaman Surah/Juz",
+    "off": "Matikan pengingat bacaan terakhir, bacaan terakhir tidak akan disimpan"
+  }
 }

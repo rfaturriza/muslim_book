@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:quranku/features/setting/domain/entities/last_read_reminder_mode_entity.dart';
 
 import '../../../../../../core/error/failures.dart';
 
@@ -15,23 +16,31 @@ abstract class StylingSettingLocalDataSource {
 
   Future<Either<Failure, double?>> getArabicFontSize();
 
-  Future<Either<Failure, Unit>> setLatinFontSize(double fontSize,);
+  Future<Either<Failure, Unit>> setLatinFontSize(
+    double fontSize,
+  );
 
   Future<Either<Failure, double?>> getLatinFontSize();
 
-  Future<Either<Failure, Unit>> setTranslationFontSize(double fontSize,);
+  Future<Either<Failure, Unit>> setTranslationFontSize(
+    double fontSize,
+  );
 
   Future<Either<Failure, double?>> getTranslationFontSize();
 
-  Future<Either<Failure, Unit>> setLastReadReminder(bool isOn,);
+  Future<Either<Failure, Unit>> setLastReadReminder(LastReadReminderModes mode);
 
-  Future<Either<Failure, bool?>> getLastReadReminder();
+  Future<Either<Failure, LastReadReminderModes>> getLastReadReminder();
 
-  Future<Either<Failure, Unit>> setShowLatin(bool isShow,);
+  Future<Either<Failure, Unit>> setShowLatin(
+    bool isShow,
+  );
 
   Future<Either<Failure, bool?>> getShowLatin();
 
-  Future<Either<Failure, Unit>> setShowTranslation(bool isShow,);
+  Future<Either<Failure, Unit>> setShowTranslation(
+    bool isShow,
+  );
 
   Future<Either<Failure, bool?>> getShowTranslation();
 }
