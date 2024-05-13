@@ -109,8 +109,8 @@
   "saveLastReadingDescription": "Do you want to save this verse as last read?\n{}, verse {}\n\nYou can change this warning in the Styling View setting",
   "yes": "Yes",
   "no": "No",
-  "warningLastReading": "Warning Last Reading",
-  "warningLastReadingDescription": "If On, you will be warned every time you exit the Surah/Juz page.",
+  "settingLastReading": "Last Reading Reminder",
+  "settingLastReadingDescription": "Set last reading reminder Mode when exiting the Surah/Juz page",
   "deleted": "{} will be deleted...",
   "undo": "Undo",
   "nearby": "Nearby",
@@ -168,5 +168,17 @@
   "darkMode": "Dark Mode",
   "systemMode": "System Mode",
   "dynamicColor": "Dynamic Color",
-  "dynamicColorDescription": "Change the color of the app according to the wallpaper. Only works on Android S+"
+  "dynamicColorDescription": "Change the color of the app according to the wallpaper. Only works on Android S+",
+  "coloredTajweed": "Colored Tajweed",
+  "coloredTajweedDescription": "Enable or disable colored tajweed",
+  "lastReadingReminderMode": {
+    "auto": "Auto",
+    "warnMe": "Warn Me",
+    "off": "Off"
+  },
+  "lastReadingReminderModeDescription": {
+    "auto": "Automatically save last reading when exiting the Surah/Juz page",
+    "warnMe": "Save last reading and remind when exiting the Surah/Juz page",
+    "off": "Turn off last reading reminder, last reading will not be saved"
+  }
 }

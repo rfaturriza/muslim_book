@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/error/failures.dart';
+import '../entities/last_read_reminder_mode_entity.dart';
 
 abstract class StylingSettingRepository {
   Future<Either<Failure, Unit>> setArabicFontFamily(
@@ -23,9 +24,9 @@ abstract class StylingSettingRepository {
 
   Future<Either<Failure, double?>> getTranslationFontSize();
 
-  Future<Either<Failure, Unit>> setLastReadReminder(bool isOn,);
+  Future<Either<Failure, Unit>> setLastReadReminder(LastReadReminderModes mode);
 
-  Future<Either<Failure, bool?>> getLastReadReminder();
+  Future<Either<Failure, LastReadReminderModes>> getLastReadReminder();
 
   Future<Either<Failure, Unit>> setShowLatin(bool isShow,);
 

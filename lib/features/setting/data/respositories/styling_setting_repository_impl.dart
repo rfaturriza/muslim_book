@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:quranku/features/setting/data/datasources/local/styling/styling_setting_local_data_source.dart';
 
 import '../../../../core/error/failures.dart';
+import '../../domain/entities/last_read_reminder_mode_entity.dart';
 import '../../domain/repositories/styling_setting_repository.dart';
 
 @LazySingleton(as: StylingSettingRepository)
@@ -86,7 +87,7 @@ class StylingSettingRepositoryImpl implements StylingSettingRepository {
   }
 
   @override
-  Future<Either<Failure, bool?>> getLastReadReminder() async {
+  Future<Either<Failure, LastReadReminderModes>> getLastReadReminder() async {
     final result = await localDataSource.getLastReadReminder();
     return result.fold(
       (l) => Left(l),
@@ -113,8 +114,8 @@ class StylingSettingRepositoryImpl implements StylingSettingRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> setLastReadReminder(bool isOn) async {
-    final result = await localDataSource.setLastReadReminder(isOn);
+  Future<Either<Failure, Unit>> setLastReadReminder(LastReadReminderModes mode) async {
+    final result = await localDataSource.setLastReadReminder(mode);
     return result.fold(
       (l) => Left(l),
       (r) => Right(r),
