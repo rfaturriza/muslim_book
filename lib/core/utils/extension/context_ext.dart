@@ -5,6 +5,8 @@ import 'package:quranku/core/components/loading_dialog.dart';
 
 import '../themes/color_schemes_material.dart';
 
+import '../themes/color_schemes_material.dart';
+
 extension ContextExt on BuildContext {
   ThemeData get theme => Theme.of(this);
 
