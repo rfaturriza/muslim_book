@@ -180,5 +180,35 @@
     "auto": "Automatically save last reading when exiting the Surah/Juz page",
     "warnMe": "Save last reading and remind when exiting the Surah/Juz page",
     "off": "Turn off last reading reminder, last reading will not be saved"
+  },
+  "lafazdAllahExplanation": {
+    "content": "The rule of tajwid that applies to reading the word Allah. This tajwid rule is called alif lam jalalah and only applies to the word jalalah, or words with the name of Allah."
+  },
+  "ghunnahExplanation": {
+    "content": "When the letter **Nun with Tasyidid ن** or **Mim with Tasyidid م** appears, the tasyidid mark resembles the letter `w`.\n\nThe reading rule for Ghunnah is that it is nasalized and held for about 2 harakats before clearly pronouncing the Nun/Mim.\n\n*However, if the previous letter is a silent nun or tanwin, the rule changes to **Idgham Bighunnah**.*"
+  },
+  "idghamBighunnahExplanation": {
+    "content": "When the letter **Nun mati ن** or **Tanwin ٌ ٍ ً** meets one of the following 4 letters: `ي ن م و`.\n\nThe rule for Idgham Bighunnah is to assimilate the silent nun or tanwin into the letter that follows it, so that the nun or tanwin is not pronounced. Instead, it is nasalized and held for about 2 harakats before clearly pronouncing the following letter."
+  },
+  "idghamBilaGhunnahExplanation": {
+    "content": "When the letter **Nun mati ن** or **Tanwin ٌ ٍ ً** meets one of the following 2 letters: `ل ر`.\n\nThe rule for Idgham Bilaghunnah is to assimilate the silent nun or tanwin into the following letter so that the nun or tanwin is not pronounced, but is held for about 2 harakats before clearly pronouncing the following letter."
+  },
+  "idghamMimiExplanation": {
+    "content": "When the letter **Mim mati م** meets the letter **Mim (م) with a vowel (Mim hidup)**.\n\nThe rule for Idgham Mitslain is to assimilate the silent mim with the following mim with a vowel (Mim hidup) so that the silent mim is nasalized and held for about 2 harakats before clearly pronouncing the Mim with a vowel (Mim hidup) in front."
+  },
+  "iqlabExplanation": {
+    "content": "When the letter **Nun mati ن** or **Tanwin ٌ ٍ ً** meets the letter **Ba (ب)**.\n\nThe rule for Iqlab is to replace the silent nun or tanwin with a mim and nasalize it, holding it for about 2 harakats before clearly pronouncing the `Ba (ب)` that follows. Iqlab also occurs when the letter `ba (ب)` follows a tanwin, with a small mim mark in between."
+  },
+  "ikhfaExplanation": {
+    "content": "When the letter **Nun mati ن** or **Tanwin ٌ ٍ ً** meets one of the following 15 letters: `ت ث ج د ذ ز س ش ص ض ط ظ ف ق ك`.\n\nThe rule for Ikhfa is to replace the silent nun or tanwin with a sound between idgham and izhar, which is nasalized with a soft sound and held for about 2 harakats before clearly pronouncing the `Ikhfa` letter that follows.\n\nIkhfa is divided into 3 parts:\n1. **Ikhfa Aqrob** is the nearest Ikhfa, so the NG sound is slightly less clear. Example: `di`.\n2. **Ikhfa Ausath** is the middle Ikhfa, so the NG sound is moderate. Example: `ni`.\n3. **Ikhfa Ab'ad** is the farthest Ikhfa, so the NG sound is clear, such as the letters `di` and `du`."
+  },
+  "izharExplanation": {
+    "content": "When the letter **Nun mati ن** or **Tanwin ٌ ٍ ً** meets one of the following 7 letters: `أ ه ع ح غ خ`.\n\nThe rule for Izhar is to clearly pronounce the silent Nun or Tanwin without nasalization and without holding before pronouncing the `Izhar` letter that follows."
+  },
+  "ikhfaSyafawiExplanation": {
+    "content": "When the letter **Mim mati م** meets the letter **Ba (ب)**.\n\nThe rule for Ikhfa Syafawi is that the silent Mim is pronounced like the letter Mim and held for about 2 harakats before clearly pronouncing the Ba."
+  },
+  "qalqalahExplanation": {
+    "content": "When one of these 5 letters (`ب د ج ط ق`) meets `sukun` (`ـْـ`).\n\nThe rule for Qalqalah is to emphasize the `sukun` (`ـْـ`) when pronouncing the letter. This can be divided into:\n- **Qalqalah Sughra** (Small Qalqalah), with lighter emphasis.\n- **Qalqalah Kubra** (Major Qalqalah), with stronger emphasis.\n- **Qalqalah Akbar** (Greatest Qalqalah), with the strongest emphasis.\n- This occurs within a verse and chapter."
   }
 }
