@@ -54,6 +54,7 @@ dependencies:
   firebase_remote_config: ^4.3.8
   dynamic_color: ^1.7.0
   flutter_markdown: ^0.7.3+1
+  compassx: ^1.0.1
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +74,7 @@ flutter:
     - assets/lottie/
     - assets/svg/
     - assets/images/
+    - assets/gif/
   fonts:
     - family: Lato
       fonts:

@@ -55,7 +55,7 @@
   "errorGettingJuzBookmarks": "Gagal mendapatkan penanda juz",
   "errorGettingSurahBookmarks": "Gagal mendapatkan penanda surah",
   "errorGettingVerseBookmarks": "Gagal mendapatkan penanda ayat",
-  "instructionQibla": "Sejajarkan kedua kepala panah\nJangan letakkan perangkat dekat dengan benda logam.\nKalibrasi setiap kali Anda menggunakannya.",
+  "instructionQibla": "Jauhkan perangkat dari objek yang berbahan besi atau logam, agar lebih akurat.",
   "qibla": "Kiblat",
   "audioNotAvailable": "Audio tidak tersedia",
   "connectionTimeoutException": "Ups! Koneksi telah habis waktu. Silakan periksa koneksi internet Anda dan coba lagi.",
@@ -210,5 +210,6 @@
   },
   "qalqalahExplanation": {
     "content": "Ketika salah satu dari 5 huruf ini (`ب د ج ط ق`) bertemu dengan `sukun` (`ـْـ`).\n\nCara baca hukum Qalqalah yaitu Sukun (`ـْـ`) ditekankan saat menyebut huruf tersebut. Ini dapat dibagi menjadi:\n- **Qalqalah Sughra** (Qalqalah Kecil), ditekankan lebih kecil.\n- **Qalqalah Kubra** (Qalqalah Besar), ditekankan lebih besar.\n- **Qalqalah Akbar** (Qalqalah Terbesar), ditekankan lebih kuat.\n- Ini terjadi di dalam surat dan surah."
-  }
+  },
+  "calibration": "Kalibrasi"
 }

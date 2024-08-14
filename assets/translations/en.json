@@ -55,7 +55,7 @@
   "errorGettingJuzBookmarks": "Juz Bookmarks failed to get",
   "errorGettingSurahBookmarks": "Surah Bookmarks failed to get",
   "errorGettingVerseBookmarks": "Verse Bookmarks failed to get",
-  "instructionQibla": "Align both arrow head\nDo not put device close to metal object.\nCalibrate everytime you use it.",
+  "instructionQibla": "Keep the device away from objects made of iron or metal for more accuracy.",
   "qibla": "Qibla",
   "audioNotAvailable": "Audio not available",
   "connectionTimeoutException": "Oops! The connection timed out. Please check your internet connection and try again.",
@@ -210,5 +210,6 @@
   },
   "qalqalahExplanation": {
     "content": "When one of these 5 letters (`ب د ج ط ق`) meets `sukun` (`ـْـ`).\n\nThe rule for Qalqalah is to emphasize the `sukun` (`ـْـ`) when pronouncing the letter. This can be divided into:\n- **Qalqalah Sughra** (Small Qalqalah), with lighter emphasis.\n- **Qalqalah Kubra** (Major Qalqalah), with stronger emphasis.\n- **Qalqalah Akbar** (Greatest Qalqalah), with the strongest emphasis.\n- This occurs within a verse and chapter."
-  }
+  },
+  "calibration": "Calibration"
 }

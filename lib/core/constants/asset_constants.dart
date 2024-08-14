@@ -16,4 +16,5 @@ class AssetConst {
       'assets/images/KajianHub-text.png';
   static const String googleMapsIcon = 'assets/svg/google_maps_icon.svg';
   static const String mosqueDummyImageUrl = 'https://kajianhub.com/img/dummy/dummy-masjid.jpg';
+  static const String compassCalibrationGif = 'assets/gif/compass-calibration.gif';
 }
