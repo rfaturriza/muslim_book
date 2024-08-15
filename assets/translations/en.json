@@ -211,5 +211,7 @@
   "qalqalahExplanation": {
     "content": "When one of these 5 letters (`ب د ج ط ق`) meets `sukun` (`ـْـ`).\n\nThe rule for Qalqalah is to emphasize the `sukun` (`ـْـ`) when pronouncing the letter. This can be divided into:\n- **Qalqalah Sughra** (Small Qalqalah), with lighter emphasis.\n- **Qalqalah Kubra** (Major Qalqalah), with stronger emphasis.\n- **Qalqalah Akbar** (Greatest Qalqalah), with the strongest emphasis.\n- This occurs within a verse and chapter."
   },
-  "calibration": "Calibration"
+  "calibration": "Calibration",
+  "accuracy": "Accuracy",
+  "calibrationCompass": "Please calibrate your compass by moving your phone in a figure 8 motion"
 }

@@ -1,6 +1,5 @@
 import 'dart:math' show pi;
 
-import 'package:compassx/compassx.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -60,46 +59,45 @@ class QiblaCompassScreen extends StatelessWidget {
   }
 }
 
-class QiblaCompassWidget extends StatelessWidget {
+class QiblaCompassWidget extends StatefulWidget {
   const QiblaCompassWidget({super.key});
 
+  @override
+  State<QiblaCompassWidget> createState() => _QiblaCompassWidgetState();
+}
+
+class _QiblaCompassWidgetState extends State<QiblaCompassWidget> {
   void showCalibrationCompassDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
+        return Dialog(
           backgroundColor: Colors.white,
-          title: Text(LocaleKeys.calibration.tr()),
-          content: StreamBuilder<CompassXEvent>(
-              stream: CompassX.events,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(
-                    child: Text('No data'),
-                  );
-                }
-                final compass = snapshot.data!;
-                return Column(
-                  children: [
-                    Image.asset(AssetConst.compassCalibrationGif),
-                    const VSpacer(),
-                    Text(
-                      "Accuracy: ${compass.accuracy}",
-                    ),
-                  ],
-                );
-              }),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(LocaleKeys.next.tr()),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Wrap(
+              children: [
+                Image.asset(AssetConst.compassCalibrationGif),
+                const VSpacer(),
+                Text(
+                  LocaleKeys.calibrationCompass.tr(),
+                  textAlign: TextAlign.center,
+                ),
+                const VSpacer(),
+              ],
             ),
-          ],
+          ),
         );
       },
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showCalibrationCompassDialog(context);
+    });
   }
 
   @override
@@ -107,42 +105,30 @@ class QiblaCompassWidget extends StatelessWidget {
     return BlocBuilder<QiblaBloc, QiblaState>(
       builder: (context, state) {
         if (state.isLoading) {
-          return const CircularProgressIndicator.adaptive();
+          return const CircularProgressIndicator();
         }
         final direction = state.qiblaDirectionResult?.asRight();
         var angle = ((direction?.qiblah ?? 0) * (pi / 180) * -1) / (2 * pi);
 
-        return StreamBuilder<CompassXEvent>(
-            stream: CompassX.events,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Center(
-                  child: Text(LocaleKeys.defaultErrorMessage.tr()),
-                );
-              }
-              final compass = snapshot.data!;
-              if (compass.shouldCalibrate) {
-                showCalibrationCompassDialog(context);
-              }
-              return Stack(
-                alignment: Alignment.center,
-                children: <Widget>[
-                  SvgPicture.asset(AssetConst.compassSvg),
-                  AnimatedRotation(
-                    turns: angle,
-                    duration: const Duration(milliseconds: 200),
-                    child: SvgPicture.asset(AssetConst.needleSvg),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Text(
-                      LocaleKeys.instructionQibla.tr(),
-                      textAlign: TextAlign.center,
-                    ),
-                  )
-                ],
-              );
-            });
+        return Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            SvgPicture.asset(AssetConst.compassSvg),
+            AnimatedRotation(
+              turns: angle,
+              duration: const Duration(milliseconds: 200),
+              child: SvgPicture.asset(AssetConst.needleSvg),
+            ),
+            const VSpacer(),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Text(
+                LocaleKeys.instructionQibla.tr(),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        );
       },
     );
   }

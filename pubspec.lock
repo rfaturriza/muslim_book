@@ -257,14 +257,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.18.0"
-  compassx:
-    dependency: "direct main"
-    description:
-      name: compassx
-      sha256: "4ac6d726b00491ea6361be4e0a17fb630fbe4051b744582d0c28eb0191e77f5a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.1"
   connectivity_plus:
     dependency: "direct main"
     description:

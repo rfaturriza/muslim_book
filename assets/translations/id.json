@@ -211,5 +211,7 @@
   "qalqalahExplanation": {
     "content": "Ketika salah satu dari 5 huruf ini (`ب د ج ط ق`) bertemu dengan `sukun` (`ـْـ`).\n\nCara baca hukum Qalqalah yaitu Sukun (`ـْـ`) ditekankan saat menyebut huruf tersebut. Ini dapat dibagi menjadi:\n- **Qalqalah Sughra** (Qalqalah Kecil), ditekankan lebih kecil.\n- **Qalqalah Kubra** (Qalqalah Besar), ditekankan lebih besar.\n- **Qalqalah Akbar** (Qalqalah Terbesar), ditekankan lebih kuat.\n- Ini terjadi di dalam surat dan surah."
   },
-  "calibration": "Kalibrasi"
+  "calibration": "Kalibrasi",
+  "accuracy": "Akurasi",
+  "calibrationCompass": "Kalibrasi kompas dengan menggerakkan ponsel Anda dalam gerakan angka 8"
 }
