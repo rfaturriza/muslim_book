@@ -185,31 +185,31 @@
     "content": "Hukum Tajwid yang berlaku untuk membaca lafal Allah. Hukum Tajwid ini disebut Alif Lam Jalalah dan hanya terdapat pada lafaz Jalalah, atau lafaz dengan nama Allah."
   },
   "ghunnahExplanation": {
-    "content": "Ketika huruf **Nun ber-Tasyidid ن** atau **Mim ber-Tasyidid م**, tanda tasyidid itu yang seperti huruf `w`.\n\nCara baca hukum Ghunnah yaitu didengungkan serta ditahan sekitar 2 harakat sebelum menyebut jelas huruf Nun/Mim-nya.\n\n*Namun jika huruf sebelumnya adalah nun sukun atau tanwin maka hukumnya berubah menjadi **Idgham Bighunnah**.*"
+    "content": "Ketika huruf **Nun ber-Tasyidid نّ** atau **Mim ber-Tasyidid مّ**, tanda tasyidid itu yang seperti huruf `w`.\n\nCara baca hukum Ghunnah yaitu didengungkan serta ditahan sekitar 2 harakat sebelum menyebut jelas huruf Nun/Mim-nya.\n\n*Namun jika huruf sebelumnya adalah nun mati atau tanwin maka hukumnya berubah menjadi **Idgham Bighunnah**.*"
   },
   "idghamBighunnahExplanation": {
-    "content": "Ketika huruf **Nun sukun ن** atau **Tanwin ٌ ٍ ً** bertemu dengan salah satu dari 4 huruf ini: `ي ن م و`.\n\nCara baca hukum Idgham Bighunnah yaitu meleburkan nun sukun atau tanwin yang berada di depan huruf di depannya dan seolah-olah huruf Nun sukun atau tanwin tidak dibaca namun didengungkan serta ditahan sekitar 2 harakat sebelum menyebut jelas huruf di depannya."
+    "content": "Ketika huruf **Nun mati (نْ)** atau **Tanwin ( ٌ ٍ ً  )** bertemu dengan salah satu dari 4 huruf ini: `ي ن م و`.\n\nCara baca hukum Idham Bighunnah yaitu meleburkan nun mati atau tanwin dengan huruf di depannya dan seolah-olah huruf **N** di nun mati atau tanwin tidak dibaca sambil didengungkan serta ditahan sekitar 2 harakat sebelum menyebut jelas huruf di depannya.\n**Namun jika huruf **Nun mati (نْ)** bertemu dengan huruf **Wau (ﻭ)** atau **Ya (ﻱ)** tersambung (tanpa dipisah spasi), maka hukumnya menjadi **Idzhar Wajib** (dibaca dengan jelas tanpa dengung), contohnya di QS. Al-Baqarah ayat 86 pada kata 'dun-yaa'. Pada aplikasi ini hukum Idzhar tidak kami beri warna dikarenakan hukum Idzhar dibaca jelas sesuai huruf tanpa ada dengung*"
   },
   "idghamBilaGhunnahExplanation": {
-    "content": "Ketika huruf **Nun sukun ن** atau **Tanwin ٌ ٍ ً** bertemu dengan salah satu dari 2 huruf ini: `ل ر`.\n\nCara baca hukum Idgham Bilaghunnah yaitu meleburkan nun sukun atau tanwin yang berada di depan huruf di depannya dan seolah-olah huruf Nun sukun atau tanwin tidak dibaca serta ditahan sekitar 2 harakat sebelum menyebut jelas huruf di depannya."
+    "content": "Ketika huruf **Nun mati (نْ)** atau **Tanwin ( ٌ ٍ ً  )** bertemu dengan salah satu dari 2 huruf ini **Lam (ﻝ)** atau **Ra (ﺭ)**. \n\nCara baca hukum Idham Bilaghunnah yaitu meleburkan nun mati atau tanwin dengan huruf di depannya dan seolah-olah huruf **N** di nun mati atau tanwin tidak dibaca tanpa didengungkan serta ditahan sekitar 1 atau 2 harakat sebelum menyebut jelas huruf di depannya."
   },
   "idghamMimiExplanation": {
-    "content": "Ketika huruf **Mim sukun م** bertemu dengan huruf **Mim (م) ber-harakat (Mim hidup)**.\n\nCara baca hukum Idgham Mitslain yaitu meleburkan huruf mim sukun dengan huruf mim ber-harakat (Mim hidup) di depannya dan seolah-olah huruf mim sukun dibaca sambil didengungkan serta ditahan sekitar 2 harakat sebelum menyebut jelas huruf Mim ber-harakat (Mim hidup) di depannya."
+    "content": "Ketika huruf **Mim mati (مْ)** bertemu dengan huruf **Mim (ﻡ)** ber-harakat (mim hidup).\n\nCara baca hukum Idgham Mitsain yaitu meleburkan huruf mim mati dengan huruf mim ber-harakat (mim hidup) di depannya dan seolah-olah huruf M di mim mati dibaca sambil didengungkan serta ditahan sekitar 2 harakat sebelum menyebut jelas huruf Mim ber-harakat (mim hidup) di depannya."
   },
   "iqlabExplanation": {
-    "content": "Ketika huruf **Nun sukun ن** atau **Tanwin ٌ ٍ ً** bertemu dengan huruf **Ba (ب)**.\n\nCara baca hukum Iqlab yaitu menggantikan huruf nun sukun atau tanwin dengan huruf mim serta didengungkan serta ditahan sekitar 2 harakat sebelum menyebut jelas huruf `Ba (ب)` yang ada di depannya. Iqlab juga terjadi ketika huruf `ba (ب)` terletak setelah tanwin, baik yang tidak menunjukkan mim kecil di antaranya."
+    "content": "Ketika huruf **Nun mati (نْ)** atau **Tanwin ( ٌ ٍ ً  )** bertemu dengan huruf **Ba(ﺏ)**. \n\nCara baca hukum Iqlab yaitu menggantikan huruf nun mati atau tanwin dengan huruf mim mati serta ditahan sekitar 2 harakat sebelum menyebut jelas huruf Ba-nya. Pada beberapa mushaf ditulis huruf mim kecil berdiri di antaranya, tetapi ada juga mushaf yang tidak menulis mim kecil di antaranya."
   },
   "ikhfaExplanation": {
-    "content": "Ketika huruf **Nun sukun ن** atau **Tanwin ٌ ٍ ً** bertemu dengan salah satu dari 15 huruf: `ت ث ج د ذ ز س ش ص ض ط ظ ف ق ك`.\n\nCara baca hukum Ikhfa yaitu menggantikan huruf nun sukun atau tanwin dengan suara antara idgham dan izhar, yaitu didengungkan dengan suara yang samar dan ditahan sekitar 2 harakat sebelum menyebut jelas huruf `Ikhfa` yang ada di depannya.\n\nIkhfa terbagi menjadi 3 bagian, yaitu:\n1. **Ikhfa Aqrob** adalah Ikhfa yang dekat, sehingga NG-nya terdengar agak kurang jelas. Contoh kata: `di`.\n2. **Ikhfa Ausath** adalah Pertengahan, sehingga NG-nya terdengar sedang. Contoh kata: `ni`.\n3. **Ikhfa Ab'ad** adalah Jauh, sehingga NG-nya terdengar jelas, ada 2 huruf, yaitu: `di` dan `du`."
+    "content": "Ketika huruf **Nun mati (نْ)** atau **Tanwin ( ٌ ٍ ً  )** bertemu dengan salah satu dari 15 huruf: `ت ث ج د ذ ز س ش ص ض ط ظ ف ق ك`.\n\nCara baca hukum Ikhfa yaitu menyamarkan huruf nun mati atau tanwin seperti huruf **NG** serta ditahan sekitar 2 harakat sebelum menyebut jelas huruf di depannya.\nIkhfa terbagi menjadi 3 bagian, yaitu:\n1. **Ikhfa Aqrob** adalah Dekat, sehingga NG-nya terdengar agak kurang jelas, yaitu: `ت د ط `.\n2. **Ikhfa Ausath** adalah Pertengahan, sehingga NG-nya terdengar sedang, yaitu: ` ث ج ذ ز س ش ص ض ظ ف `.\n3. **Ikhfa Ab'ad** adalah Jauh, sehingga NG-nya terdengar jelas, ada 2 huruf, yaitu: `ق ك`."
   },
   "izharExplanation": {
-    "content": "Ketika huruf **Nun sukun ن** atau **Tanwin ٌ ٍ ً** bertemu dengan salah satu dari 7 huruf: `أ ه ع ح غ خ`.\n\nCara baca hukum Izhar yaitu menyebut jelas huruf Nun sukun atau Tanwin tanpa didengungkan serta tanpa ditahan sebelum menyebut jelas huruf `Izhar` yang ada di depannya."
+    "content": "Ketika huruf **Nun mati (نْ)** atau **Tanwin ( ٌ ٍ ً  )** bertemu dengan salah satu dari 7 huruf: `أ ه ع ح غ خ`.\n\nCara baca hukum Izhar yaitu menyebut jelas huruf Nun mati atau Tanwin tanpa didengungkan serta tanpa ditahan sebelum menyebut jelas huruf `Izhar` yang ada di depannya."
   },
   "ikhfaSyafawiExplanation": {
-    "content": "Ketika huruf **Mim sukun م** bertemu dengan huruf **Ba (ب)**.\n\nCara baca hukum Ikhfa Syafawi yaitu huruf mim sukun menjadi huruf mim seperti huruf MIM serta ditahan sekitar 2 harakat sebelum menyebut jelas huruf Ba-nya."
+    "content": "Ketika huruf **Mim mati (مْ)** bertemu dengan huruf **Ba (ﺏ)**.\nCara baca hukum Ikhfa Syafawi yaitu menyamarkan huruf mim mati seperti huruf **MNG** serta ditahan sekitar 2 atau 3 harakat sebelum menyebut jelas huruf Ba-nya."
   },
   "qalqalahExplanation": {
-    "content": "Ketika salah satu dari 5 huruf ini (`ب د ج ط ق`) bertemu dengan `sukun` (`ـْـ`).\n\nCara baca hukum Qalqalah yaitu Sukun (`ـْـ`) ditekankan saat menyebut huruf tersebut. Ini dapat dibagi menjadi:\n- **Qalqalah Sughra** (Qalqalah Kecil), ditekankan lebih kecil.\n- **Qalqalah Kubra** (Qalqalah Besar), ditekankan lebih besar.\n- **Qalqalah Akbar** (Qalqalah Terbesar), ditekankan lebih kuat.\n- Ini terjadi di dalam surat dan surah."
+    "content": "Ketika salah satu dari 5 huruf ini (`ب د ج ط ق`) mati (sukun) di tengah-tengah kalimat, maka ini disebut qalqalah sughra (qalqalah kecil). Dan ketika salah satu huruf tersebut dihentikan karena waqaf atau di akhir ayat disebut qalgalah kubra (qalqalah besar), pada qalqalah kubra apabila waqaf tidak dihentikan bacaannya maka tidak di-qalqalahkan. \nCara baca hukum Qalqalah yaitu seperti dipantulkan huruf qalqalah-nya."
   },
   "calibration": "Kalibrasi",
   "accuracy": "Akurasi",
