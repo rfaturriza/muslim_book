@@ -107,7 +107,7 @@ class StylingSettingBottomSheet extends StatelessWidget {
               buildWhen: (p, c) =>
                   p.isColoredTajweedEnabled != c.isColoredTajweedEnabled,
               builder: (context, state) {
-                return SwitchListTile(
+                return ListTile(
                   contentPadding: EdgeInsets.zero,
                   title: Row(
                     children: [
@@ -139,14 +139,16 @@ class StylingSettingBottomSheet extends StatelessWidget {
                     ],
                   ),
                   subtitle: Text(LocaleKeys.coloredTajweedDescription.tr()),
-                  value: state.isColoredTajweedEnabled,
-                  onChanged: (value) {
-                    stylingBloc.add(
-                      StylingSettingEvent.setColoredTajweedStatus(
-                        isColoredTajweedEnabled: value,
-                      ),
-                    );
-                  },
+                  trailing:  Switch(
+                    value: state.isColoredTajweedEnabled,
+                    onChanged: (value) {
+                      stylingBloc.add(
+                        StylingSettingEvent.setColoredTajweedStatus(
+                          isColoredTajweedEnabled: value,
+                        ),
+                      );
+                    },
+                  ),
                 );
               },
             ),
