@@ -127,7 +127,7 @@ class StylingSettingBottomSheet extends StatelessWidget {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: context.theme.primaryColor,
+                              color: context.theme.colorScheme.primary,
                             ),
                           ),
                           child: const Icon(
