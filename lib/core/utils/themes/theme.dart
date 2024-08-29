@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:quranku/core/constants/font_constants.dart';
-import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/themes/color_schemes_material.dart';
 
 import 'text.dart';
@@ -90,11 +89,11 @@ ThemeData themeData({
     ),
     iconButtonTheme: IconButtonThemeData(
       style: ButtonStyle(
-        padding: MaterialStateProperty.all(
+        padding: WidgetStateProperty.all(
           const EdgeInsets.all(8),
         ),
-        foregroundColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.disabled)) {
+        foregroundColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.disabled)) {
             return primaryColor.withOpacity(0.5);
           }
           return primaryColor;
@@ -138,16 +137,16 @@ ThemeData themeData({
       ),
     ),
     checkboxTheme: CheckboxThemeData(
-      fillColor: MaterialStateProperty.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
+      fillColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
           return isDarkMode
               ? darkColorScheme.primary
               : lightColorScheme.primary;
         }
         return Colors.transparent;
       }),
-      overlayColor: MaterialStateProperty.all(defaultColor.withOpacity(0.1)),
-      checkColor: MaterialStateProperty.all(
+      overlayColor: WidgetStateProperty.all(defaultColor.withOpacity(0.1)),
+      checkColor: WidgetStateProperty.all(
         isDarkMode ? darkColorScheme.onPrimary : lightColorScheme.onPrimary,
       ),
       shape: RoundedRectangleBorder(

@@ -23,8 +23,8 @@ class JuzExpansionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
-      backgroundColor: context.theme.colorScheme.background,
-      collapsedBackgroundColor: context.theme.colorScheme.surfaceVariant,
+      backgroundColor: context.theme.colorScheme.surface,
+      collapsedBackgroundColor: context.theme.colorScheme.surfaceContainerHighest,
       initiallyExpanded: isExpanded,
       trailing: isExpanded
           ? Icon(
@@ -58,7 +58,7 @@ class JuzExpansionTile extends StatelessWidget {
             onTapJuz: () => onTapJuz(e),
             number: e.number.toString(),
             name: e.name,
-            backgroundColor: context.theme.colorScheme.background,
+            backgroundColor: context.theme.colorScheme.surface,
             description: e.description,
           ),
         ),

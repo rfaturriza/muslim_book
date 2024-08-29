@@ -436,7 +436,7 @@ class DialogDetailTajweed extends StatelessWidget {
                           ),
                         );
                       }).toList(),
-                    ).toList()
+                    ),
                   ],
                 ),
               )

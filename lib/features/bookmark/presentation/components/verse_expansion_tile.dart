@@ -26,8 +26,8 @@ class VerseExpansionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
-      backgroundColor: context.theme.colorScheme.background,
-      collapsedBackgroundColor: context.theme.colorScheme.surfaceVariant,
+      backgroundColor: context.theme.colorScheme.surface,
+      collapsedBackgroundColor: context.theme.colorScheme.surfaceContainerHighest,
       initiallyExpanded: isExpanded,
       trailing: isExpanded
           ? Icon(
@@ -62,7 +62,7 @@ class VerseExpansionTile extends StatelessWidget {
             surahName: e.surahName,
             juzName: e.juz?.name,
             verseNumber: e.versesNumber.inSurah ?? 0,
-            backgroundColor: context.theme.colorScheme.background,
+            backgroundColor: context.theme.colorScheme.surface,
           ),
         ),
       ],

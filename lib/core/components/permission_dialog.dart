@@ -18,7 +18,7 @@ class PermissionDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: context.theme.colorScheme.background,
+      backgroundColor: context.theme.colorScheme.surface,
       title: Text(title ?? LocaleKeys.permissionTitle.tr()),
       content: Text(
         content ?? LocaleKeys.defaultPermissionMessage.tr(),
