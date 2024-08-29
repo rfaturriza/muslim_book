@@ -100,6 +100,11 @@ class AdMobConst {
     required void Function() onLoaded,
     required void Function(String message) onFailedToLoad,
   }) async {
+    if (kDebugMode || kProfileMode || kReleaseMode) {
+      onLoaded();
+      onEarnedReward(RewardItem(1, 'Ads'));
+      return;
+    }
     await RewardedInterstitialAd.load(
       adUnitId: adUnitId,
       request: request,
@@ -124,7 +129,7 @@ class AdMobConst {
     required void Function() onLoaded,
     required void Function(String message) onFailedToLoad,
   }) async {
-    if (kDebugMode) {
+    if (kDebugMode || kProfileMode || kReleaseMode) {
       onLoaded();
       onEarnedReward(RewardItem(1, 'Ads'));
       return;
