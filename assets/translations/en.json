@@ -55,7 +55,7 @@
   "errorGettingJuzBookmarks": "Juz Bookmarks failed to get",
   "errorGettingSurahBookmarks": "Surah Bookmarks failed to get",
   "errorGettingVerseBookmarks": "Verse Bookmarks failed to get",
-  "instructionQibla": "Align both arrow head\nDo not put device close to metal object.\nCalibrate everytime you use it.",
+  "instructionQibla": "Keep the device away from objects made of iron or metal for more accuracy.",
   "qibla": "Qibla",
   "audioNotAvailable": "Audio not available",
   "connectionTimeoutException": "Oops! The connection timed out. Please check your internet connection and try again.",
@@ -109,8 +109,8 @@
   "saveLastReadingDescription": "Do you want to save this verse as last read?\n{}, verse {}\n\nYou can change this warning in the Styling View setting",
   "yes": "Yes",
   "no": "No",
-  "warningLastReading": "Warning Last Reading",
-  "warningLastReadingDescription": "If On, you will be warned every time you exit the Surah/Juz page.",
+  "settingLastReading": "Last Reading Reminder",
+  "settingLastReadingDescription": "Set last reading reminder Mode when exiting the Surah/Juz page",
   "deleted": "{} will be deleted...",
   "undo": "Undo",
   "nearby": "Nearby",
@@ -163,5 +163,55 @@
   "requestAccessLocation": "Request Location Permission",
   "tryAgain": "Try Again",
   "notAvailableInYourCountry": "Sorry, this feature is not available in your country",
-  "shareAppDescription": "Check out {}, an app that helps you read the Quran and find prayer times. Download it at {}"
+  "shareAppDescription": "Check out {}, an app that helps you read the Quran and find prayer times. Download it at {}",
+  "lightMode": "Light Mode",
+  "darkMode": "Dark Mode",
+  "systemMode": "System Mode",
+  "dynamicColor": "Dynamic Color",
+  "dynamicColorDescription": "Change the color of the app according to the wallpaper. Only works on Android S+",
+  "coloredTajweed": "Colored Tajweed",
+  "coloredTajweedDescription": "Enable or disable colored tajweed",
+  "lastReadingReminderMode": {
+    "auto": "Auto",
+    "warnMe": "Warn Me",
+    "off": "Off"
+  },
+  "lastReadingReminderModeDescription": {
+    "auto": "Automatically save last reading when exiting the Surah/Juz page",
+    "warnMe": "Save last reading and remind when exiting the Surah/Juz page",
+    "off": "Turn off last reading reminder, last reading will not be saved"
+  },
+  "lafazdAllahExplanation": {
+    "content": "The rule of tajwid that applies to reading the word Allah. This tajwid rule is called alif lam jalalah and only applies to the word jalalah, or words with the name of Allah."
+  },
+  "ghunnahExplanation": {
+    "content": "When meets with **Noon shaddah (نّ)** & or **Meem shaddah (مّ)** s, the shaddah is like letters **W**. But when previous letters is noon sukoon or tanween the tajweed name is Idghaam Ghunna."
+  },
+  "idghamBighunnahExplanation": {
+    "content": "When letters **Noon sukoon (نْ)** or **Tanween ( ٌ ٍ ً  )** meet with one of the 4 letters these (`ي ن م و`). \n\n*But if letters **Noon sukoon (نْ)** meet with **Wau (ﻭ)** or **Ya (ﻱ)** is connected without spaces then the tajweed name is not Idghaam Ghunna, but the tajweed name is **Izhaar Mandatory**, check Surah Al-Baqara ayah 86 in `dun-yaa`.*"
+  },
+  "idghamBilaGhunnahExplanation": {
+    "content": "When letters **Noon sukoon (نْ)** or **Tanween ( ٌ ٍ ً  )** meet with one of letters **Lam (ﻝ)** or **Ra (ﺭ)**."
+  },
+  "idghamMimiExplanation": {
+    "content": "When letters **Meem sukoon (مْ)** meet with letters **Meem (ﻡ)**."
+  },
+  "iqlabExplanation": {
+    "content": "When letters **Noon sukoon (نْ)** or **Tanween ( ٌ ٍ ً  )** meet with letters **Ba (ﺏ)**. Some of Mushaf there was a small meem standing between them, but there were also Mushaf who did not write small meem standing between them."
+  },
+  "ikhfaExplanation": {
+    "content": "When letters **Noon sukoon (نْ)** or **Tanween ( ٌ ٍ ً  )** meet with one of the 15 letters these: `ت ث ج د ذ ز س ش ص ض ط ظ ف ق ك`."
+  },
+  "izharExplanation": {
+    "content": "When the letter **Noon sukoon (نْ)** or **Tanween ( ٌ ٍ ً  )** meets one of the following 7 letters: `أ ه ع ح غ خ`.\n\nThe rule for Izhar is to clearly pronounce the silent Nun or Tanwin without nasalization and without holding before pronouncing the `Izhar` letter that follows."
+  },
+  "ikhfaSyafawiExplanation": {
+    "content": "When letters **Meem sukoon (مْ)** meet with letters **Ba (ﺏ)**."
+  },
+  "qalqalahExplanation": {
+    "content": "When one of the 5 letters these (`ب د ج ط ق`) sukoon in the middle of the sentence, then this is called Qalgala Sughra. And when one of the letters is stopped because of waqf or at the end of the ayah is called Qalgala Kubra, in the Qalqala Kubra if the waqf is not stopped the reciting is not with Qalqala."
+  },
+  "calibration": "Calibration",
+  "accuracy": "Accuracy",
+  "calibrationCompass": "Please calibrate your compass before use by moving your phone in a figure 8 motion"
 }

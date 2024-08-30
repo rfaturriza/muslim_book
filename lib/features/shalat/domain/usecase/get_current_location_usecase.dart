@@ -49,20 +49,9 @@ class GetCurrentLocationUseCase
       return Future.error(LocaleKeys.errorLocationPermanentDenied.tr());
     }
     final resultLocator = await Geolocator.getCurrentPosition();
-    final languageCode = locale.languageCode;
-    final countryCode = () {
-      if (locale.countryCode != null) {
-        return locale.countryCode;
-      }
-      if (locale.languageCode.toUpperCase() == "EN") {
-        return "US";
-      }
-      return locale.languageCode.toUpperCase();
-    }();
     final placemarks = await placemarkFromCoordinates(
       resultLocator.latitude,
       resultLocator.longitude,
-      localeIdentifier: "${languageCode}_$countryCode",
     );
 
     return GeoLocation(

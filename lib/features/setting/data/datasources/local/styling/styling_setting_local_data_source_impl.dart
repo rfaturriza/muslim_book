@@ -5,6 +5,7 @@ import 'package:quranku/features/setting/data/datasources/local/styling/styling_
 
 import '../../../../../../core/constants/hive_constants.dart';
 import '../../../../../../core/error/failures.dart';
+import '../../../../domain/entities/last_read_reminder_mode_entity.dart';
 
 @LazySingleton(as: StylingSettingLocalDataSource)
 class StylingSettingLocalDataSourceImpl
@@ -136,10 +137,10 @@ class StylingSettingLocalDataSourceImpl
   }
 
   @override
-  Future<Either<Failure, Unit>> setLastReadReminder(bool isReminders) async {
+  Future<Either<Failure, Unit>> setLastReadReminder(LastReadReminderModes mode) async {
     try {
       var box = await hive.openBox(HiveConst.settingBox);
-      await box.put(HiveConst.lastReadRemindersKey, isReminders);
+      await box.put(HiveConst.lastReadRemindersModeKey, mode.name);
       return right(unit);
     } catch (e) {
       return left(
@@ -151,10 +152,13 @@ class StylingSettingLocalDataSourceImpl
   }
 
   @override
-  Future<Either<Failure, bool?>> getLastReadReminder() async {
+  Future<Either<Failure, LastReadReminderModes>> getLastReadReminder() async {
     try {
       var box = await hive.openBox(HiveConst.settingBox);
-      final bool? isReminders = await box.get(HiveConst.lastReadRemindersKey);
+      final mode = box.get(HiveConst.lastReadRemindersModeKey);
+      final LastReadReminderModes isReminders = LastReadReminderModes.values.firstWhere(
+        (e) => e.name == mode,
+      );
       return right(isReminders);
     } catch (e) {
       return left(

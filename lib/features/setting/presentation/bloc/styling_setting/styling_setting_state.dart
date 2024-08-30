@@ -15,8 +15,9 @@ class StylingSettingState with _$StylingSettingState {
     @Default(FontConst.lpmqIsepMisbah) String fontFamilyArabic,
     @Default(FontConst.defaultLatinFontSize) double latinFontSize,
     @Default(FontConst.defaultTranslationFontSize) double translationFontSize,
-    @Default(true) bool isLastReadReminderOn,
+    @Default(LastReadReminderModes.on) LastReadReminderModes lastReadReminderMode,
     @Default(true) bool isShowLatin,
     @Default(true) bool isShowTranslation,
+    @Default(true) bool isColoredTajweedEnabled,
   }) = _StylingSettingState;
 }

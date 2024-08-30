@@ -11,11 +11,12 @@ part 'network_info_state.dart';
 @injectable
 class NetworkInfoBloc extends Bloc<NetworkInfoEvent, NetworkInfoState> {
   StreamSubscription? connectivitySubscription;
+
   NetworkInfoBloc() : super(NetworkInfoLoadingState()) {
     final Connectivity connectivity = Connectivity();
     connectivitySubscription =
         connectivity.onConnectivityChanged.listen((result) {
-      if (result == ConnectivityResult.none) {
+      if (result.contains(ConnectivityResult.none)) {
         add(DisconnectedConnectivityEvent());
       } else {
         add(ConnectedConnectivityEvent());
@@ -25,6 +26,7 @@ class NetworkInfoBloc extends Bloc<NetworkInfoEvent, NetworkInfoState> {
     on<ConnectedConnectivityEvent>(_onConnectedConnectivityEvent);
     on<DisconnectedConnectivityEvent>(_onDisconnectedConnectivityEvent);
   }
+
   void _onConnectedConnectivityEvent(ConnectedConnectivityEvent event, emit) {
     emit(NetworkInfoConnectedState());
   }
@@ -41,8 +43,8 @@ class NetworkInfoBloc extends Bloc<NetworkInfoEvent, NetworkInfoState> {
   }
 
   Future<void> checkConnection({required Connectivity connectivity}) async {
-    ConnectivityResult result = await connectivity.checkConnectivity();
-    if (result == ConnectivityResult.none) {
+    final result = await connectivity.checkConnectivity();
+    if (result.contains(ConnectivityResult.none)) {
       add(DisconnectedConnectivityEvent());
     } else {
       add(ConnectedConnectivityEvent());

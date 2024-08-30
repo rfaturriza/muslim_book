@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:quranku/core/components/divider.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/features/quran/presentation/screens/components/app_bar_detail_screen.dart';
 import 'package:quranku/features/setting/presentation/screens/components/language_choose_bottom_sheet.dart';
@@ -172,7 +171,7 @@ class LanguageSettingScreen extends StatelessWidget {
                   ),
                   onTap: showAdsOnAppLanguage,
                 ),
-                const DividerMuslimBook(),
+                const Divider(),
                 ListTile(
                   title: Text(LocaleKeys.quranTranslation.tr()),
                   subtitle: Text(
@@ -180,7 +179,7 @@ class LanguageSettingScreen extends StatelessWidget {
                   ),
                   onTap: showAdsOnTranslation,
                 ),
-                const DividerMuslimBook(),
+                const Divider(),
                 ListTile(
                   title: Text(LocaleKeys.latinTranslation.tr()),
                   subtitle: Text(
@@ -188,7 +187,7 @@ class LanguageSettingScreen extends StatelessWidget {
                   ),
                   onTap: showAdsOnLatin,
                 ),
-                const DividerMuslimBook(),
+                const Divider(),
                 ListTile(
                   title: Text(LocaleKeys.prayTimeLanguage.tr()),
                   subtitle: Text(
@@ -196,7 +195,7 @@ class LanguageSettingScreen extends StatelessWidget {
                   ),
                   onTap: showAdsOnPrayerTime,
                 ),
-                const DividerMuslimBook(),
+                const Divider(),
               ],
             );
           }),

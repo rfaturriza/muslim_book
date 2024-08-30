@@ -38,8 +38,7 @@ class PopupMenuHorizontal extends StatelessWidget {
 }
 
 class PopupMenuWidget<T> extends PopupMenuEntry<T> {
-  const PopupMenuWidget({Key? key, required this.height, required this.child})
-      : super(key: key);
+  const PopupMenuWidget({super.key, required this.height, required this.child});
 
   final Widget child;
 

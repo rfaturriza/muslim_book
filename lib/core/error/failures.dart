@@ -12,22 +12,22 @@ abstract class Failure extends Equatable {
 }
 
 class ServerFailure extends Failure {
-  const ServerFailure({String? message}) : super(message: message);
+  const ServerFailure({super.message});
 }
 
 class CacheFailure extends Failure {
-  const CacheFailure({String? message}) : super(message: message);
+  const CacheFailure({super.message});
 }
 
 class GeneralFailure extends Failure {
-  const GeneralFailure({String? message}) : super(message: message);
+  const GeneralFailure({super.message});
 }
 
 String mapFailureToMessage(Failure failure) {
   switch (failure.runtimeType) {
-    case ServerFailure:
+    case ServerFailure _:
       return failure.message ?? LocaleKeys.defaultErrorMessage.tr();
-    case CacheFailure:
+    case CacheFailure _:
       return failure.message ?? LocaleKeys.defaultErrorMessage.tr();
     default:
       return 'Unexpected error';

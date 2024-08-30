@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
@@ -135,7 +137,8 @@ class _Footer extends StatelessWidget {
                   );
                   final info = await PackageInfo.fromPlatform();
                   final link =
-                      'https://play.google.com/store/apps/details?id=${info.packageName}';
+                      'https://play.google.com/store/apps/details?id=${info
+                      .packageName}';
                   await Share.shareWithResult(
                     LocaleKeys.shareAppDescription.tr(
                       args: [info.appName, link],
@@ -228,18 +231,89 @@ class _AppInfoState extends State<_AppInfo> {
         ),
         trailing: IconButton(
           icon: context.isDarkMode
-              ? const Icon(Icons.light_mode)
-              : const Icon(Icons.dark_mode),
+              ? const Icon(Icons.dark_mode_rounded)
+              : const Icon(Icons.light_mode_rounded),
           onPressed: () {
-            final themeProvider =
-                Provider.of<ThemeProvider>(context, listen: false);
-            if (context.isDarkMode) {
-              themeProvider.setThemeMode(ThemeMode.light);
-              return;
-            }
-            themeProvider.setThemeMode(ThemeMode.dark);
+            showModalBottomSheet(
+              useSafeArea: true,
+              context: context,
+              builder: (_) {
+                return const _ThemePickerBottomSheet();
+              },
+            );
           },
         ),
+      ),
+    );
+  }
+}
+
+class _ThemePickerBottomSheet extends StatelessWidget {
+  const _ThemePickerBottomSheet();
+
+  @override
+  Widget build(BuildContext context) {
+    final themeProvider = context.read<ThemeProvider>();
+    return SafeArea(
+      child: Wrap(
+        children: [
+          Column(
+            children: [
+              if (Platform.isAndroid) ...[
+                ListTile(
+                  title: Text(LocaleKeys.dynamicColor.tr()),
+                  subtitle: Text(
+                    LocaleKeys.dynamicColorDescription.tr(),
+                  ),
+                  trailing: Consumer<ThemeProvider>(
+                    builder: (_, themeProvider, __) {
+                      return Switch(
+                        value: themeProvider.dynamicColor,
+                        onChanged: (value) {
+                          themeProvider.setDynamicColor(value);
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+              const Divider(),
+              ListTile(
+                title: Text(LocaleKeys.systemMode.tr()),
+                selected: themeProvider.themeMode == ThemeMode.system,
+                trailing: themeProvider.themeMode == ThemeMode.system
+                    ? const Icon(Icons.check)
+                    : null,
+                onTap: () {
+                  themeProvider.setThemeMode(ThemeMode.system);
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text(LocaleKeys.lightMode.tr()),
+                selected: themeProvider.themeMode == ThemeMode.light,
+                trailing: themeProvider.themeMode == ThemeMode.light
+                    ? const Icon(Icons.check)
+                    : null,
+                onTap: () {
+                  themeProvider.setThemeMode(ThemeMode.light);
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text(LocaleKeys.darkMode.tr()),
+                selected: themeProvider.themeMode == ThemeMode.dark,
+                trailing: themeProvider.themeMode == ThemeMode.dark
+                    ? const Icon(Icons.check)
+                    : null,
+                onTap: () {
+                  themeProvider.setThemeMode(ThemeMode.dark);
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

@@ -21,10 +21,10 @@ class DetailSurahScreen extends StatelessWidget {
   final int? jumpToVerse;
 
   const DetailSurahScreen({
-    Key? key,
+    super.key,
     this.surah,
     this.jumpToVerse,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

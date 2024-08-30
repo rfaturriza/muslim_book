@@ -10,13 +10,12 @@ import 'package:quranku/features/quran/presentation/screens/components/list_tile
 import 'package:quranku/features/quran/presentation/screens/detail_juz_screen.dart';
 
 import '../../../../../core/components/search_box.dart';
-import '../../../../../core/utils/themes/color.dart';
 import '../../../../../generated/locale_keys.g.dart';
 import '../../../../../injection.dart';
 import '../../bloc/audioVerse/audio_verse_bloc.dart';
 
 class JuzList extends StatelessWidget {
-  const JuzList({Key? key}) : super(key: key);
+  const JuzList({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +41,7 @@ class JuzList extends StatelessWidget {
             if (index == 0) {
               return const Divider(color: Colors.transparent);
             }
-            return Divider(color: secondaryColor.shade500, thickness: 0.1);
+            return const Divider(thickness: 0.1);
           },
           itemBuilder: (context, index) {
             if (index == 0) {

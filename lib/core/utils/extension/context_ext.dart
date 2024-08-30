@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:quranku/core/components/loading_dialog.dart';
-import 'package:quranku/core/utils/themes/color.dart';
 
 import '../themes/color_schemes_material.dart';
 
@@ -122,7 +121,7 @@ extension ContextExt on BuildContext {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        backgroundColor: secondaryColor.shade800,
+        backgroundColor: theme.colorScheme.secondary,
         content: Text(message),
         action: action,
         duration: const Duration(seconds: 3),

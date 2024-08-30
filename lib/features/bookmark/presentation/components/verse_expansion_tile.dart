@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
-import 'package:quranku/core/utils/themes/color.dart';
 import 'package:quranku/features/bookmark/domain/entities/verse_bookmark.codegen.dart';
 import 'package:quranku/features/quran/domain/entities/surah_name.codegen.dart';
 import 'package:quranku/generated/locale_keys.g.dart';
@@ -27,8 +26,8 @@ class VerseExpansionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
-      backgroundColor: context.theme.colorScheme.background,
-      collapsedBackgroundColor: context.theme.colorScheme.surfaceVariant,
+      backgroundColor: context.theme.colorScheme.surface,
+      collapsedBackgroundColor: context.theme.colorScheme.surfaceContainerHighest,
       initiallyExpanded: isExpanded,
       trailing: isExpanded
           ? Icon(
@@ -63,7 +62,7 @@ class VerseExpansionTile extends StatelessWidget {
             surahName: e.surahName,
             juzName: e.juz?.name,
             verseNumber: e.versesNumber.inSurah ?? 0,
-            backgroundColor: context.theme.colorScheme.background,
+            backgroundColor: context.theme.colorScheme.surface,
           ),
         ),
       ],
@@ -119,7 +118,7 @@ class VerseBookmarkListTile extends StatelessWidget {
               surahName?.short ?? emptyString,
               textAlign: TextAlign.end,
               style: TextStyle(
-                color: defaultColor.shade50,
+                color: context.theme.colorScheme.onPrimary,
                 fontFamily: FontConst.decoTypeThuluthII,
                 fontSize: 25,
               ),

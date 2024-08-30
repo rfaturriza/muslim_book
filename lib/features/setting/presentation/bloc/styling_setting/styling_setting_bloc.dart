@@ -1,10 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import 'package:quranku/core/constants/font_constants.dart';
+import 'package:quranku/features/setting/domain/entities/last_read_reminder_mode_entity.dart';
 import 'package:quranku/features/setting/domain/usecases/styling/set_arabic_font_size_setting.dart';
 
+import '../../../../../core/constants/hive_constants.dart';
 import '../../../../../core/usecases/usecase.dart';
 import '../../../domain/usecases/styling/get_arabic_font_family_setting.dart';
 import '../../../domain/usecases/styling/get_arabic_font_size_setting.dart';
@@ -73,6 +76,8 @@ class StylingSettingBloc
     on<_GetShowLatin>(_onGetShowLatin);
     on<_SetShowTranslation>(_onSetShowTranslation);
     on<_GetShowTranslation>(_onGetShowTranslation);
+    on<_SetColoredTajweedStatus>(_onSetColoredTajweedStatus);
+    on<_GetColoredTajweedStatus>(_onGetColoredTajweedStatus);
   }
 
   void _onInit(_Init event, emit) {
@@ -83,6 +88,7 @@ class StylingSettingBloc
     add(const _GetLastReadReminder());
     add(const _GetShowLatin());
     add(const _GetShowTranslation());
+    add(const _GetColoredTajweedStatus());
   }
 
   void _onSetArabicFontFamily(_SetArabicFontFamily event, emit) async {
@@ -202,11 +208,11 @@ class StylingSettingBloc
   }
 
   void _onSetLastReadReminder(_SetLastReadReminder event, emit) async {
-    final result = await setLastReadReminderSetting(event.isOn);
+    final result = await setLastReadReminderSetting(event.mode);
     result.fold(
       (failure) {},
       (_) => emit(state.copyWith(
-        isLastReadReminderOn: event.isOn,
+        lastReadReminderMode: event.mode,
       )),
     );
   }
@@ -215,8 +221,8 @@ class StylingSettingBloc
     final result = await getLastReadReminderSetting(NoParams());
     result.fold(
       (failure) {},
-      (isReminderOn) => emit(state.copyWith(
-        isLastReadReminderOn: isReminderOn ?? true,
+      (mode) => emit(state.copyWith(
+        lastReadReminderMode: mode,
       )),
     );
   }
@@ -259,5 +265,19 @@ class StylingSettingBloc
         isShowTranslation: isShow ?? true,
       )),
     );
+  }
+
+  void _onSetColoredTajweedStatus(_SetColoredTajweedStatus event, emit) async {
+    emit(state.copyWith(
+      isColoredTajweedEnabled: event.isColoredTajweedEnabled,
+    ));
+  }
+
+  void _onGetColoredTajweedStatus(_GetColoredTajweedStatus event, emit) async {
+    final settingBox = await Hive.openBox(HiveConst.settingBox);
+    final isColoredTajweedEnabled = settingBox.get(HiveConst.tajweedStatusKey) ?? true;
+    emit(state.copyWith(
+      isColoredTajweedEnabled: isColoredTajweedEnabled,
+    ));
   }
 }

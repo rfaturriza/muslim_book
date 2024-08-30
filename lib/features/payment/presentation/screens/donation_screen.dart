@@ -14,7 +14,6 @@ import 'package:quranku/generated/locale_keys.g.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/components/button_drawer.dart';
-import '../../../../core/utils/themes/color.dart';
 import '../../../../injection.dart';
 import '../../../quran/presentation/screens/components/app_bar_detail_screen.dart';
 
@@ -80,9 +79,7 @@ class _DonationPaymentScreen extends StatelessWidget {
                           subtitle: Text(e.description),
                           trailing: Text(
                             e.price,
-                            style: context.textTheme.titleMedium?.copyWith(
-                              color: defaultColor.shade50,
-                            ),
+                            style: context.textTheme.titleMedium,
                           ),
                           onTap: () {
                             context

@@ -11,6 +11,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:quranku/core/network/remote_config.dart';
+import 'package:quranku/features/quran/presentation/utils/tajweed_token.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import 'app.dart';
@@ -18,6 +19,9 @@ import 'core/constants/admob_constants.dart';
 import 'core/utils/bloc_observe.dart';
 import 'core/utils/firebase_cloud_message.dart';
 import 'core/utils/local_notification.dart';
+import 'features/quran/presentation/utils/tajweed_rule.dart';
+import 'features/quran/presentation/utils/tajweed_subrule.dart';
+import 'features/quran/presentation/utils/tajweed_word.dart';
 import 'firebase_options.dart';
 import 'injection.dart';
 
@@ -25,6 +29,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await Hive.initFlutter();
+  Hive.registerAdapter(TajweedTokenAdapter());
+  Hive.registerAdapter(TajweedWordAdapter());
+  Hive.registerAdapter(TajweedWordListAdapter());
+  Hive.registerAdapter(TajweedRuleAdapter());
+  Hive.registerAdapter(TajweedSubruleAdapter());
   await configureDependencies();
   await dotenv.load(fileName: ".env");
   unawaited(MobileAds.instance.initialize());
