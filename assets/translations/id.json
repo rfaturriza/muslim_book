@@ -213,5 +213,7 @@
   },
   "calibration": "Kalibrasi",
   "accuracy": "Akurasi",
-  "calibrationCompass": "Kalibrasi kompas sebelum digunakan dengan menggerakkan ponsel Anda dalam gerakan angka 8"
+  "calibrationCompass": "Kalibrasi kompas sebelum digunakan dengan menggerakkan ponsel Anda dalam gerakan angka 8",
+  "islamicStudiesInformationLabel": "Info Kajian",
+  "islamicStudiesNearbyInformationLabel": "Info Kajian Terdekat"
 }

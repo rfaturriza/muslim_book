@@ -12,6 +12,7 @@ import 'package:quranku/features/shalat/presentation/components/shalat_info_card
 import '../../../../generated/locale_keys.g.dart';
 import '../../../kajian/presentation/components/kajianhub_card.dart';
 import '../../../shalat/presentation/bloc/shalat/shalat_bloc.dart';
+import '../bloc/lastRead/last_read_cubit.dart';
 import 'components/surah_list.dart';
 import 'drawer_quran_screen.dart';
 
@@ -45,14 +46,25 @@ class QuranScreen extends StatelessWidget {
             headerSliverBuilder:
                 (BuildContext context, bool innerBoxIsScrolled) {
               return [
-                const SliverAppBar(
-                  leading: SizedBox(),
-                  backgroundColor: Colors.transparent,
-                  expandedHeight: 170.0,
-                  pinned: false,
-                  flexibleSpace: ShalatInfoCard(),
-                  collapsedHeight: 170.0,
-                ),
+                BlocBuilder<LastReadCubit, LastReadState>(
+                    builder: (context, state) {
+                  final height = () {
+                    if (state.lastReadSurah.isNotEmpty &&
+                        state.lastReadJuz.isNotEmpty) {
+                      return 170.0;
+                    } else {
+                      return 100.0;
+                    }
+                  }();
+                  return SliverAppBar(
+                    leading: const SizedBox(),
+                    backgroundColor: Colors.transparent,
+                    expandedHeight: height,
+                    pinned: false,
+                    flexibleSpace: const ShalatInfoCard(),
+                    collapsedHeight: height,
+                  );
+                }),
                 BlocBuilder<ShalatBloc, ShalatState>(
                     buildWhen: (previous, current) {
                   return previous.geoLocation != current.geoLocation;
@@ -71,7 +83,7 @@ class QuranScreen extends StatelessWidget {
                   return SliverAppBar(
                     leading: const SizedBox(),
                     backgroundColor: Colors.transparent,
-                    expandedHeight: 120.0,
+                    expandedHeight: 150.0,
                     pinned: false,
                     flexibleSpace: FlexibleSpaceBar(
                       background: KajianHubCard(
