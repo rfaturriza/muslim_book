@@ -49,7 +49,7 @@ class QuranScreen extends StatelessWidget {
                 BlocBuilder<LastReadCubit, LastReadState>(
                     builder: (context, state) {
                   final height = () {
-                    if (state.lastReadSurah.isNotEmpty &&
+                    if (state.lastReadSurah.isNotEmpty ||
                         state.lastReadJuz.isNotEmpty) {
                       return 170.0;
                     } else {
