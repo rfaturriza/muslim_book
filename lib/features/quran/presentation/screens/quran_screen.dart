@@ -53,7 +53,7 @@ class QuranScreen extends StatelessWidget {
                         state.lastReadJuz.isNotEmpty) {
                       return 170.0;
                     } else {
-                      return 100.0;
+                      return 105.0;
                     }
                   }();
                   return SliverAppBar(

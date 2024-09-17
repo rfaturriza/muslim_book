@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quranku/core/components/spacer.dart';
 import 'package:quranku/core/constants/asset_constants.dart';
+import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/extension/dartz_ext.dart';
 import 'package:quranku/core/utils/extension/extension.dart';
 import 'package:quranku/features/qibla/presentation/bloc/qibla_bloc.dart';
@@ -82,6 +83,9 @@ class _QiblaCompassWidgetState extends State<QiblaCompassWidget> {
                 Text(
                   LocaleKeys.calibrationCompass.tr(),
                   textAlign: TextAlign.center,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: Colors.grey.shade800,
+                  ),
                 ),
                 const VSpacer(),
               ],
