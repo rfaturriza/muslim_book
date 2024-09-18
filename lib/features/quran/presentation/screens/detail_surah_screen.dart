@@ -113,6 +113,7 @@ class DetailSurahScreen extends StatelessWidget {
                     toVerses: jumpToVerse,
                     view: ViewMode.surah,
                     listVerses: verses ?? [],
+                    tajweedWords: detailSurah?.tajweedWords ?? [],
                     surah: detailSurah,
                     preBismillah: detailSurah?.preBismillah?.text?.arab,
                   );

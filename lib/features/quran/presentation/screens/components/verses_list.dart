@@ -1,11 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
-import 'package:quranku/core/components/loading_screen.dart';
 import 'package:quranku/core/components/spacer.dart';
-import 'package:quranku/core/constants/hive_constants.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/features/bookmark/domain/entities/verse_bookmark.codegen.dart';
 import 'package:quranku/features/quran/domain/entities/juz.codegen.dart';
@@ -28,7 +24,6 @@ import '../../../domain/entities/detail_surah.codegen.dart';
 import '../../../domain/entities/last_read_surah.codegen.dart';
 import '../../bloc/audioVerse/audio_verse_bloc.dart';
 import '../../bloc/detailSurah/detail_surah_bloc.dart';
-import '../../utils/tajweed.dart';
 import '../../utils/tajweed_token.dart';
 import '../share_verse_screen.dart';
 import 'number_pin.dart';
@@ -46,6 +41,7 @@ class VersesList extends StatefulWidget {
   final DetailSurah? surah;
   final int? toVerses;
   final List<Verses> listVerses;
+  final List<TajweedWord> tajweedWords;
 
   const VersesList({
     super.key,
@@ -55,6 +51,7 @@ class VersesList extends StatefulWidget {
     this.juz,
     this.surah,
     this.toVerses,
+    required this.tajweedWords,
   });
 
   @override
@@ -245,240 +242,159 @@ class _VersesListState extends State<VersesList> {
       );
     }
 
-    Future<List<TajweedWord>> generateAyasWithTajweed(
-      List<String?>? ayas,
-    ) async {
-      if (ayas == null) {
-        return [];
-      }
-      final result = <TajweedWord>[];
-      for (var index = 0; index < ayas.length; index++) {
-        final line = ayas[index] ?? '';
-        final tajweedWord =
-            TajweedWord(tokens: Tajweed.tokenize(line, 2, index));
-        result.add(tajweedWord);
-      }
-      return result;
-    }
-
-    Future<List<TajweedWord>?> checkCacheTajweed() async {
-      final settingBox = await Hive.openBox(HiveConst.settingBox);
-      final isTajweedEnabled = settingBox.get(
-            HiveConst.tajweedStatusKey,
-          ) ??
-          true;
-      if (!isTajweedEnabled) {
-        return null;
-      }
-      final tajweedCacheBox = await Hive.openBox<TajweedWordList>(
-        HiveConst.tajweedCacheBox,
-      );
-      final key = () {
-        if (widget.juz != null) {
-          return widget.juz?.number.toString();
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          return;
         }
-        return widget.surah?.number.toString();
-      }();
-      final cached = tajweedCacheBox.get(key);
-      if (cached != null) {
-        return cached.words;
-      }
-      return null;
-    }
-
-    Future<void> saveCacheTajweed(List<TajweedWord> tajweedWords) async {
-      final tajweedCacheBox = await Hive.openBox<TajweedWordList>(
-        HiveConst.tajweedCacheBox,
-      );
-      final key = () {
-        if (widget.juz != null) {
-          return widget.juz?.number.toString();
-        }
-        return widget.surah?.number.toString();
-      }();
-      await tajweedCacheBox.put(key, TajweedWordList(words: tajweedWords));
-    }
-
-    Future<List<TajweedWord>?> loadAyas() async {
-      final cached = await checkCacheTajweed();
-      if (cached != null) {
-        return cached;
-      }
-      final result = await compute(
-        generateAyasWithTajweed,
-        widget.listVerses.map((e) => e.text?.arab).toList(),
-      );
-      await saveCacheTajweed(result);
-      return result;
-    }
-
-    return FutureBuilder(
-        future: loadAyas(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return const LoadingScreen();
+        saveLastReading();
+      },
+      child: BlocListener<AudioVerseBloc, AudioVerseState>(
+        listener: (context, state) {
+          if (state.audioVersePlaying != null) {
+            _autoScrollPlayingAudio(state);
           }
-          return PopScope(
-            canPop: false,
-            onPopInvoked: (didPop) {
-              if (didPop) {
-                return;
-              }
-              saveLastReading();
-            },
-            child: BlocListener<AudioVerseBloc, AudioVerseState>(
-              listener: (context, state) {
-                if (state.audioVersePlaying != null) {
-                  _autoScrollPlayingAudio(state);
-                }
-              },
-              child: SafeArea(
-                top: false,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (widget.view != ViewMode.setting) ...[
-                      ValueListenableBuilder<double>(
-                        valueListenable: _progress,
-                        builder: (context, value, _) {
-                          return GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTapDown: (details) {
-                              final width = context.width;
-                              final value = details.localPosition.dx / width;
-                              _itemScrollController.jumpTo(
-                                index:
-                                    (value * widget.listVerses.length).toInt(),
-                              );
-                            },
-                            onPanStart: (details) {
-                              setState(() {
-                                onDrag = true;
-                              });
-                            },
-                            onPanEnd: (details) {
-                              setState(() {
-                                onDrag = false;
-                              });
-                            },
-                            onPanUpdate: (details) {
-                              final width = context.width;
-                              final value = details.localPosition.dx / width;
-                              _itemScrollController.jumpTo(
-                                index:
-                                    (value * widget.listVerses.length).toInt(),
-                              );
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  SliderTheme(
-                                    data: SliderThemeData(
-                                      trackHeight: onDrag ? 3 : 1,
-                                      thumbShape: RoundSliderThumbShape(
-                                        enabledThumbRadius: onDrag ? 6 : 3,
-                                      ),
-                                      overlayShape:
-                                          const RoundSliderOverlayShape(
-                                        overlayRadius: 0,
-                                      ),
-                                    ),
-                                    child: Slider(
-                                      value: value,
-                                      onChanged: (value) {
-                                        _itemScrollController.jumpTo(
-                                          index:
-                                              (value * widget.listVerses.length)
-                                                  .toInt(),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.all(2),
-                                    decoration: BoxDecoration(
-                                      color: context
-                                          .theme.colorScheme.primaryContainer,
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(2),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      '${(value * 100).toStringAsFixed(0)}%',
-                                      style:
-                                          context.textTheme.bodySmall?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: context.theme.colorScheme
-                                            .onPrimaryContainer,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+        },
+        child: SafeArea(
+          top: false,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (widget.view != ViewMode.setting) ...[
+                ValueListenableBuilder<double>(
+                  valueListenable: _progress,
+                  builder: (context, value, _) {
+                    return GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTapDown: (details) {
+                        final width = context.width;
+                        final value = details.localPosition.dx / width;
+                        _itemScrollController.jumpTo(
+                          index: (value * widget.listVerses.length).toInt(),
+                        );
+                      },
+                      onPanStart: (details) {
+                        setState(() {
+                          onDrag = true;
+                        });
+                      },
+                      onPanEnd: (details) {
+                        setState(() {
+                          onDrag = false;
+                        });
+                      },
+                      onPanUpdate: (details) {
+                        final width = context.width;
+                        final value = details.localPosition.dx / width;
+                        _itemScrollController.jumpTo(
+                          index: (value * widget.listVerses.length).toInt(),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            SliderTheme(
+                              data: SliderThemeData(
+                                trackHeight: onDrag ? 3 : 1,
+                                thumbShape: RoundSliderThumbShape(
+                                  enabledThumbRadius: onDrag ? 6 : 3,
+                                ),
+                                overlayShape: const RoundSliderOverlayShape(
+                                  overlayRadius: 0,
+                                ),
                               ),
+                              child: Slider(
+                                value: value,
+                                onChanged: (value) {
+                                  _itemScrollController.jumpTo(
+                                    index: (value * widget.listVerses.length)
+                                        .toInt(),
+                                  );
+                                },
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                color:
+                                    context.theme.colorScheme.primaryContainer,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(2),
+                                ),
+                              ),
+                              child: Text(
+                                '${(value * 100).toStringAsFixed(0)}%',
+                                style: context.textTheme.bodySmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: context
+                                      .theme.colorScheme.onPrimaryContainer,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+              Expanded(
+                child: ScrollablePositionedList.separated(
+                  itemScrollController: _itemScrollController,
+                  itemPositionsListener: _itemPositionsListener,
+                  itemCount: () {
+                    if (isPreBismillah) {
+                      return widget.listVerses.length + 1;
+                    }
+                    return widget.listVerses.length;
+                  }(),
+                  separatorBuilder: (BuildContext context, int index) {
+                    if (isPreBismillah && index == 0) {
+                      return const Divider(color: Colors.transparent);
+                    }
+                    return const Divider(thickness: 0.1);
+                  },
+                  itemBuilder: (context, index) {
+                    if (index == 0 && isPreBismillah) {
+                      return BlocBuilder<StylingSettingBloc,
+                          StylingSettingState>(
+                        buildWhen: (p, c) {
+                          return p.fontFamilyArabic != c.fontFamilyArabic ||
+                              p.arabicFontSize != c.arabicFontSize;
+                        },
+                        builder: (context, state) {
+                          return Text(
+                            widget.preBismillah ?? emptyString,
+                            textAlign: TextAlign.center,
+                            style: context.textTheme.titleLarge?.copyWith(
+                              fontSize: state.arabicFontSize,
+                              fontFamily: state.fontFamilyArabic,
                             ),
                           );
                         },
-                      ),
-                    ],
-                    Expanded(
-                      child: ScrollablePositionedList.separated(
-                        itemScrollController: _itemScrollController,
-                        itemPositionsListener: _itemPositionsListener,
-                        itemCount: () {
-                          if (isPreBismillah) {
-                            return widget.listVerses.length + 1;
-                          }
-                          return widget.listVerses.length;
-                        }(),
-                        separatorBuilder: (BuildContext context, int index) {
-                          if (isPreBismillah && index == 0) {
-                            return const Divider(color: Colors.transparent);
-                          }
-                          return const Divider(thickness: 0.1);
-                        },
-                        itemBuilder: (context, index) {
-                          if (index == 0 && isPreBismillah) {
-                            return BlocBuilder<StylingSettingBloc,
-                                StylingSettingState>(
-                              buildWhen: (p, c) {
-                                return p.fontFamilyArabic !=
-                                        c.fontFamilyArabic ||
-                                    p.arabicFontSize != c.arabicFontSize;
-                              },
-                              builder: (context, state) {
-                                return Text(
-                                  widget.preBismillah ?? emptyString,
-                                  textAlign: TextAlign.center,
-                                  style: context.textTheme.titleLarge?.copyWith(
-                                    fontSize: state.arabicFontSize,
-                                    fontFamily: state.fontFamilyArabic,
-                                  ),
-                                );
-                              },
-                            );
-                          }
-                          final indexVerses =
-                              isPreBismillah ? index - 1 : index;
-                          final verses = widget.listVerses[indexVerses];
-                          return ListTileVerses(
-                            verses: verses,
-                            clickFrom: widget.view,
-                            juz: widget.juz,
-                            surah: widget.surah,
-                            tajweedAya: snapshot.data?[indexVerses].tokens,
-                          );
-                        },
-                      ),
-                    ),
-                  ],
+                      );
+                    }
+                    final indexVerses = isPreBismillah ? index - 1 : index;
+                    final verses = widget.listVerses[indexVerses];
+                    return ListTileVerses(
+                      verses: verses,
+                      clickFrom: widget.view,
+                      juz: widget.juz,
+                      surah: widget.surah,
+                      tajweedAya: widget.tajweedWords[indexVerses].tokens,
+                    );
+                  },
                 ),
               ),
-            ),
-          );
-        });
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 

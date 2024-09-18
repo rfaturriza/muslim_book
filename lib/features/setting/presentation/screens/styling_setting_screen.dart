@@ -81,6 +81,7 @@ class StylingSettingScreen extends StatelessWidget {
               return VersesList(
                 view: ViewMode.setting,
                 listVerses: detailSurah?.verses ?? [],
+                tajweedWords: detailSurah?.tajweedWords ?? [],
                 surah: detailSurah,
                 preBismillah: detailSurah?.preBismillah?.text?.arab,
               );
