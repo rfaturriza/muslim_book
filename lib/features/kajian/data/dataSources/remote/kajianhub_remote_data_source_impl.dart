@@ -27,7 +27,7 @@ class KajianHubRemoteDataSourceImpl implements KajianHubRemoteDataSource {
   Future<Either<Exception, KajianSchedulesResponseModel>> getKajianSchedules({
     required KajianScheduleRequestModel request,
   }) async {
-    const endpoint = 'kajian/schedules';
+    const endpoint = 'mobile/kajian/schedules';
     try {
       final queryParameters = request.toJson();
       final response = await _dio.get(

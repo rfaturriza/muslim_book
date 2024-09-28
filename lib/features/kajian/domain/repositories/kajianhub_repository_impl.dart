@@ -103,6 +103,8 @@ class KajianHubRepositoryImpl extends KajianHubRepository {
         limit: 1,
         orderBy: 'id',
         sortBy: 'asc',
+        // date=2024-09-19
+        date: DateTime.now().toIso8601String().split('T').first,
         relations:
             'ustadz,studyLocation.province,studyLocation.city,dailySchedules,customSchedules,themes',
       ),

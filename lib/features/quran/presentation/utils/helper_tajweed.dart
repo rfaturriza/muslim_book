@@ -5,6 +5,7 @@ import 'package:hive/hive.dart';
 import 'package:quranku/core/constants/hive_constants.dart';
 import 'package:quranku/features/quran/domain/entities/verses.codegen.dart';
 import 'package:quranku/features/quran/presentation/screens/components/verses_list.dart';
+import 'package:quranku/core/utils/helper.dart';
 
 import 'tajweed.dart';
 
@@ -55,9 +56,9 @@ class HelperTajweed {
         versionToClear;
 
     // If the app is at the specific version and the cache has not been cleared yet, clear it
-    if (currentVersion == versionToClear && !cacheClearedForVersion) {
+    if (isVersionGreater(currentVersion, versionToClear) &&
+        !cacheClearedForVersion) {
       await tajweedCacheBox.clear();
-      // Mark that the cache has been cleared for this version
       await settingBox.put(
         HiveConst.tajweedCacheClearedVersionKey,
         versionToClear,

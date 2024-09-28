@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +16,7 @@ import '../../../../generated/locale_keys.g.dart';
 import '../../../../injection.dart';
 import '../../../shalat/presentation/bloc/shalat/shalat_bloc.dart';
 import 'label_tag.dart';
+import 'mosque_image_container.dart';
 
 class KajianHubCard extends StatelessWidget {
   final bool isNotAvailable;
@@ -229,25 +229,10 @@ class _RecitationInfo extends StatelessWidget {
                 children: [
                   Expanded(
                     flex: 3,
-                    child: CachedNetworkImage(
+                    child: MosqueImageContainer(
                       imageUrl: imageUrl,
-                      fit: BoxFit.cover,
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                      imageBuilder: (context, imageProvider) => Container(
-                        width: double.infinity,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            bottomLeft: Radius.circular(10),
-                          ),
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
+                      height: 100,
+                      width: double.infinity,
                     ),
                   ),
                   const HSpacer(width: 10),

@@ -53,3 +53,26 @@ class CurrencyInputFormatter extends TextInputFormatter {
         selection: TextSelection.collapsed(offset: newText.length));
   }
 }
+
+bool isVersionGreater(String fromVersion, String targetVersion) {
+  // Split both versions by '.' to get major, minor, and patch versions as lists
+  List<String> versionParts = fromVersion.split('.');
+  List<String> referenceParts = targetVersion.split('.');
+
+  // Convert the string parts to integers
+  List<int> versionNumbers = versionParts.map(int.parse).toList();
+  List<int> referenceNumbers = referenceParts.map(int.parse).toList();
+
+  // Compare major, minor, and patch versions one by one
+  for (int i = 0; i < versionNumbers.length; i++) {
+    if (versionNumbers[i] > referenceNumbers[i]) {
+      return true;
+    } else if (versionNumbers[i] < referenceNumbers[i]) {
+      return false;
+    }
+    // If they're equal, continue to next part (major -> minor -> patch)
+  }
+
+  // If all parts are equal, return false (the versions are the same)
+  return false;
+}

@@ -500,6 +500,7 @@ extension MaterialSchemeUtils on MaterialScheme {
       onError: onError,
       errorContainer: errorContainer,
       onErrorContainer: onErrorContainer,
+      surfaceContainer: surfaceContainer,
       surface: surface,
       onSurface: onSurface,
       surfaceContainerHighest: surfaceVariant,
