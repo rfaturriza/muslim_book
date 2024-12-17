@@ -139,7 +139,7 @@ class _Footer extends StatelessWidget {
                   final link =
                       'https://play.google.com/store/apps/details?id=${info
                       .packageName}';
-                  await Share.shareWithResult(
+                  await Share.share(
                     LocaleKeys.shareAppDescription.tr(
                       args: [info.appName, link],
                     ),

@@ -244,7 +244,7 @@ class _VersesListState extends State<VersesList> {
 
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) {
+      onPopInvokedWithResult: (didPop, _) {
         if (didPop) {
           return;
         }

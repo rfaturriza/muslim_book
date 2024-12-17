@@ -56,7 +56,7 @@ class RamadhanScheduleRequestModel with _$RamadhanScheduleRequestModel {
   factory RamadhanScheduleRequestModel.fromJson(Map<String, dynamic> json) =>
       _$RamadhanScheduleRequestModelFromJson(json);
 
-  Map<String, dynamic> toAnalytic() {
+  Map<String, Object> toAnalytic() {
     final json = toJson();
     json.update(
       'options[]',
@@ -66,6 +66,5 @@ class RamadhanScheduleRequestModel with _$RamadhanScheduleRequestModel {
     json['options'] = json['options[]'];
     json.remove('options[]');
     json.removeWhere((k, v) => v == null);
-    return json;
-  }
+    return json.cast<String, Object>();  }
 }
