@@ -11,7 +11,9 @@ import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/features/setting/presentation/bloc/styling_setting/styling_setting_bloc.dart';
 import 'package:quranku/generated/locale_keys.g.dart';
 
+import '../../../../core/network/remote_config.dart';
 import '../../../../core/utils/extension/string_ext.dart';
+import '../../../../injection.dart';
 import '../../../setting/presentation/bloc/language_setting/language_setting_bloc.dart';
 import '../bloc/shareVerse/share_verse_bloc.dart';
 
@@ -106,11 +108,11 @@ class _CanvasPreview extends StatelessWidget {
                 image: state.backgroundColor == null
                     ? DecorationImage(
                         image: CachedNetworkImageProvider(
-                          AssetConst.imageRandomUrl,
+                          sl<RemoteConfigService>().imageRandomUrl,
                           cacheKey: state.randomImageUrl,
                         ),
                         colorFilter: ColorFilter.mode(
-                          Colors.black.withOpacity(0.5),
+                          Colors.black.withValues(alpha:0.5),
                           BlendMode.darken,
                         ),
                         fit: BoxFit.cover,
@@ -258,7 +260,7 @@ class _CopyRightMuslimBook extends StatelessWidget {
         children: [
           ClipOval(
             child: SvgPicture.asset(
-              AssetConst.logoAPP,
+              AssetConst.kajianHubLogoLight,
               width: 18,
               height: 18,
             ),
@@ -321,7 +323,7 @@ class _RowListColorSetting extends StatelessWidget {
             children: [
               CachedNetworkImage(
                 cacheKey: state.randomImageUrl,
-                imageUrl: AssetConst.imageRandomUrl,
+                imageUrl: sl<RemoteConfigService>().imageRandomUrl,
                 errorWidget: (context, url, error) {
                   return GestureDetector(
                     onTap: () {
