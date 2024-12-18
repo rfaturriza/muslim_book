@@ -84,7 +84,7 @@ class _SearchBoxState extends State<SearchBox> {
                 isDense: widget.isDense,
                 hintText: widget.hintText,
                 hintStyle: context.theme.textTheme.titleSmall?.copyWith(
-                  color: context.theme.colorScheme.onSurface.withOpacity(0.5),
+                  color: context.theme.colorScheme.onSurface.withValues(alpha: 0.5),
                 ),
                 labelStyle: context.theme.textTheme.titleSmall,
                 border: InputBorder.none,

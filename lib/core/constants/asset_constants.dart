@@ -5,8 +5,6 @@ class AssetConst {
   static const String starSvg = 'assets/svg/number.svg';
   static const String needleSvg = 'assets/svg/needleKabah.svg';
   static const String compassSvg = 'assets/svg/circle_compass.svg';
-  static const String imageRandomUrl =
-      'https://source.unsplash.com/random/1080x1920?nature';
   static const String logoAPP = 'assets/svg/logoApp.svg';
   static const String kajianHubLogoLight = 'assets/images/KajianHub-white.png';
   static const String kajianHubTextLogoLight =

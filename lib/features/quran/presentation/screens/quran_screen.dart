@@ -145,7 +145,7 @@ class BarHeaderPersistentDelegate extends SliverPersistentHeaderDelegate {
       if (shrinkOffset > 0 && shrinkOffset < maxExtent) {
         // Calculate opacity based on the shrinkOffset
         double opacity = 1 - (shrinkOffset / maxExtent);
-        return context.theme.colorScheme.surface.withOpacity(opacity);
+        return context.theme.colorScheme.surface.withValues(alpha:opacity);
       } else if (shrinkOffset >= maxExtent) {
         // When fully scrolled, return the background color without any opacity
         return context.theme.colorScheme.surface;

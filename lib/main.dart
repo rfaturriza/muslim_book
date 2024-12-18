@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,12 +47,9 @@ void main() async {
 
   /// iOS skip this step because it's need Account in Apple Developer
   /// iOS also need to upload key to firebase
-  if (Platform.isAndroid) {
-    await initializeFCM();
-    configureFCMListeners();
-    FirebaseMessaging.onBackgroundMessage(backgroundHandler);
-    await sl<LocalNotification>().init();
-  }
+  await initializeFCM();
+  await sl<LocalNotification>().init();
+
   timeago.setLocaleMessages('id', timeago.IdMessages());
   timeago.setLocaleMessages('en', timeago.EnMessages());
   if (kDebugMode) {
