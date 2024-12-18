@@ -3,7 +3,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quranku/core/components/spacer.dart';
 import 'package:quranku/core/constants/admob_constants.dart';
 import 'package:quranku/core/constants/asset_constants.dart';
@@ -236,7 +235,7 @@ class _CanvasPreview extends StatelessWidget {
                         ],
                       ],
                     ),
-                    const _CopyRightMuslimBook(),
+                    const _CopyRightLogo(),
                   ],
                 ),
               ),
@@ -248,33 +247,17 @@ class _CanvasPreview extends StatelessWidget {
   }
 }
 
-class _CopyRightMuslimBook extends StatelessWidget {
-  const _CopyRightMuslimBook();
+class _CopyRightLogo extends StatelessWidget {
+  const _CopyRightLogo();
 
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.bottomRight,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          ClipOval(
-            child: SvgPicture.asset(
-              AssetConst.kajianHubLogoLight,
-              width: 18,
-              height: 18,
-            ),
-          ),
-          const HSpacer(width: 4),
-          Text(
-            LocaleKeys.appName.tr(),
-            style: context.textTheme.titleSmall?.copyWith(
-              fontSize: 10,
-              color: Colors.white,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+      child: Image.asset(
+        AssetConst.kajianHubLogoLight,
+        width: 32,
+        height: 32,
       ),
     );
   }
