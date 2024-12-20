@@ -118,7 +118,7 @@ class VerseBookmarkListTile extends StatelessWidget {
               surahName?.short ?? emptyString,
               textAlign: TextAlign.end,
               style: TextStyle(
-                color: context.theme.colorScheme.onPrimary,
+                color: context.theme.colorScheme.onSurface,
                 fontFamily: FontConst.decoTypeThuluthII,
                 fontSize: 25,
               ),
