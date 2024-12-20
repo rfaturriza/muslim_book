@@ -109,7 +109,7 @@ class VerseBookmarkListTile extends StatelessWidget {
           style: context.textTheme.titleMedium,
         ),
         subtitle: Text(
-          '${LocaleKeys.verses} $verseNumber',
+          '${LocaleKeys.verses.tr()} $verseNumber',
           style: context.textTheme.titleSmall,
         ),
         trailing: () {
