@@ -33,10 +33,12 @@
 	<string>ca-app-pub-2622910246074431~9722662918</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app needs access to location when in the background.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs access to location when open.</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Turning on location services allows us to show nearby studies, prayer times, and qibla when in the background.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Turning on location services allows us to show nearby studies, prayer times, and qibla when open.</string>
+    <key>NSLocationUsageDescription</key>
+	<string>Turning on location services allows us to show nearby studies, prayer times, and qibla.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
