@@ -71,7 +71,7 @@
   "defaultPermissionMessage": "Aplikasi ini membutuhkan izin untuk melanjutkan",
   "cancel": "Batal",
   "next": "Lanjutkan",
-  "permissionMessageLocation": "Aplikasi ini mengumpulkan data lokasi untuk mengaktifkan pelacak lokasi guna menentukan waktu sholat sesuai dengan lokasi pengguna. Bahkan ketika aplikasi ditutup dan kemudian digunakan kembali, informasi lokasi akan diperbarui secara otomatis.",
+  "permissionMessageLocation": "Aplikasi ini mengumpulkan data lokasi untuk menentukan kajian, waktu sholat, dan kiblat sesuai dengan lokasi pengguna. Informasi lokasi diperbarui hanya saat aplikasi dibuka.",
   "arabic": "Arab",
   "english": "Inggris",
   "indonesia": "Indonesia",
