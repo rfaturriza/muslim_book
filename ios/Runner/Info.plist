@@ -33,18 +33,17 @@
 	<string>ca-app-pub-2622910246074431~9722662918</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string>Turning on location services allows us to show nearby studies, prayer times, and qibla when in the background.</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Turning on location services allows us to show nearby studies, prayer times, and qibla when open.</string>
-    <key>NSLocationUsageDescription</key>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Turning on location services allows us to show nearby studies, prayer times, and qibla when in the background.</string>
+	<key>NSLocationUsageDescription</key>
 	<string>Turning on location services allows us to show nearby studies, prayer times, and qibla.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Turning on location services allows us to show nearby studies, prayer times, and qibla when open.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
-		<string>location</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
