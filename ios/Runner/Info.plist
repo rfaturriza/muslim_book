@@ -39,6 +39,8 @@
 	<string>Turning on location services allows us to show nearby studies, prayer times, and qibla.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Turning on location services allows us to show nearby studies, prayer times, and qibla when open.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Turning on location services allows us to show nearby studies, prayer times, and qibla.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
