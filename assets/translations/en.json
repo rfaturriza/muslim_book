@@ -215,5 +215,7 @@
   "accuracy": "Accuracy",
   "calibrationCompass": "Please calibrate your compass before use by moving your phone in a figure 8 motion",
   "islamicStudiesInformationLabel": "Islamic Studies Info",
-  "islamicStudiesNearbyInformationLabel": "Studies Nearby Info"
+  "islamicStudiesNearbyInformationLabel": "Studies Nearby Info",
+  "doneAction": "Done"
+
 }

@@ -73,7 +73,7 @@ class _QiblaCompassWidgetState extends State<QiblaCompassWidget> {
       context: context,
       builder: (context) {
         return Dialog(
-          backgroundColor: Colors.white,
+          backgroundColor: context.theme.colorScheme.surfaceContainer,
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Wrap(
@@ -84,10 +84,21 @@ class _QiblaCompassWidgetState extends State<QiblaCompassWidget> {
                   LocaleKeys.calibrationCompass.tr(),
                   textAlign: TextAlign.center,
                   style: context.textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey.shade800,
+                    color: context.theme.colorScheme.onSurface,
                   ),
                 ),
-                const VSpacer(),
+                const VSpacer(height: 48),
+                Center(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 40),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(LocaleKeys.doneAction.tr()),
+                  ),
+                ),
               ],
             ),
           ),
