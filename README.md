@@ -1,15 +1,19 @@
 # Muslim Book
 
-Muslim Book is a Flutter project designed to provide a modern and user-friendly Quran application for users to read and explore the Quranic text. Please note that this project is a **work in progress**, and contributions are welcome.
+Muslim Book is a Flutter project designed to provide a modern and user-friendly Quran application for users to read and explore the Quranic text.  contributions are welcome.
 
-## Screenshots
+<div style="display: flex; justify-content: center; align-items: center">
+  <a href="https://apps.apple.com/id/app/kajianhub/id6739066951" target="_blank">
+    <img src="https://github.com/user-attachments/assets/170a7c12-ab9b-470b-8a88-dd1f1d68f0e7" alt="Download on the App Store" height="60">
+  </a>
+  <a href="https://play.google.com/store/apps/details?id=com.rizz.quranku" target="_blank">
+    <img src="https://github.com/user-attachments/assets/46fa6300-2ca2-48e1-afe3-a4004ddda5e7" alt="Get it on Google Play" height="60" style="margin-left: 50px;">
+  </a>
+</div>
 
-| Home | Time Prayer | Save, Play, Share | Qibla | Bookmark |
-|----------|----------|----------|----------|----------|
-| ![image](https://github.com/rfaturriza/muslim_book/assets/56538058/28c0eb53-ce00-46f9-a1e8-a7d097db1377)| ![image](https://github.com/rfaturriza/muslim_book/assets/56538058/9fe12933-8e16-4e1c-9941-f845df99cf1a)| ![image](https://github.com/rfaturriza/muslim_book/assets/56538058/b60d98ed-46fc-4af5-a551-8ddc27b4618b)| ![image](https://github.com/rfaturriza/muslim_book/assets/56538058/4bdff21c-caee-4d3e-a39b-9b71e36f693e)| ![image](https://github.com/rfaturriza/muslim_book/assets/56538058/4b618793-768b-4d2c-8564-0f15286951b4)|
 
 ## Tech
-- Flutter 3.13.1
+- Flutter
 - Clean Architecture
 - Freezed
 - Easy Localization
@@ -29,11 +33,11 @@ Muslim Book is a Flutter project designed to provide a modern and user-friendly 
 - [✔] Audio recitations of Quranic verses.
 - [✔] User-friendly and responsive design.
 - [✔] Share your favorite verses with your friends on Instagram, WhatsApp, etc.
+- [✔] Setting for changing font size, font type, language, etc.
+- [✔] Light and Dark mode for more comfortable reading.
+- [✔] Display Quranic text with tajweed.
 - [In Progress] Display detail Shalat time in calendar/permonth.
-- [In Progress] Setting for changing font size, font type, language, etc.
-- [Upcoming] Light and Dark mode for more comfortable reading.
-- [Upcoming] Display Quranic text with tajweed.
-- [Upcoming] Localization more languages.
+- [In Progress] Localization more languages.
 
 ## Installation
 To run this Flutter project on your local machine, follow these steps:
@@ -41,12 +45,12 @@ To run this Flutter project on your local machine, follow these steps:
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/rfaturriza/quran_flutter.git
+   git clone https://github.com/rfaturriza/muslim_book.git
 
 2. **Navigate to the project directory:**
 
    ```bash
-   cd quran_flutter
+   cd muslim_book
 
 3. **Install dependencies:**
 
