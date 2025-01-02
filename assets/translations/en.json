@@ -1,5 +1,5 @@
 {
-  "appName": "Muslim Book",
+  "appName": "KajianHub",
   "defaultErrorMessage": "I'm sorry, an error occurred, please try again",
   "loading": "Loading",
   "noData": "No data",
@@ -71,7 +71,7 @@
   "defaultPermissionMessage": "Please grant the required permissions to continue using the app.",
   "cancel": "Cancel",
   "next": "Next",
-  "permissionMessageLocation": "Muslim Book collects location data to enable location trackers to determine prayer times according to the user's location. Even when the app is closed and then used again, the location information will be updated automatically.",
+  "permissionMessageLocation": "This app collects location data to determine studies, prayer times, and qibla according to the user's location. The location information is updated only when the app is open.",
   "arabic": "Arabic",
   "english": "English",
   "indonesia": "Indonesia",
@@ -213,5 +213,9 @@
   },
   "calibration": "Calibration",
   "accuracy": "Accuracy",
-  "calibrationCompass": "Please calibrate your compass before use by moving your phone in a figure 8 motion"
+  "calibrationCompass": "Please calibrate your compass before use by moving your phone in a figure 8 motion",
+  "islamicStudiesInformationLabel": "Islamic Studies Info",
+  "islamicStudiesNearbyInformationLabel": "Studies Nearby Info",
+  "doneAction": "Done"
+
 }

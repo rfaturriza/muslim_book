@@ -80,8 +80,8 @@ class ShalatInfoCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            child: const Padding(
-              padding: EdgeInsets.symmetric(
+            child:  Padding(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 17.5,
               ),
@@ -89,9 +89,16 @@ class ShalatInfoCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _PrayTimeInfo(),
-                  Divider(thickness: 2),
-                  _LastReadInfo(),
+                  const _PrayTimeInfo(),
+                  BlocBuilder<LastReadCubit, LastReadState>(
+                      builder: (context, state) {
+                        if (state.lastReadSurah.isEmpty && state.lastReadJuz.isEmpty) {
+                          return const SizedBox();
+                        }
+                        return const Divider(thickness: 2);
+                    }
+                  ),
+                  const _LastReadInfo(),
                 ],
               ),
             ),

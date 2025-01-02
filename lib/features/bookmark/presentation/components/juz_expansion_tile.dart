@@ -59,7 +59,7 @@ class JuzExpansionTile extends StatelessWidget {
             number: e.number.toString(),
             name: e.name,
             backgroundColor: context.theme.colorScheme.surface,
-            description: e.description,
+            description: e.descriptionTr,
           ),
         ),
       ],

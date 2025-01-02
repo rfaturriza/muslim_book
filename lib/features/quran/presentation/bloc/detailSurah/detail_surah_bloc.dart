@@ -1,12 +1,14 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import 'package:quranku/core/utils/extension/dartz_ext.dart';
 import 'package:quranku/features/bookmark/domain/entities/surah_bookmark.codegen.dart';
 import 'package:quranku/features/bookmark/domain/usecases/delete_surah_bookmark_usecase.dart';
 import 'package:quranku/features/quran/domain/entities/detail_surah.codegen.dart';
 
+import '../../../../../core/constants/hive_constants.dart';
 import '../../../../../core/error/failures.dart';
 import '../../../../../core/usecases/usecase.dart';
 import '../../../../../core/utils/extension/string_ext.dart';
@@ -17,6 +19,8 @@ import '../../../../bookmark/domain/usecases/delete_verse_bookmark_usecase.dart'
 import '../../../../bookmark/domain/usecases/get_list_surah_bookmark_usecase.dart';
 import '../../../../bookmark/domain/usecases/get_list_verses_bookmark_usecase.dart';
 import '../../../domain/usecases/get_detail_surah_usecase.dart';
+import '../../screens/components/verses_list.dart';
+import '../../utils/helper_tajweed.dart';
 
 part 'detail_surah_bloc.freezed.dart';
 
@@ -89,6 +93,30 @@ class SurahDetailBloc extends Bloc<SurahDetailEvent, SurahDetailState> {
         );
       },
     );
+
+    final settingBox = await Hive.openBox(HiveConst.settingBox);
+    final isColoredTajweedEnabled =
+        settingBox.get(HiveConst.tajweedStatusKey) ?? true;
+    if (isColoredTajweedEnabled) {
+      final loadTajweedVerses = await HelperTajweed.loadAyas(
+        addVerseBookmarked.fold((l) => [], (r) => r?.verses ?? []),
+        ViewMode.surah,
+        event.surahNumber.toString(),
+      );
+      final updatedDetailSurah = addVerseBookmarked.fold(
+        (failure) => null,
+        (detailSurah) => detailSurah?.copyWith(
+            tajweedWords: loadTajweedVerses
+        ),
+      );
+      emit(
+        state.copyWith(
+          isLoading: false,
+          detailSurahResult: right(updatedDetailSurah),
+        ),
+      );
+      return;
+    }
     emit(
       state.copyWith(
         isLoading: false,
@@ -152,14 +180,14 @@ class SurahDetailBloc extends Bloc<SurahDetailEvent, SurahDetailState> {
       final Either<Failure, DetailSurah?>? stateUpdateBookmark = state
           .detailSurahResult
           ?.fold((failure) => left(failure), (detailSurah) {
-      final updatedVerses = detailSurah?.verses?.map(
-        (e) {
-          if (e.number?.inSurah == event.bookmark?.versesNumber.inSurah) {
-            return e.copyWith(isBookmarked: false);
-          }
-          return e;
-        },
-      ).toList();
+        final updatedVerses = detailSurah?.verses?.map(
+          (e) {
+            if (e.number?.inSurah == event.bookmark?.versesNumber.inSurah) {
+              return e.copyWith(isBookmarked: false);
+            }
+            return e;
+          },
+        ).toList();
         return right(detailSurah?.copyWith(verses: updatedVerses));
       });
       emit(
@@ -183,14 +211,14 @@ class SurahDetailBloc extends Bloc<SurahDetailEvent, SurahDetailState> {
     final Either<Failure, DetailSurah?>? stateUpdateBookmark = state
         .detailSurahResult
         ?.fold((failure) => left(failure), (detailSurah) {
-    final updatedVerses = detailSurah?.verses?.map(
-      (e) {
-        if (e.number?.inSurah == event.bookmark?.versesNumber.inSurah) {
-          return e.copyWith(isBookmarked: true);
-        }
-        return e;
-      },
-    ).toList();
+      final updatedVerses = detailSurah?.verses?.map(
+        (e) {
+          if (e.number?.inSurah == event.bookmark?.versesNumber.inSurah) {
+            return e.copyWith(isBookmarked: true);
+          }
+          return e;
+        },
+      ).toList();
       return right(detailSurah?.copyWith(verses: updatedVerses));
     });
 

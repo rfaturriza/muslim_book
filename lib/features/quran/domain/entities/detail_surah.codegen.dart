@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:quranku/features/quran/data/models/detail_surah_model.codegen.dart';
 import 'package:quranku/features/quran/domain/entities/language.codegen.dart';
+import 'package:quranku/features/quran/presentation/utils/tajweed_word.dart';
 
 import 'surah_name.codegen.dart';
 import 'verses.codegen.dart';
@@ -19,6 +20,7 @@ class DetailSurah with _$DetailSurah {
     Language? tafsir,
     PreBismillah? preBismillah,
     List<Verses>? verses,
+    List<TajweedWord>? tajweedWords,
   }) = _DetailSurah;
 
   const DetailSurah._();

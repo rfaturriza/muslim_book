@@ -57,7 +57,7 @@ class StylingSettingBottomSheet extends StatelessWidget {
                                     tileColor:
                                         state.lastReadReminderMode == mode
                                             ? context.theme.primaryColor
-                                                .withOpacity(0.1)
+                                                .withValues(alpha:0.1)
                                             : null,
                                     title: Text(
                                       mode.toTitle(),

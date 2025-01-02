@@ -288,7 +288,7 @@ class _SwipeDeleteList extends StatelessWidget {
         padding: const EdgeInsets.only(right: 16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: context.theme.colorScheme.error.withOpacity(0.1),
+          color: context.theme.colorScheme.error.withValues(alpha:0.1),
         ),
         child: Align(
           alignment: Alignment.centerRight,

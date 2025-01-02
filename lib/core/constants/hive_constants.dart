@@ -26,4 +26,6 @@ class HiveConst {
   static const String dynamicColorKey = 'dynamicColorKey';
   static const String tajweedCacheBox = 'tajweedCacheBox';
   static const String tajweedStatusKey = 'tajweedModeKey';
+
+  static const String tajweedCacheClearedVersionKey = 'tajweedCacheClearedVersionKey';
 }

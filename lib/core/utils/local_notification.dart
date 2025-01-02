@@ -16,16 +16,14 @@ class LocalNotification {
       if (notificationResponse.payload != null) {
         log('notification payload: $payload');
       }
-      // await Navigator.push(
-      //   context,
-      //   MaterialPageRoute<void>(builder: (context) => SecondScreen(payload)),
-      // );
     }
 
-    const initSettingsAndroid =
-        AndroidInitializationSettings('ic_launcher_round');
-    const initSettingsDarwin = DarwinInitializationSettings();
-    const initializationSettings = InitializationSettings(
+    const initSettingsAndroid = AndroidInitializationSettings(
+      'ic_notification',
+    );
+    final initSettingsDarwin = DarwinInitializationSettings();
+
+    final initializationSettings = InitializationSettings(
       android: initSettingsAndroid,
       iOS: initSettingsDarwin,
       macOS: initSettingsDarwin,

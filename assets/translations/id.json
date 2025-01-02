@@ -1,5 +1,5 @@
 {
-  "appName": "Muslim Book",
+  "appName": "KajianHub",
   "defaultErrorMessage": "Mohon maaf, Terjadi kesalahan silahkan coba lagi",
   "loading": "Memuat",
   "noData": "Tidak ada data",
@@ -71,7 +71,7 @@
   "defaultPermissionMessage": "Aplikasi ini membutuhkan izin untuk melanjutkan",
   "cancel": "Batal",
   "next": "Lanjutkan",
-  "permissionMessageLocation": "Muslim Book mengumpulkan data lokasi untuk mengaktifkan pelacak lokasi guna menentukan waktu sholat sesuai dengan lokasi pengguna. Bahkan ketika aplikasi ditutup dan kemudian digunakan kembali, informasi lokasi akan diperbarui secara otomatis.",
+  "permissionMessageLocation": "Aplikasi ini mengumpulkan data lokasi untuk menentukan kajian, waktu sholat, dan kiblat sesuai dengan lokasi pengguna. Informasi lokasi diperbarui hanya saat aplikasi dibuka.",
   "arabic": "Arab",
   "english": "Inggris",
   "indonesia": "Indonesia",
@@ -213,5 +213,8 @@
   },
   "calibration": "Kalibrasi",
   "accuracy": "Akurasi",
-  "calibrationCompass": "Kalibrasi kompas sebelum digunakan dengan menggerakkan ponsel Anda dalam gerakan angka 8"
+  "calibrationCompass": "Kalibrasi kompas sebelum digunakan dengan menggerakkan ponsel Anda dalam gerakan angka 8",
+  "islamicStudiesInformationLabel": "Info Kajian",
+  "islamicStudiesNearbyInformationLabel": "Info Kajian Terdekat",
+  "doneAction": "Sudah"
 }

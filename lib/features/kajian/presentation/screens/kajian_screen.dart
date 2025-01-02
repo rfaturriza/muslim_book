@@ -14,7 +14,6 @@ import 'package:quranku/generated/locale_keys.g.dart';
 import '../../../../core/components/error_screen.dart';
 import '../../../../core/components/spacer.dart';
 import '../../../../core/utils/pair.dart';
-import '../../../../core/utils/themes/color_schemes_material.dart';
 import '../../domain/entities/kajian_schedule.codegen.dart';
 import '../../domain/entities/week_kajian.codegen.dart';
 import '../bloc/kajian/kajian_bloc.dart';
@@ -466,9 +465,7 @@ class _KajianTile extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: ShapeDecoration(
-          color: context.isDarkMode
-              ? MaterialTheme.darkScheme().surfaceContainer
-              : MaterialTheme.lightScheme().surfaceContainer,
+          color: context.theme.colorScheme.surfaceContainer,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5),
           ),

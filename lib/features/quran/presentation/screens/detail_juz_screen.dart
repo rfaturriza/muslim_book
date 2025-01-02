@@ -109,6 +109,7 @@ class DetailJuzScreen extends StatelessWidget {
                   return VersesList(
                     view: ViewMode.juz,
                     listVerses: verses ?? [],
+                    tajweedWords: detailJuz?.tajweedWords ?? [],
                     juz: juz,
                     toVerses: toVerse,
                   );

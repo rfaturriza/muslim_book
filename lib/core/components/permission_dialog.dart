@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
@@ -24,10 +26,12 @@ class PermissionDialog extends StatelessWidget {
         content ?? LocaleKeys.defaultPermissionMessage.tr(),
       ),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(LocaleKeys.cancel.tr()),
-        ),
+        if (Platform.isAndroid) ...[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(LocaleKeys.cancel.tr()),
+          ),
+        ],
         ElevatedButton(
           onPressed: () {
             onOk();

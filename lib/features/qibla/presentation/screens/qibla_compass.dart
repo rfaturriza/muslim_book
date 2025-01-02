@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quranku/core/components/spacer.dart';
 import 'package:quranku/core/constants/asset_constants.dart';
+import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/extension/dartz_ext.dart';
 import 'package:quranku/core/utils/extension/extension.dart';
 import 'package:quranku/features/qibla/presentation/bloc/qibla_bloc.dart';
@@ -72,7 +73,7 @@ class _QiblaCompassWidgetState extends State<QiblaCompassWidget> {
       context: context,
       builder: (context) {
         return Dialog(
-          backgroundColor: Colors.white,
+          backgroundColor: context.theme.colorScheme.surfaceContainer,
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Wrap(
@@ -82,8 +83,22 @@ class _QiblaCompassWidgetState extends State<QiblaCompassWidget> {
                 Text(
                   LocaleKeys.calibrationCompass.tr(),
                   textAlign: TextAlign.center,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: context.theme.colorScheme.onSurface,
+                  ),
                 ),
-                const VSpacer(),
+                const VSpacer(height: 48),
+                Center(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 40),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(LocaleKeys.doneAction.tr()),
+                  ),
+                ),
               ],
             ),
           ),

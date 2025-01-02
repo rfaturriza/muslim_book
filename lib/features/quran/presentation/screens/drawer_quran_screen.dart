@@ -136,12 +136,20 @@ class _Footer extends StatelessWidget {
                     method: 'Share Drawer Button',
                   );
                   final info = await PackageInfo.fromPlatform();
-                  final link =
-                      'https://play.google.com/store/apps/details?id=${info
-                      .packageName}';
-                  await Share.shareWithResult(
+                  final appName = info.appName;
+                  const iosAppId = '6739066951';
+                  final linkAndroid =
+                      'https://play.google.com/store/apps/details?id=${info.packageName}';
+                  final linkIOS =
+                      'https://apps.apple.com/app/${appName.toLowerCase()}/id$iosAppId';
+                  final link = Platform.isIOS ? linkIOS : linkAndroid;
+
+                  await Share.share(
                     LocaleKeys.shareAppDescription.tr(
-                      args: [info.appName, link],
+                      args: [
+                        info.appName,
+                        link,
+                      ],
                     ),
                   );
                 },
@@ -151,14 +159,17 @@ class _Footer extends StatelessWidget {
             ),
           ],
         ),
-        const VSpacer(),
-        ButtonDrawer(
-          onTap: () {
-            context.navigateTo(const DonationPaymentScreen());
-          },
-          icon: Icons.volunteer_activism,
-          title: LocaleKeys.supportUs.tr(),
-        ),
+        if (Platform.isAndroid) ...[
+          const VSpacer(),
+          ButtonDrawer(
+            onTap: () {
+              context.navigateTo(const DonationPaymentScreen());
+            },
+            icon: Icons.volunteer_activism,
+            title: LocaleKeys.supportUs.tr(),
+          ),
+          const VSpacer(),
+        ],
         const VSpacer(),
         ButtonDrawer(
           onTap: () async {
