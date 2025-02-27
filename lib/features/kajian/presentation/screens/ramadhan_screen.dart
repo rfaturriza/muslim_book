@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quranku/core/components/error_screen.dart';
 import 'package:quranku/core/components/search_box.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
@@ -561,7 +562,7 @@ class _PrayerScheduleBottomSheetFilter extends StatelessWidget {
                                   pageNumber: 1,
                                 ),
                               );
-                          Navigator.pop(context);
+                          context.pop();
                         },
                         child: Text(
                           LocaleKeys.reset.tr(),
@@ -606,7 +607,7 @@ class _PrayerScheduleBottomSheetFilter extends StatelessWidget {
                         pageNumber: 1,
                       ),
                     );
-                Navigator.pop(context);
+                context.pop();
               },
               child: Text(LocaleKeys.apply.tr()),
             ),

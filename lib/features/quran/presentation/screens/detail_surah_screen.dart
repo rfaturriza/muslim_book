@@ -16,6 +16,16 @@ import '../../../../generated/locale_keys.g.dart';
 import '../../domain/entities/surah.codegen.dart';
 import '../bloc/detailSurah/detail_surah_bloc.dart';
 
+class DetailSurahScreenExtra {
+  final Surah? surah;
+  final int? jumpToVerse;
+
+  const DetailSurahScreenExtra({
+    this.surah,
+    this.jumpToVerse,
+  });
+}
+
 class DetailSurahScreen extends StatelessWidget {
   final Surah? surah;
   final int? jumpToVerse;

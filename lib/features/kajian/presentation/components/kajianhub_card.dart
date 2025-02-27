@@ -4,13 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qiblah/flutter_qiblah.dart';
 import 'package:formz/formz.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/extension/extension.dart';
 import 'package:quranku/features/kajian/presentation/bloc/kajian/kajian_bloc.dart';
-import 'package:quranku/features/kajian/presentation/screens/kajianhub_screen.dart';
 
 import '../../../../core/components/spacer.dart';
 import '../../../../core/constants/asset_constants.dart';
+import '../../../../core/route/root_router.dart';
 import '../../../../core/utils/pair.dart';
 import '../../../../generated/locale_keys.g.dart';
 import '../../../../injection.dart';
@@ -57,7 +58,7 @@ class KajianHubCard extends StatelessWidget {
                 onTap: isLocationNotGranted || isNotIndonesia
                     ? null
                     : () {
-                        context.navigateTo(const KajianHubScreen());
+                        context.pushNamed(RootRouter.kajianRoute.name);
                       },
                 child: Container(
                   decoration: ShapeDecoration(

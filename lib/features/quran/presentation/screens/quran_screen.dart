@@ -1,10 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:quranku/core/route/root_router.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/extension/extension.dart';
 import 'package:quranku/features/bookmark/presentation/screen/bookmark_screen.dart';
-import 'package:quranku/features/qibla/presentation/screens/qibla_compass.dart';
 import 'package:quranku/features/quran/presentation/screens/components/juz_list.dart';
 import 'package:quranku/features/quran/presentation/screens/components/main_app_bar.dart';
 import 'package:quranku/features/shalat/presentation/components/shalat_info_card.dart';
@@ -24,9 +25,7 @@ class QuranScreen extends StatelessWidget {
     final appBar = MainAppBar(
       onPressedMenu: () {},
       onPressedQibla: () {
-        context.navigateTo(
-          const QiblaCompassScreen(),
-        );
+        context.pushNamed(RootRouter.qiblaRoute.name);
       },
     );
     final controller = ScrollController();
@@ -145,7 +144,7 @@ class BarHeaderPersistentDelegate extends SliverPersistentHeaderDelegate {
       if (shrinkOffset > 0 && shrinkOffset < maxExtent) {
         // Calculate opacity based on the shrinkOffset
         double opacity = 1 - (shrinkOffset / maxExtent);
-        return context.theme.colorScheme.surface.withValues(alpha:opacity);
+        return context.theme.colorScheme.surface.withValues(alpha: opacity);
       } else if (shrinkOffset >= maxExtent) {
         // When fully scrolled, return the background color without any opacity
         return context.theme.colorScheme.surface;

@@ -4,18 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qiblah/flutter_qiblah.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quranku/core/components/dialog.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/extension/dartz_ext.dart';
 import 'package:quranku/core/utils/extension/extension.dart';
 import 'package:quranku/core/utils/extension/string_ext.dart';
 import 'package:quranku/features/quran/presentation/bloc/lastRead/last_read_cubit.dart';
-import 'package:quranku/features/quran/presentation/screens/history_read_screen.dart';
 import 'package:quranku/features/setting/presentation/bloc/language_setting/language_setting_bloc.dart';
 import 'package:quranku/generated/locale_keys.g.dart';
 
 import '../../../../core/constants/asset_constants.dart';
-import '../../../quran/domain/entities/juz.codegen.dart';
+import '../../../../core/route/root_router.dart';
 import '../../../quran/domain/entities/surah.codegen.dart';
 import '../../../quran/presentation/screens/components/juz_list.dart';
 import '../../../quran/presentation/screens/components/surah_list.dart';
@@ -80,7 +80,7 @@ class ShalatInfoCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            child:  Padding(
+            child: Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 17.5,
@@ -92,12 +92,12 @@ class ShalatInfoCard extends StatelessWidget {
                   const _PrayTimeInfo(),
                   BlocBuilder<LastReadCubit, LastReadState>(
                       builder: (context, state) {
-                        if (state.lastReadSurah.isEmpty && state.lastReadJuz.isEmpty) {
-                          return const SizedBox();
-                        }
-                        return const Divider(thickness: 2);
+                    if (state.lastReadSurah.isEmpty &&
+                        state.lastReadJuz.isEmpty) {
+                      return const SizedBox();
                     }
-                  ),
+                    return const Divider(thickness: 2);
+                  }),
                   const _LastReadInfo(),
                 ],
               ),
@@ -335,7 +335,7 @@ class _LastReadInfo extends StatelessWidget {
                 IconButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {
-                    context.navigateTo(const HistoryReadScreen());
+                    context.pushNamed(RootRouter.historyRoute.name);
                   },
                   icon: const Icon(
                     Icons.list_alt_rounded,
@@ -356,11 +356,7 @@ class _LastReadInfo extends StatelessWidget {
                     } else {
                       JuzList.onTapJuz(
                         context,
-                        JuzConstant(
-                          number: lastReadJuz?.number ?? 0,
-                          name: lastReadJuz?.name ?? emptyString,
-                          description: lastReadJuz?.description ?? emptyString,
-                        ),
+                        lastReadJuz?.number ?? 0,
                         jumpToVerse: lastReadJuz?.versesNumber.inQuran ?? 0,
                       );
                     }
