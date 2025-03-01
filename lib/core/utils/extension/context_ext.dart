@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:quranku/core/components/loading_dialog.dart';
 
@@ -30,54 +29,6 @@ extension ContextExt on BuildContext {
 
   dismissKeyboard() {
     FocusScope.of(this).requestFocus(FocusNode());
-  }
-
-  void navigateTo(Widget widget, {Bloc? bloc}) {
-    if (bloc != null) {
-      _navigateToWithBloc(widget, bloc);
-      return;
-    }
-    Navigator.push(
-      this,
-      MaterialPageRoute(
-        builder: (context) => widget,
-      ),
-    );
-  }
-
-  void _navigateToWithBloc(Widget widget, Bloc bloc) {
-    Navigator.push(
-      this,
-      MaterialPageRoute(
-        builder: (context) => BlocProvider(
-          create: (context) => bloc,
-          child: widget,
-        ),
-      ),
-    );
-  }
-
-  void navigateBack() {
-    Navigator.pop(this);
-  }
-
-  void navigateToAndRemoveUntil(Widget widget) {
-    Navigator.pushAndRemoveUntil(
-      this,
-      MaterialPageRoute(
-        builder: (context) => widget,
-      ),
-      (route) => false,
-    );
-  }
-
-  void navigateToAndReplace(Widget widget) {
-    Navigator.pushReplacement(
-      this,
-      MaterialPageRoute(
-        builder: (context) => widget,
-      ),
-    );
   }
 
   showErrorToast(String message) {

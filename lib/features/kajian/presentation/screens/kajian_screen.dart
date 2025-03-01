@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quranku/core/components/search_box.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/extension/extension.dart';
@@ -13,6 +14,7 @@ import 'package:quranku/generated/locale_keys.g.dart';
 
 import '../../../../core/components/error_screen.dart';
 import '../../../../core/components/spacer.dart';
+import '../../../../core/route/root_router.dart';
 import '../../../../core/utils/pair.dart';
 import '../../domain/entities/kajian_schedule.codegen.dart';
 import '../../domain/entities/week_kajian.codegen.dart';
@@ -20,7 +22,6 @@ import '../bloc/kajian/kajian_bloc.dart';
 import '../components/item_bottom_sheet.dart';
 import '../components/mosque_image_container.dart';
 import '../components/schedule_icon_text.dart';
-import 'kajian_detail_screen.dart';
 
 class KajianScreen extends StatelessWidget {
   const KajianScreen({super.key});
@@ -458,9 +459,13 @@ class _KajianTile extends StatelessWidget {
     }();
     return GestureDetector(
       onTap: () {
-        context.navigateTo(KajianDetailScreen(
-          kajian: kajian,
-        ));
+        context.pushNamed(
+          RootRouter.kajianDetailRoute.name,
+          pathParameters: {
+            'id': kajian.id.toString(),
+          },
+          extra: kajian,
+        );
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -589,7 +594,7 @@ class _KajianBottomSheetFilter extends StatelessWidget {
                                   pageNumber: 1,
                                 ),
                               );
-                          Navigator.pop(context);
+                          context.pop();
                         },
                         child: Text(
                           LocaleKeys.reset.tr(),
@@ -638,7 +643,7 @@ class _KajianBottomSheetFilter extends StatelessWidget {
                         pageNumber: 1,
                       ),
                     );
-                Navigator.pop(context);
+                context.pop();
               },
               child: Text(LocaleKeys.apply.tr()),
             ),

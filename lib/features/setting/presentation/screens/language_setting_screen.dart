@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/features/quran/presentation/screens/components/app_bar_detail_screen.dart';
 import 'package:quranku/features/setting/presentation/screens/components/language_choose_bottom_sheet.dart';
@@ -29,16 +30,16 @@ class LanguageSettingScreen extends StatelessWidget {
               languages: context.supportTranslateApplication,
               onTap: (Locale locale) {
                 context.setLocale(locale);
-                Navigator.pop(context);
+                context.pop();
               },
             ),
           );
         },
         onLoaded: () {
-          context.navigateBack();
+          context.pop();
         },
         onFailedToLoad: (String message) {
-          context.navigateBack();
+          context.pop();
           context.showErrorToast(message);
         },
       );
@@ -61,16 +62,16 @@ class LanguageSettingScreen extends StatelessWidget {
                         locale: locale,
                       ),
                     );
-                Navigator.pop(context);
+                context.pop();
               },
             ),
           );
         },
         onLoaded: () {
-          context.navigateBack();
+          context.pop();
         },
         onFailedToLoad: (String message) {
-          context.navigateBack();
+          context.pop();
           context.showErrorToast(message);
         },
       );
@@ -95,17 +96,17 @@ class LanguageSettingScreen extends StatelessWidget {
                           locale: locale,
                         ),
                       );
-                  Navigator.pop(context);
+                  context.pop();
                 },
               ),
             ),
           );
         },
         onLoaded: () {
-          context.navigateBack();
+          context.pop();
         },
         onFailedToLoad: (String message) {
-          context.navigateBack();
+          context.pop();
           context.showErrorToast(message);
         },
       );
@@ -130,17 +131,17 @@ class LanguageSettingScreen extends StatelessWidget {
                           locale: locale,
                         ),
                       );
-                  Navigator.pop(context);
+                  context.pop();
                 },
               ),
             ),
           );
         },
         onLoaded: () {
-          context.navigateBack();
+          context.pop();
         },
         onFailedToLoad: (String message) {
-          context.navigateBack();
+          context.pop();
           context.showErrorToast(message);
         },
       );

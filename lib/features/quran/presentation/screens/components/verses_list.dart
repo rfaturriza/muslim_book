@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quranku/core/components/spacer.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/features/bookmark/domain/entities/verse_bookmark.codegen.dart';
@@ -9,15 +10,14 @@ import 'package:quranku/features/quran/domain/entities/last_read_juz.codegen.dar
 import 'package:quranku/features/quran/domain/entities/verses.codegen.dart';
 import 'package:quranku/features/quran/presentation/bloc/detailJuz/detail_juz_bloc.dart';
 import 'package:quranku/features/quran/presentation/bloc/lastRead/last_read_cubit.dart';
-import 'package:quranku/features/quran/presentation/bloc/shareVerse/share_verse_bloc.dart';
 import 'package:quranku/features/quran/presentation/screens/components/verse_popup_menu.dart';
 import 'package:quranku/features/quran/presentation/utils/tajweed_word.dart';
 import 'package:quranku/features/setting/domain/entities/last_read_reminder_mode_entity.dart';
 import 'package:quranku/generated/locale_keys.g.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
+import '../../../../../core/route/root_router.dart';
 import '../../../../../core/utils/extension/string_ext.dart';
-import '../../../../../injection.dart';
 import '../../../../setting/presentation/bloc/language_setting/language_setting_bloc.dart';
 import '../../../../setting/presentation/bloc/styling_setting/styling_setting_bloc.dart';
 import '../../../domain/entities/detail_surah.codegen.dart';
@@ -462,17 +462,12 @@ class ListTileVerses extends StatelessWidget {
                                   context, verses, clickFrom, juz, surah);
                             },
                             onSharePressed: () {
-                              context.navigateTo(
-                                BlocProvider(
-                                  create: (context) => sl<ShareVerseBloc>()
-                                    ..add(
-                                      ShareVerseEvent.onInit(
-                                        verse: verses,
-                                        juz: juz,
-                                        surah: surah,
-                                      ),
-                                    ),
-                                  child: const ShareVerseScreen(),
+                              context.pushNamed(
+                                RootRouter.shareVerseRoute.name,
+                                extra: ShareVerseScreenExtra(
+                                  verse: verses,
+                                  juz: juz,
+                                  surah: surah,
                                 ),
                               );
                             },

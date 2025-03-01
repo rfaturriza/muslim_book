@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quranku/core/constants/font_constants.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/features/setting/domain/entities/last_read_reminder_mode_entity.dart';
@@ -57,7 +58,7 @@ class StylingSettingBottomSheet extends StatelessWidget {
                                     tileColor:
                                         state.lastReadReminderMode == mode
                                             ? context.theme.primaryColor
-                                                .withValues(alpha:0.1)
+                                                .withValues(alpha: 0.1)
                                             : null,
                                     title: Text(
                                       mode.toTitle(),
@@ -73,7 +74,7 @@ class StylingSettingBottomSheet extends StatelessWidget {
                                           mode: mode,
                                         ),
                                       );
-                                      Navigator.pop(context);
+                                      context.pop();
                                     },
                                   );
                                 }).toList(),
@@ -139,7 +140,7 @@ class StylingSettingBottomSheet extends StatelessWidget {
                     ],
                   ),
                   subtitle: Text(LocaleKeys.coloredTajweedDescription.tr()),
-                  trailing:  Switch(
+                  trailing: Switch(
                     value: state.isColoredTajweedEnabled,
                     onChanged: (value) {
                       stylingBloc.add(
@@ -322,7 +323,7 @@ class DialogDetailTajweed extends StatelessWidget {
         future: tajweedExampleCache.getExampleAyah(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child:  CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Text(LocaleKeys.defaultErrorMessage.tr());
           }
@@ -342,7 +343,7 @@ class DialogDetailTajweed extends StatelessWidget {
                   ),
                   IconButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      context.pop();
                     },
                     icon: const Icon(Icons.close),
                   ),
@@ -398,9 +399,8 @@ class DialogDetailTajweed extends StatelessWidget {
                                         textAlign: TextAlign.right,
                                         TextSpan(
                                           children: <TextSpan>[
-                                            for (final token
-                                                in snapshot.data![rule.index]
-                                                    .tokens)
+                                            for (final token in snapshot
+                                                .data![rule.index].tokens)
                                               TextSpan(
                                                 text: token.text,
                                                 style: context
