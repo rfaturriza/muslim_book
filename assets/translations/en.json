@@ -122,9 +122,9 @@
   "searchKajianEmpty": "Sorry, no study resources were found.",
   "nearbyKajianEmptyToday": "Sorry, there are no study resources nearby today.",
   "errorGetKajian": "Sorry, we're unable to retrieve the study at the moment. Please try again later.",
-  "searchRamadhanHint": "Search Ramadhan Schedule...",
-  "searchRamadhanEmpty": "Sorry, no Ramadhan schedule found.",
-  "errorGetRamadhanSchedule": "Sorry, we're unable to retrieve the Ramadhan schedule at the moment. Please try again later.",
+  "searchRamadhanHint": "Search Schedule...",
+  "searchRamadhanEmpty": "Sorry, no schedule found.",
+  "errorGetRamadhanSchedule": "Sorry, we're unable to retrieve the schedule at the moment. Please try again later.",
   "province": "Province",
   "district": "District",
   "city": "City",
@@ -216,6 +216,6 @@
   "calibrationCompass": "Please calibrate your compass before use by moving your phone in a figure 8 motion",
   "islamicStudiesInformationLabel": "Islamic Studies Info",
   "islamicStudiesNearbyInformationLabel": "Studies Nearby Info",
-  "doneAction": "Done"
-
+  "doneAction": "Done",
+  "kajian": "Kajian"
 }

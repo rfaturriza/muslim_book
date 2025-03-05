@@ -47,4 +47,30 @@ class PrayerKajian with _$PrayerKajian {
       return PrayerKajian(id: e.key.toString(), name: e.value);
     }).toList();
   }
+
+  static List<PrayerKajian> prayersKajian() {
+    final prayerName = {
+      // Using by {type_id}:{subtype_id} format
+      "1:": 'Jum\'at',
+      "2:2": 'Subuh',
+      "2:1": 'Terawih',
+      "3:": 'Qiyamul Lail',
+      ":3": 'Idul Fitri',
+      ":4": 'Idul Adha',
+    };
+
+    // ignore: unused_local_variable
+    final prayerCategoryName = {
+      1: 'Jum\'at',
+      2: 'Tarawih',
+      3: 'Subuh',
+      4: 'Qiyamul Lail',
+      5: 'Idul Fitri',
+      6: 'Idul Adha',
+    };
+
+    return prayerName.entries.map((e) {
+      return PrayerKajian(id: e.key.toString(), name: e.value);
+    }).toList();
+  }
 }

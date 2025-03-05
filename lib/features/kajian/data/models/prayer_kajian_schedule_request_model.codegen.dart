@@ -1,12 +1,12 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'ramadhan_schedule_request_model.codegen.freezed.dart';
-part 'ramadhan_schedule_request_model.codegen.g.dart';
+part 'prayer_kajian_schedule_request_model.codegen.freezed.dart';
+part 'prayer_kajian_schedule_request_model.codegen.g.dart';
 
 @freezed
-class RamadhanScheduleByMosqueRequestModel
-    with _$RamadhanScheduleByMosqueRequestModel {
-  const factory RamadhanScheduleByMosqueRequestModel({
+class PrayerKajianScheduleByMosqueRequestModel
+    with _$PrayerKajianScheduleByMosqueRequestModel {
+  const factory PrayerKajianScheduleByMosqueRequestModel({
     @JsonKey(name: 'pray_date') String? prayDate,
 
     /// 0/1 -> 1 = menampilkan lokasi masjid terdekat, wajib kirim lotitude & longitude
@@ -16,16 +16,16 @@ class RamadhanScheduleByMosqueRequestModel
 
     /// filter,{relation}.{field},{operator},{value}
     List<String>? options,
-  }) = _RamadhanScheduleByMosqueRequestModel;
+  }) = _PrayerKajianScheduleByMosqueRequestModel;
 
-  factory RamadhanScheduleByMosqueRequestModel.fromJson(
+  factory PrayerKajianScheduleByMosqueRequestModel.fromJson(
           Map<String, dynamic> json) =>
-      _$RamadhanScheduleByMosqueRequestModelFromJson(json);
+      _$PrayerKajianScheduleByMosqueRequestModelFromJson(json);
 }
 
 @freezed
-class RamadhanScheduleRequestModel with _$RamadhanScheduleRequestModel {
-  const factory RamadhanScheduleRequestModel({
+class PrayerKajianScheduleRequestModel with _$PrayerKajianScheduleRequestModel {
+  const factory PrayerKajianScheduleRequestModel({
     /// type:pagination/collection
     required String type,
 
@@ -47,14 +47,14 @@ class RamadhanScheduleRequestModel with _$RamadhanScheduleRequestModel {
     @JsonKey(name: 'pray_date') String? prayDate,
 
     /// filter,{relation}.{field},{operator},{value}
-    @JsonKey(name: 'options[]')
-    List<String>? options,
-  }) = _RamadhanScheduleRequestModel;
+    @JsonKey(name: 'options[]') List<String>? options,
+  }) = _PrayerKajianScheduleRequestModel;
 
-  const RamadhanScheduleRequestModel._();
+  const PrayerKajianScheduleRequestModel._();
 
-  factory RamadhanScheduleRequestModel.fromJson(Map<String, dynamic> json) =>
-      _$RamadhanScheduleRequestModelFromJson(json);
+  factory PrayerKajianScheduleRequestModel.fromJson(
+          Map<String, dynamic> json) =>
+      _$PrayerKajianScheduleRequestModelFromJson(json);
 
   Map<String, Object> toAnalytic() {
     final json = toJson();
@@ -66,5 +66,6 @@ class RamadhanScheduleRequestModel with _$RamadhanScheduleRequestModel {
     json['options'] = json['options[]'];
     json.remove('options[]');
     json.removeWhere((k, v) => v == null);
-    return json.cast<String, Object>();  }
+    return json.cast<String, Object>();
+  }
 }

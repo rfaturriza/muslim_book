@@ -2,20 +2,20 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'kajian_schedule.codegen.dart';
 
-part 'ramadhan_schedules.codegen.freezed.dart';
+part 'prayer_kajian_schedules.codegen.freezed.dart';
 
 @freezed
-class RamadhanSchedules with _$RamadhanSchedules {
-  const factory RamadhanSchedules({
-    required List<RamadhanSchedule> data,
+class PrayerkajianSchedules with _$PrayerkajianSchedules {
+  const factory PrayerkajianSchedules({
+    required List<PrayerKajianSchedule> data,
     required LinksKajianSchedule links,
     required MetaKajianSchedule meta,
-  }) = _RamadhanSchedules;
+  }) = _PrayerkajianSchedules;
 }
 
 @freezed
-class RamadhanSchedule with _$RamadhanSchedule {
-  const factory RamadhanSchedule({
+class PrayerKajianSchedule with _$PrayerKajianSchedule {
+  const factory PrayerKajianSchedule({
     int? id,
     String? prayDate,
     String? locationId,
@@ -28,5 +28,5 @@ class RamadhanSchedule with _$RamadhanSchedule {
     String? imam,
     String? link,
     StudyLocation? studyLocation,
-  }) = _RamadhanSchedule;
+  }) = _PrayerKajianSchedule;
 }
