@@ -83,6 +83,15 @@ jobs:
       - name: Build
         run: flutter build ${{ matrix.target }}
 
+      - name: Get branch name
+        id: branch-name
+        run: |
+          if [ ${{ github.event_name == 'pull_request' }} ]; then
+            echo "name=${{ github.head_ref }}" >> $GITHUB_OUTPUT
+          else
+            echo "name=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          fi
+
       - name: Install Cider
         run: dart pub global activate cider
       
@@ -92,5 +101,6 @@ jobs:
       - name: Commit & Push changes
         uses: actions-js/push@master
         with:
+          branch: ${{ steps.branch-name.outputs.name }}
           message: "chore: bump build number (BOT)"
           github_token: ${{ secrets.GITHUB_TOKEN }}
