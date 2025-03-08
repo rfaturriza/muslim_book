@@ -27,6 +27,7 @@ jobs:
 
       - name: Install iOS Simulator Runtime
         run: |
+          sudo xcode-select -s /Applications/Xcode_16.2.app
           sudo xcodebuild -downloadPlatform iOS
 
       - name: Checkout code
