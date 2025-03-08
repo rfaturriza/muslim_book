@@ -9,6 +9,8 @@ import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/extension/extension.dart';
 import 'package:quranku/core/utils/extension/string_ext.dart';
 import 'package:quranku/generated/locale_keys.g.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/components/spacer.dart';
 import '../../../../core/utils/pair.dart';
@@ -134,6 +136,8 @@ class KajianPrayerScheduleScreen extends StatelessWidget {
                       khatib: schedule.khatib ?? emptyString,
                       date: schedule.prayDate ?? emptyString,
                       place: schedule.studyLocation?.address ?? emptyString,
+                      urlGoogleMaps:
+                          schedule.studyLocation?.googleMaps ?? emptyString,
                     );
                   },
                 ),
@@ -499,6 +503,7 @@ class _RamadhanTile extends StatelessWidget {
   final String khatib;
   final String date;
   final String place;
+  final String urlGoogleMaps;
 
   const _RamadhanTile({
     required this.imageUrl,
@@ -508,6 +513,7 @@ class _RamadhanTile extends StatelessWidget {
     required this.khatib,
     required this.date,
     required this.place,
+    required this.urlGoogleMaps,
   });
 
   @override
@@ -598,9 +604,27 @@ class _RamadhanTile extends StatelessWidget {
                           text: scheduledDate ?? emptyString,
                         ),
                         const VSpacer(height: 2),
-                        ScheduleIconText(
-                          icon: Icons.place_outlined,
-                          text: place,
+                        InkWell(
+                          onTap: () async {
+                            final uri = Uri.parse(urlGoogleMaps);
+                            if (!await launchUrl(uri)) {
+                              if (context.mounted) {
+                                context.showErrorToast(
+                                  LocaleKeys.errorOpenMap.tr(),
+                                );
+                              }
+                            }
+                          },
+                          child: Shimmer.fromColors(
+                            baseColor: context.theme.colorScheme.onSurface
+                                .withValues(alpha: 0.7),
+                            highlightColor: context.theme.colorScheme.onSurface,
+                            period: const Duration(seconds: 10),
+                            child: ScheduleIconText(
+                              icon: Icons.place_outlined,
+                              text: place,
+                            ),
+                          ),
                         ),
                       ],
                     ),

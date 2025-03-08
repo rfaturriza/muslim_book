@@ -217,5 +217,6 @@
   "islamicStudiesInformationLabel": "Islamic Studies Info",
   "islamicStudiesNearbyInformationLabel": "Studies Nearby Info",
   "doneAction": "Done",
-  "kajian": "Kajian"
+  "kajian": "Kajian",
+  "errorOpenMap": "Sorry, unable to open the map"
 }
