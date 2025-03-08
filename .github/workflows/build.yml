@@ -82,3 +82,15 @@ jobs:
 
       - name: Build
         run: flutter build ${{ matrix.target }}
+
+      - name: Install Cider
+        run: dart pub global activate cider
+      
+      - name: Increment Build Number
+        run: flutter pub global run cider bump build
+      
+      - name: Commit & Push changes
+        uses: actions-js/push@master
+        with:
+          message: "chore: bump build number (BOT)"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
