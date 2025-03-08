@@ -11,7 +11,7 @@ permissions: read-all
 jobs:
   build:
     name: Build ${{ matrix.target }}
-    runs-on: macos-14
+    runs-on: macos-latest
     strategy:
       fail-fast: false
       matrix:
