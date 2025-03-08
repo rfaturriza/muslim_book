@@ -361,7 +361,22 @@ class _DatePickerSection extends StatelessWidget {
           }
           return now;
         }();
-
+        final daysDiff = () {
+          final selectedDate = state.filter.prayDate;
+          final isFriday = selectedDate?.weekday == DateTime.friday;
+          final isFridaySelected = state.filter.prayerSchedule?.second ==
+              PrayerKajian.prayersKajian()
+                  .where((e) => e.name == 'Jum\'at')
+                  .first
+                  .id;
+          final duration = () {
+            if (isFriday && isFridaySelected) {
+              return 7;
+            }
+            return 1;
+          }();
+          return duration;
+        }();
         return Row(
           children: [
             Expanded(
@@ -370,8 +385,7 @@ class _DatePickerSection extends StatelessWidget {
                 onPressed: () {
                   final selectedDate = state.filter.prayDate;
                   if (selectedDate != null) {
-                    final isFriday = selectedDate.weekday == DateTime.friday;
-                    final substractDuration = isFriday ? 7 : 1;
+                    final substractDuration = daysDiff;
                     setDateAndReFetch(
                       selectedDate.subtract(
                         Duration(days: substractDuration),
@@ -389,8 +403,7 @@ class _DatePickerSection extends StatelessWidget {
                   if (details.primaryVelocity != 0) {
                     final selectedDate = state.filter.prayDate;
                     if (selectedDate != null) {
-                      final isFriday = selectedDate.weekday == DateTime.friday;
-                      final duration = isFriday ? 7 : 1;
+                      final duration = daysDiff;
                       setDateAndReFetch(
                         selectedDate.add(
                           Duration(
@@ -405,11 +418,14 @@ class _DatePickerSection extends StatelessWidget {
                 },
                 onTap: () async {
                   final now = DateTime.now();
-                  // check if filter pray schedule is Jum`at (1:) => ID
-                  // show the available date for Jum`at only
-                  final isJumah = state.filter.prayerSchedule?.second == '1:';
+                  final isFridaySelected =
+                      state.filter.prayerSchedule?.second ==
+                          PrayerKajian.prayersKajian()
+                              .where((e) => e.name == 'Jum\'at')
+                              .first
+                              .id;
                   final initialDate = () {
-                    if (isJumah) {
+                    if (isFridaySelected) {
                       return setFriday;
                     }
                     return state.filter.prayDate ?? now;
@@ -421,7 +437,7 @@ class _DatePickerSection extends StatelessWidget {
                     firstDate: now.subtract(const Duration(days: 365 * 5)),
                     lastDate: now.add(const Duration(days: 365 * 5)),
                     selectableDayPredicate: (day) {
-                      if (isJumah) {
+                      if (isFridaySelected) {
                         return day.weekday == DateTime.friday;
                       }
                       return true;
@@ -457,8 +473,7 @@ class _DatePickerSection extends StatelessWidget {
                 onPressed: () {
                   final selectedDate = state.filter.prayDate;
                   if (selectedDate != null) {
-                    final isFriday = selectedDate.weekday == DateTime.friday;
-                    final addDuration = isFriday ? 7 : 1;
+                    final addDuration = daysDiff;
                     setDateAndReFetch(
                       selectedDate.add(
                         Duration(days: addDuration),
