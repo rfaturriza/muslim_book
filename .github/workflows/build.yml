@@ -43,6 +43,11 @@ jobs:
       - name: Check Flutter
         run: flutter doctor -v
 
+      - name: Create Firebase Directory for iOS
+        run: |
+          mkdir -p ios/Runner/Firebase/Debug
+          mkdir -p ios/Runner/Firebase/Release
+
       - name: Configure Firebase
         run: |
           echo "$FIREBASE_OPTIONS" | base64 --decode > lib/firebase_options.dart
