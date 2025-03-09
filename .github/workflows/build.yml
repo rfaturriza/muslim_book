@@ -27,8 +27,12 @@ jobs:
 
       - name: Install iOS Simulator Runtime
         run: |
-            xcrun simctl list runtimes
-            sudo xcodebuild -downloadPlatform iOS -version 18.2
+          xcrun simctl list runtimes
+          DOWNLOAD_PATH="./ios-runtime"
+          mkdir -p $DOWNLOAD_PATH
+          xcodebuild -downloadPlatform iOS -version 18.2 -exportPath $DOWNLOAD_PATH
+          find $DOWNLOAD_PATH -name "*.dmg" -exec xcodebuild -importPlatform {} \;
+          xcrun simctl list runtimes
 
       - name: Checkout code
         uses: actions/checkout@v4
