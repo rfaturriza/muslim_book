@@ -23,8 +23,6 @@ jobs:
   release-android:
     name: Build and release Android app
     runs-on: ubuntu-latest
-    outputs:
-      flutter_version: ${{ steps.read_fvm_config.outputs.content }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -105,11 +103,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      
+      - name: Read Version Flutter
+        id: read_fvm_config
+        uses: juliangruber/read-file-action@v1.1.6
+        with:
+          path: ./.fvm/fvm_config.json
         
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ fromJson(needs.release-android.outputs.flutter_version).flutterSdkVersion }}
+          flutter-version: ${{ fromJson(steps.read_fvm_config.outputs.content).flutterSdkVersion }}
           
       - name: Get branch name
         id: branch-name
