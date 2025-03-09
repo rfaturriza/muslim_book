@@ -23,6 +23,8 @@ jobs:
   release-android:
     name: Build and release Android app
     runs-on: ubuntu-latest
+    outputs:
+      flutter_version: ${{ steps.read_fvm_config.outputs.content }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -95,3 +97,47 @@ jobs:
         env:
           PLAY_STORE_CONFIG_JSON: ${{ secrets.GPLAY_SERVICE_ACCOUNT_KEY_JSON }}
         working-directory: android
+      
+  bump-version:
+    name: Bump Version
+    needs: release-android
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ fromJson(needs.release-android.outputs.flutter_version).flutterSdkVersion }}
+          
+      - name: Get branch name
+        id: branch-name
+        run: |
+          if [ ${{ github.event_name == 'pull_request' }} ]; then
+            echo "name=${{ github.head_ref }}" >> $GITHUB_OUTPUT
+          else
+            echo "name=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: Install Cider
+        run: dart pub global activate cider
+      
+      - name: Increment Build Number
+        run: |
+          if [[ "${{ github.event.inputs.lane }}" == *_major ]]; then
+            flutter pub global run cider bump major
+          elif [[ "${{ github.event.inputs.lane }}" == *_minor ]]; then
+            flutter pub global run cider bump minor
+          elif [[ "${{ github.event.inputs.lane }}" == *_patch ]]; then
+            flutter pub global run cider bump patch
+          else
+            echo "Skipping version increment for promotion lanes"
+          fi
+      
+      - name: Commit & Push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: bump build number (BOT)"
+          file_pattern: pubspec.yaml
+          branch: ${{ steps.branch-name.outputs.name }}
