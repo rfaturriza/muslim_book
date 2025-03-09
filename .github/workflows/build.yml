@@ -24,15 +24,18 @@ jobs:
       - uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: latest
+      
+      - name: Configure Xcode
+        if: matrix.target == 'ios --no-codesign'
+        run: sudo sh -c 'xcode-select -s /Applications/Xcode.app/Contents/Developer && xcodebuild -runFirstLaunch'
+
+      - name: Sign the Xcode license agreement
+        if: matrix.target == 'ios --no-codesign'
+        run: sudo xcodebuild -license accept
 
       - name: Install iOS Simulator Runtime
-        run: |
-          xcrun simctl list runtimes
-          DOWNLOAD_PATH="./ios-runtime"
-          mkdir -p $DOWNLOAD_PATH
-          xcodebuild -downloadPlatform iOS -version 18.2 -exportPath $DOWNLOAD_PATH
-          find $DOWNLOAD_PATH -name "*.dmg" -exec xcodebuild -importPlatform {} \;
-          xcrun simctl list runtimes
+        if: matrix.target == 'ios --no-codesign'
+        run: xcodebuild -downloadPlatform iOS
 
       - name: Checkout code
         uses: actions/checkout@v4
