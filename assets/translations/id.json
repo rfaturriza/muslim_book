@@ -122,9 +122,9 @@
   "searchKajianEmpty": "Maaf, tidak ada kajian yang tersedia.",
   "nearbyKajianEmptyToday": "Tidak ada kajian terdekat yang ditemukan hari ini.",
   "errorGetKajian": "Maaf, terjadi kesalahan saat memuat kajian",
-  "searchRamadhanHint": "Cari Jadwal Ramadhan...",
-  "searchRamadhanEmpty": "Maaf, tidak ada jadwal Ramadhan yang tersedia.",
-  "errorGetRamadhanSchedule": "Maaf, terjadi kesalahan saat memuat jadwal Ramadhan",
+  "searchRamadhanHint": "Cari Jadwal ...",
+  "searchRamadhanEmpty": "Maaf, tidak ada jadwal yang tersedia.",
+  "errorGetRamadhanSchedule": "Maaf, terjadi kesalahan saat memuat jadwal",
   "province": "Provinsi",
   "district": "Wilayah",
   "city": "Kabupaten/Kota",
@@ -216,5 +216,7 @@
   "calibrationCompass": "Kalibrasi kompas sebelum digunakan dengan menggerakkan ponsel Anda dalam gerakan angka 8",
   "islamicStudiesInformationLabel": "Info Kajian",
   "islamicStudiesNearbyInformationLabel": "Info Kajian Terdekat",
-  "doneAction": "Sudah"
+  "doneAction": "Sudah",
+  "kajian": "Kajian",
+  "errorOpenMap": "Mohon maaf, tidak dapat membuka peta"
 }

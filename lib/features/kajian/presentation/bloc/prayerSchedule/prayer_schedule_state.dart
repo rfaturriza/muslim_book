@@ -4,7 +4,7 @@ part of 'prayer_schedule_bloc.dart';
 class PrayerScheduleState with _$PrayerScheduleState {
   const factory PrayerScheduleState({
     @Default(FormzSubmissionStatus.initial) FormzSubmissionStatus status,
-    @Default([]) List<RamadhanSchedule> ramadhanSchedules,
+    @Default([]) List<PrayerKajianSchedule> prayerKajianSchedules,
     @Default(FormzSubmissionStatus.initial)
     FormzSubmissionStatus provincesStatus,
     @Default([]) List<Province> provinces,

@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:quranku/features/kajian/data/models/mosques_response_model.codegen.dart';
-import 'package:quranku/features/kajian/data/models/ramadhan_schedules_response_model.codegen.dart';
+import 'package:quranku/features/kajian/data/models/prayer_kajian_schedules_response_model.codegen.dart';
 import 'package:quranku/features/kajian/domain/entities/kajian_schedule.codegen.dart';
-import 'package:quranku/features/kajian/domain/entities/ramadhan_schedules.codegen.dart';
+import 'package:quranku/features/kajian/domain/entities/prayer_kajian_schedules.codegen.dart';
 
 import '../../../../core/error/failures.dart';
 import '../models/kajian_schedule_request_model.codegen.dart';
-import '../models/ramadhan_schedule_request_model.codegen.dart';
+import '../models/prayer_kajian_schedule_request_model.codegen.dart';
 
 abstract class KajianHubRepository {
   Future<Either<Failure, KajianSchedules>> getKajianList({
@@ -23,13 +23,13 @@ abstract class KajianHubRepository {
     required double longitude,
   });
 
-  Future<Either<Failure, DataRamadhanScheduleModel?>>
-      getRamadhanSchedulesByMosque({
-    required RamadhanScheduleByMosqueRequestModel request,
+  Future<Either<Failure, DataPrayerKajianScheduleModel?>>
+      getPrayerKajianSchedulesByMosque({
+    required PrayerKajianScheduleByMosqueRequestModel request,
   });
 
-  Future<Either<Failure, RamadhanSchedules>> getRamadhanSchedules({
-    required RamadhanScheduleRequestModel request,
+  Future<Either<Failure, PrayerkajianSchedules>> getPrayerKajianSchedules({
+    required PrayerKajianScheduleRequestModel request,
   });
 
   Future<Either<Failure, List<DataMosqueModel>>> getMosqueList({

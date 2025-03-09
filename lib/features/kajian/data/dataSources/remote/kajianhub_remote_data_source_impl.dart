@@ -8,20 +8,21 @@ import 'package:quranku/features/kajian/data/models/kajian_schedules_response_mo
 import 'package:quranku/features/kajian/data/models/kajian_themes_response_model.codegen.dart';
 import 'package:quranku/features/kajian/data/models/mosques_response_model.codegen.dart';
 import 'package:quranku/features/kajian/data/models/provinces_response_model.codegen.dart';
-import 'package:quranku/features/kajian/data/models/ramadhan_schedules_response_model.codegen.dart';
+import 'package:quranku/features/kajian/data/models/prayer_kajian_schedules_response_model.codegen.dart';
 import 'package:quranku/features/kajian/data/models/ustadz_response_model.codegen.dart';
 
 import '../../models/kajian_schedule_response_model.codegen.dart';
-import '../../models/ramadhan_schedule_request_model.codegen.dart';
+import '../../models/prayer_kajian_schedule_request_model.codegen.dart';
 import 'kajianhub_remote_data_source.dart';
 
 @LazySingleton(as: KajianHubRemoteDataSource)
 class KajianHubRemoteDataSourceImpl implements KajianHubRemoteDataSource {
   final Dio _dio;
 
-  KajianHubRemoteDataSourceImpl() : _dio = NetworkConfig.getDioCustom(
-    NetworkConfig.baseUrlKajianHub,
-  );
+  KajianHubRemoteDataSourceImpl()
+      : _dio = NetworkConfig.getDioCustom(
+          NetworkConfig.baseUrlKajianHub,
+        );
 
   @override
   Future<Either<Exception, KajianSchedulesResponseModel>> getKajianSchedules({
@@ -167,9 +168,9 @@ class KajianHubRemoteDataSourceImpl implements KajianHubRemoteDataSource {
   }
 
   @override
-  Future<Either<Exception, RamadhanSchedulesByMosqueResponseModel>>
-  getRamadhanSchedulesByMosque({
-    required RamadhanScheduleByMosqueRequestModel request,
+  Future<Either<Exception, PrayerKajianSchedulesByMosqueResponseModel>>
+      getPrayerKajianSchedulesByMosque({
+    required PrayerKajianScheduleByMosqueRequestModel request,
   }) async {
     const endpoint = 'kajian/prayer-schedules/ramadhan';
     try {
@@ -179,7 +180,7 @@ class KajianHubRemoteDataSourceImpl implements KajianHubRemoteDataSource {
       );
 
       final data = response.data;
-      return right(RamadhanSchedulesByMosqueResponseModel.fromJson(data));
+      return right(PrayerKajianSchedulesByMosqueResponseModel.fromJson(data));
     } catch (e) {
       throw left(e);
     }
@@ -210,14 +211,14 @@ class KajianHubRemoteDataSourceImpl implements KajianHubRemoteDataSource {
   }
 
   @override
-  Future<Either<Exception, RamadhanSchedulesResponseModel>>
-  getRamadhanSchedules({
-    required RamadhanScheduleRequestModel request,
+  Future<Either<Exception, PrayerKajianSchedulesResponseModel>>
+      getPrayerSchedules({
+    required PrayerKajianScheduleRequestModel request,
   }) async {
     const endpoint = 'kajian/prayer-schedules';
     try {
       final queryParameters = request.copyWith(
-        options: [...request.options ?? [], 'filter,type_id,equal,2'],
+        options: [...request.options ?? []],
       ).toJson();
       final response = await _dio.get(
         endpoint,
@@ -225,7 +226,7 @@ class KajianHubRemoteDataSourceImpl implements KajianHubRemoteDataSource {
       );
 
       final data = response.data;
-      return right(RamadhanSchedulesResponseModel.fromJson(data));
+      return right(PrayerKajianSchedulesResponseModel.fromJson(data));
     } catch (e) {
       throw left(e);
     }

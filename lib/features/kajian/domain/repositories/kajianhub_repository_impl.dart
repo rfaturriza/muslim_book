@@ -2,14 +2,14 @@ import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:quranku/core/error/failures.dart';
 import 'package:quranku/features/kajian/data/models/mosques_response_model.codegen.dart';
-import 'package:quranku/features/kajian/data/models/ramadhan_schedule_request_model.codegen.dart';
-import 'package:quranku/features/kajian/data/models/ramadhan_schedules_response_model.codegen.dart';
+import 'package:quranku/features/kajian/data/models/prayer_kajian_schedule_request_model.codegen.dart';
+import 'package:quranku/features/kajian/data/models/prayer_kajian_schedules_response_model.codegen.dart';
 import 'package:quranku/features/kajian/domain/entities/kajian_schedule.codegen.dart';
 
 import '../../data/dataSources/remote/kajianhub_remote_data_source.dart';
 import '../../data/models/kajian_schedule_request_model.codegen.dart';
 import '../../data/repositories/kajianhub_repository.dart';
-import '../entities/ramadhan_schedules.codegen.dart';
+import '../entities/prayer_kajian_schedules.codegen.dart';
 
 @LazySingleton(as: KajianHubRepository)
 class KajianHubRepositoryImpl extends KajianHubRepository {
@@ -135,11 +135,11 @@ class KajianHubRepositoryImpl extends KajianHubRepository {
   }
 
   @override
-  Future<Either<Failure, DataRamadhanScheduleModel?>>
-      getRamadhanSchedulesByMosque({
-    required RamadhanScheduleByMosqueRequestModel request,
+  Future<Either<Failure, DataPrayerKajianScheduleModel?>>
+      getPrayerKajianSchedulesByMosque({
+    required PrayerKajianScheduleByMosqueRequestModel request,
   }) async {
-    final result = await remoteDataSource.getRamadhanSchedulesByMosque(
+    final result = await remoteDataSource.getPrayerKajianSchedulesByMosque(
       request: request,
     );
     return result.fold(
@@ -162,10 +162,10 @@ class KajianHubRepositoryImpl extends KajianHubRepository {
   }
 
   @override
-  Future<Either<Failure, RamadhanSchedules>> getRamadhanSchedules({
-    required RamadhanScheduleRequestModel request,
+  Future<Either<Failure, PrayerkajianSchedules>> getPrayerKajianSchedules({
+    required PrayerKajianScheduleRequestModel request,
   }) async {
-    final result = await remoteDataSource.getRamadhanSchedules(
+    final result = await remoteDataSource.getPrayerSchedules(
       request: request,
     );
     return result.fold(

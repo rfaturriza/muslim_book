@@ -357,14 +357,16 @@ class _FilterRowSection extends StatelessWidget {
                     ),
                   ),
                 ).whenComplete(() {
-                  final filterAfter = context.read<KajianBloc>().state.filter;
-                  if (filterBefore != filterAfter) {
-                    context.read<KajianBloc>().add(
-                          KajianEvent.fetchKajian(
-                            locale: context.locale,
-                            pageNumber: 1,
-                          ),
-                        );
+                  if (context.mounted) {
+                    final filterAfter = context.read<KajianBloc>().state.filter;
+                    if (filterBefore != filterAfter) {
+                      context.read<KajianBloc>().add(
+                            KajianEvent.fetchKajian(
+                              locale: context.locale,
+                              pageNumber: 1,
+                            ),
+                          );
+                    }
                   }
                 });
               },
