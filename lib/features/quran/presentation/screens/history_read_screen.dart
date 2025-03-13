@@ -11,7 +11,6 @@ import 'package:quranku/generated/locale_keys.g.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../../../bookmark/presentation/components/verse_expansion_tile.dart';
-import '../../domain/entities/juz.codegen.dart';
 import '../../domain/entities/last_read_juz.codegen.dart';
 import '../../domain/entities/last_read_surah.codegen.dart';
 import '../../domain/entities/surah.codegen.dart';
@@ -243,11 +242,7 @@ class _JuzList extends StatelessWidget {
         onTap: () {
           JuzList.onTapJuz(
             context,
-            JuzConstant(
-              number: juz.number,
-              name: juz.name,
-              description: juz.description,
-            ),
+            juz.number,
             jumpToVerse: juz.versesNumber.inQuran,
           );
         },
@@ -288,7 +283,7 @@ class _SwipeDeleteList extends StatelessWidget {
         padding: const EdgeInsets.only(right: 16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: context.theme.colorScheme.error.withOpacity(0.1),
+          color: context.theme.colorScheme.error.withValues(alpha:0.1),
         ),
         child: Align(
           alignment: Alignment.centerRight,

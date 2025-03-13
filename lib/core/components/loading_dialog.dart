@@ -16,7 +16,7 @@ class LoadingDialog extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: context.theme.colorScheme.background,
+          color: context.theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
@@ -26,13 +26,13 @@ class LoadingDialog extends StatelessWidget {
           children: [
             CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(
-                context.theme.colorScheme.onBackground,
+                context.theme.colorScheme.onSurface,
               ),
             ),
             const VSpacer(),
             Text(message ?? 'Loading...',
                 style: context.textTheme.labelMedium?.copyWith(
-                  color: context.theme.colorScheme.onBackground,
+                  color: context.theme.colorScheme.onSurface,
                 )),
           ],
         ),

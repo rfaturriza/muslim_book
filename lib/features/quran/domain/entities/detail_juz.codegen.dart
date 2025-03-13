@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/models/detail_juz_model.codegen.dart';
+import '../../presentation/utils/tajweed_word.dart';
 import 'verses.codegen.dart';
 
 part 'detail_juz.codegen.freezed.dart';
@@ -16,6 +17,7 @@ class DetailJuz with _$DetailJuz {
     String? juzEndInfo,
     int? totalVerses,
     List<Verses>? verses,
+    List<TajweedWord>? tajweedWords,
   }) = _DetailJuz;
 
   const DetailJuz._();

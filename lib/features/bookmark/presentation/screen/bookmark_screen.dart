@@ -5,9 +5,7 @@ import 'package:quranku/features/bookmark/presentation/bloc/bookmark/bookmark_bl
 import 'package:quranku/features/bookmark/presentation/components/background_verse.dart';
 import 'package:quranku/features/bookmark/presentation/components/surah_expansion_tile.dart';
 import 'package:quranku/features/bookmark/presentation/components/verse_expansion_tile.dart';
-import 'package:quranku/features/quran/domain/entities/juz.codegen.dart';
 
-import '../../../../core/utils/extension/string_ext.dart';
 import '../../../../injection.dart';
 import '../../../quran/domain/entities/surah.codegen.dart';
 import '../../../quran/presentation/screens/components/juz_list.dart';
@@ -53,11 +51,7 @@ class BookmarkScreen extends StatelessWidget {
                         onTapJuz: (juz) {
                           JuzList.onTapJuz(
                             context,
-                            JuzConstant(
-                              number: juz.number,
-                              name: juz.name,
-                              description: juz.description,
-                            ),
+                            juz.number,
                           );
                         },
                       ),
@@ -67,7 +61,7 @@ class BookmarkScreen extends StatelessWidget {
                             state.verseBookmarks?.getOrElse(() => []) ?? [],
                         isExpanded: state.isExpandedVerses,
                         onTapVerse: (verse) {
-                          if(verse.surahName != null){
+                          if (verse.surahName != null) {
                             SurahList.onTapSurah(
                               context,
                               Surah(
@@ -79,11 +73,7 @@ class BookmarkScreen extends StatelessWidget {
                           } else {
                             JuzList.onTapJuz(
                               context,
-                              JuzConstant(
-                                number: verse.juz?.number ?? 0,
-                                name: verse.juz?.name ?? emptyString,
-                                description: verse.juz?.description ?? emptyString,
-                              ),
+                              verse.juz?.number ?? 0,
                               jumpToVerse: verse.versesNumber.inQuran,
                             );
                           }

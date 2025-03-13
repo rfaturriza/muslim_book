@@ -14,9 +14,7 @@ enum LastReadReminderModes {
         return LocaleKeys.lastReadingReminderMode_off.tr();
       case LastReadReminderModes.on:
         return LocaleKeys.lastReadingReminderMode_warnMe.tr();
-      default:
-        return '';
-    }
+      }
   }
 
   String toDescription() {
@@ -27,8 +25,6 @@ enum LastReadReminderModes {
         return LocaleKeys.lastReadingReminderModeDescription_off.tr();
       case LastReadReminderModes.on:
         return LocaleKeys.lastReadingReminderModeDescription_warnMe.tr();
-      default:
-        return '';
-    }
+      }
   }
 }

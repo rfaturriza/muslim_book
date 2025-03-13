@@ -26,8 +26,8 @@ class VerseExpansionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
-      backgroundColor: context.theme.colorScheme.background,
-      collapsedBackgroundColor: context.theme.colorScheme.surfaceVariant,
+      backgroundColor: context.theme.colorScheme.surface,
+      collapsedBackgroundColor: context.theme.colorScheme.surfaceContainerHighest,
       initiallyExpanded: isExpanded,
       trailing: isExpanded
           ? Icon(
@@ -62,7 +62,7 @@ class VerseExpansionTile extends StatelessWidget {
             surahName: e.surahName,
             juzName: e.juz?.name,
             verseNumber: e.versesNumber.inSurah ?? 0,
-            backgroundColor: context.theme.colorScheme.background,
+            backgroundColor: context.theme.colorScheme.surface,
           ),
         ),
       ],
@@ -109,7 +109,7 @@ class VerseBookmarkListTile extends StatelessWidget {
           style: context.textTheme.titleMedium,
         ),
         subtitle: Text(
-          '${LocaleKeys.verses} $verseNumber',
+          '${LocaleKeys.verses.tr()} $verseNumber',
           style: context.textTheme.titleSmall,
         ),
         trailing: () {
@@ -118,7 +118,7 @@ class VerseBookmarkListTile extends StatelessWidget {
               surahName?.short ?? emptyString,
               textAlign: TextAlign.end,
               style: TextStyle(
-                color: context.theme.colorScheme.onPrimary,
+                color: context.theme.colorScheme.onSurface,
                 fontFamily: FontConst.decoTypeThuluthII,
                 fontSize: 25,
               ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 
 import '../../../../../core/components/popup_menu.dart';
@@ -28,7 +29,7 @@ class VersePopupMenuButton extends StatelessWidget {
           IconButton(
             onPressed: () {
               onBookmarkPressed?.call();
-              context.navigateBack();
+              context.pop();
             },
             icon: Icon(
               (isBookmarked ?? false)
@@ -40,7 +41,7 @@ class VersePopupMenuButton extends StatelessWidget {
           IconButton(
             onPressed: () {
               onPlayPressed?.call();
-              context.navigateBack();
+              context.pop();
             },
             icon: Icon(
               Icons.play_circle_outline,

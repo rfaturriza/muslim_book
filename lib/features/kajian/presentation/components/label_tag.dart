@@ -16,7 +16,7 @@ class LabelTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(left: 2),
+      margin: const EdgeInsets.only(right: 4),
       padding: const EdgeInsets.all(2),
       decoration: ShapeDecoration(
         color: backgroundColor ?? context.theme.colorScheme.primaryContainer,

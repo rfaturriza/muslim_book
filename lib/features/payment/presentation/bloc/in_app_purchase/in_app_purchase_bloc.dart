@@ -136,6 +136,7 @@ class InAppPurchaseBloc extends Bloc<InAppPurchaseEvent, InAppPurchaseState> {
   ) async {
     emit(state.copyWith(purchaseStatus: PurchaseStatus.pending));
     final productDetails = state.products.first;
+    // ignore: unused_local_variable
     final purchaseParam = PurchaseParam(
       productDetails: productDetails,
     );

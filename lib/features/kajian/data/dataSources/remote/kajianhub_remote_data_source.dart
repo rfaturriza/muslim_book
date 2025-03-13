@@ -6,8 +6,8 @@ import 'package:quranku/features/kajian/data/models/kajian_schedules_response_mo
 import 'package:quranku/features/kajian/data/models/kajian_themes_response_model.codegen.dart';
 import 'package:quranku/features/kajian/data/models/mosques_response_model.codegen.dart';
 import 'package:quranku/features/kajian/data/models/provinces_response_model.codegen.dart';
-import 'package:quranku/features/kajian/data/models/ramadhan_schedule_request_model.codegen.dart';
-import 'package:quranku/features/kajian/data/models/ramadhan_schedules_response_model.codegen.dart';
+import 'package:quranku/features/kajian/data/models/prayer_kajian_schedule_request_model.codegen.dart';
+import 'package:quranku/features/kajian/data/models/prayer_kajian_schedules_response_model.codegen.dart';
 import 'package:quranku/features/kajian/data/models/ustadz_response_model.codegen.dart';
 
 abstract class KajianHubRemoteDataSource {
@@ -20,14 +20,14 @@ abstract class KajianHubRemoteDataSource {
     String? relations,
   });
 
-  Future<Either<Exception, RamadhanSchedulesByMosqueResponseModel>>
-      getRamadhanSchedulesByMosque({
-    required RamadhanScheduleByMosqueRequestModel request,
+  Future<Either<Exception, PrayerKajianSchedulesByMosqueResponseModel>>
+      getPrayerKajianSchedulesByMosque({
+    required PrayerKajianScheduleByMosqueRequestModel request,
   });
 
-  Future<Either<Exception, RamadhanSchedulesResponseModel>>
-      getRamadhanSchedules({
-    required RamadhanScheduleRequestModel request,
+  Future<Either<Exception, PrayerKajianSchedulesResponseModel>>
+      getPrayerSchedules({
+    required PrayerKajianScheduleRequestModel request,
   });
 
   Future<Either<Exception, UstadzResponseModel>> getUstadz({

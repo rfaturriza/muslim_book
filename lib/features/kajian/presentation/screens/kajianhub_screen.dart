@@ -4,7 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quranku/core/constants/asset_constants.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/features/kajian/presentation/bloc/prayerSchedule/prayer_schedule_bloc.dart';
-import 'package:quranku/features/kajian/presentation/screens/ramadhan_screen.dart';
+import 'package:quranku/features/kajian/presentation/screens/kajian_prayer_schedule_screen.dart';
+import 'package:quranku/generated/locale_keys.g.dart';
 
 import '../../../../injection.dart';
 import '../bloc/kajian/kajian_bloc.dart';
@@ -69,7 +70,7 @@ class _KajianHubScaffoldState extends State<KajianHubScaffold>
               );
         } else {
           context.read<PrayerScheduleBloc>().add(
-                PrayerScheduleEvent.fetchRamadhanSchedules(
+                PrayerScheduleEvent.fetchPrayerKajianSchedules(
                   locale: context.locale,
                   pageNumber: 1,
                 ),
@@ -109,9 +110,9 @@ class _KajianHubScaffoldState extends State<KajianHubScaffold>
   Widget build(BuildContext context) {
     final tabBar = TabBar(
       controller: tabController,
-      tabs: const [
-        Tab(text: 'Kajian'),
-        Tab(text: 'Ramadhan'),
+      tabs: [
+        Tab(text: LocaleKeys.kajian.tr()),
+        Tab(text: LocaleKeys.prayerSchedule.tr()),
       ],
     );
     return Scaffold(
@@ -161,7 +162,7 @@ class _KajianHubScaffoldState extends State<KajianHubScaffold>
               controller: tabController,
               children: const [
                 KajianScreen(),
-                RamadhanScreen(),
+                KajianPrayerScheduleScreen(),
               ],
             ),
           ),

@@ -28,6 +28,7 @@ analyzer:
   exclude:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
+    - "**/quran/presentation/utils/*"
   errors:
     invalid_annotation_target: ignore
 

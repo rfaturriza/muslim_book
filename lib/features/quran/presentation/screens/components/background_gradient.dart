@@ -25,7 +25,7 @@ class BackgroundGradient extends StatelessWidget {
                 gradient: LinearGradient(
                   colors: [
                     context.theme.primaryColor,
-                    context.theme.primaryColor.withOpacity(0.0),
+                    context.theme.primaryColor.withValues(alpha:0.0),
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -44,7 +44,7 @@ class BackgroundGradient extends StatelessWidget {
                 gradient: LinearGradient(
                   colors: [
                     context.theme.primaryColor,
-                    context.theme.primaryColor.withOpacity(0.0),
+                    context.theme.primaryColor.withValues(alpha:0.0),
                   ],
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,

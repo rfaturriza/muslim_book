@@ -5,9 +5,11 @@
 *.swp
 .DS_Store
 .atom/
+.build/
 .buildlog/
 .history
 .svn/
+.swiftpm/
 migrate_working_dir/
 
 # IntelliJ related
@@ -32,8 +34,6 @@ migrate_working_dir/
 .freezedtest.dart
 
 # fvm
-.fvm/flutter_sdk
-
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
@@ -43,7 +43,7 @@ migrate_working_dir/
 # Flutter/Dart/Pub related
 **/doc/api/
 **/ios/Flutter/.last_build_id
-.dart_tool/
+**/ios/build
 .flutter-plugins
 .flutter-plugins-dependencies
 .packages
@@ -64,7 +64,10 @@ app.*.map.json
 /android/app/release
 *.env
 
+# FVM Version Cache
+.fvm/
+
 firebase_app_id_file.json
 firebase_options.dart
-google-services.json
-GoogleService-Info.plist
+**/google-services.json
+**/GoogleService-Info.plist

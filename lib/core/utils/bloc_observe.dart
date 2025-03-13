@@ -31,4 +31,10 @@ class AppBlocObserver extends BlocObserver {
     super.onTransition(bloc, transition);
     debugPrint(transition.toString());
   }
+
+  @override
+  void onEvent(Bloc bloc, Object? event) {
+    super.onEvent(bloc, event);
+    debugPrint('onEvent -- ${bloc.runtimeType}, $event');
+  }
 }

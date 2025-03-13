@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:quranku/core/constants/font_constants.dart';
-import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/themes/color_schemes_material.dart';
 
 import 'text.dart';
@@ -27,8 +26,8 @@ ThemeData themeData({
     scaffoldBackgroundColor:
         isDarkMode ? darkColorScheme.surface : lightColorScheme.surface,
     dividerColor: isDarkMode
-        ? darkColorScheme.onSurface.withOpacity(0.12)
-        : lightColorScheme.onSurface.withOpacity(0.12),
+        ? darkColorScheme.onSurface.withValues(alpha:0.12)
+        : lightColorScheme.onSurface.withValues(alpha:0.12),
     visualDensity: VisualDensity.adaptivePlatformDensity,
     fontFamily: FontConst.lato,
     textTheme: textTheme,
@@ -37,7 +36,7 @@ ThemeData themeData({
       labelStyle: textTheme.titleMedium?.copyWith(
         fontWeight: FontWeight.w500,
       ),
-      unselectedLabelColor: textTheme.titleMedium?.color?.withOpacity(0.5),
+      unselectedLabelColor: textTheme.titleMedium?.color?.withValues(alpha:0.5),
       dividerColor: Colors.transparent,
       indicatorColor: primaryColor,
       indicatorSize: TabBarIndicatorSize.label,
@@ -62,16 +61,16 @@ ThemeData themeData({
     bottomSheetTheme: BottomSheetThemeData(
       showDragHandle: true,
       dragHandleColor: isDarkMode
-          ? darkColorScheme.onSurface.withOpacity(0.5)
-          : lightColorScheme.onSurface.withOpacity(0.5),
+          ? darkColorScheme.onSurface.withValues(alpha:0.5)
+          : lightColorScheme.onSurface.withValues(alpha:0.5),
       dragHandleSize: const Size(32, 4),
       modalElevation: 0,
       backgroundColor: isDarkMode
           ? darkColorScheme.surfaceContainer
           : lightColorScheme.surfaceContainer,
       modalBarrierColor: isDarkMode
-          ? darkColorScheme.surfaceContainer.withOpacity(0.5)
-          : lightColorScheme.surfaceContainer.withOpacity(0.5),
+          ? darkColorScheme.surfaceContainer.withValues(alpha:0.5)
+          : lightColorScheme.surfaceContainer.withValues(alpha:0.5),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(20),
@@ -90,12 +89,12 @@ ThemeData themeData({
     ),
     iconButtonTheme: IconButtonThemeData(
       style: ButtonStyle(
-        padding: MaterialStateProperty.all(
+        padding: WidgetStateProperty.all(
           const EdgeInsets.all(8),
         ),
-        foregroundColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.disabled)) {
-            return primaryColor.withOpacity(0.5);
+        foregroundColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.disabled)) {
+            return primaryColor.withValues(alpha:0.5);
           }
           return primaryColor;
         }),
@@ -120,8 +119,8 @@ ThemeData themeData({
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         foregroundColor: primaryColor,
         disabledForegroundColor: isDarkMode
-            ? darkColorScheme.onSurface.withOpacity(0.5)
-            : lightColorScheme.onSurface.withOpacity(0.5),
+            ? darkColorScheme.onSurface.withValues(alpha:0.5)
+            : lightColorScheme.onSurface.withValues(alpha:0.5),
         textStyle: textTheme.titleSmall,
       ),
     ),
@@ -138,16 +137,16 @@ ThemeData themeData({
       ),
     ),
     checkboxTheme: CheckboxThemeData(
-      fillColor: MaterialStateProperty.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
+      fillColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
           return isDarkMode
               ? darkColorScheme.primary
               : lightColorScheme.primary;
         }
         return Colors.transparent;
       }),
-      overlayColor: MaterialStateProperty.all(defaultColor.withOpacity(0.1)),
-      checkColor: MaterialStateProperty.all(
+      overlayColor: WidgetStateProperty.all(defaultColor.withValues(alpha:0.1)),
+      checkColor: WidgetStateProperty.all(
         isDarkMode ? darkColorScheme.onPrimary : lightColorScheme.onPrimary,
       ),
       shape: RoundedRectangleBorder(

@@ -70,7 +70,7 @@ class SliverAppBarDetailScreen extends StatelessWidget
             }(),
               color: context.theme.colorScheme.tertiary,
               disabledColor:
-                  context.theme.colorScheme.tertiary.withOpacity(0.5)),
+                  context.theme.colorScheme.tertiary.withValues(alpha:0.5)),
         ),
       ],
     );

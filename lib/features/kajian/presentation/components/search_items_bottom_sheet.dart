@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 
 import '../../../../core/components/search_box.dart';
@@ -44,9 +45,7 @@ class SearchItemBottomSheetState extends State<SearchItemBottomSheet> {
     for (final item in widget.selected?.second.split('|') ?? []) {
       _selectedItems.value.add(
         Pair(
-          widget.items
-              .firstWhere((e) => e.second == item)
-              .first,
+          widget.items.firstWhere((e) => e.second == item).first,
           item,
         ),
       );
@@ -97,8 +96,7 @@ class SearchItemBottomSheetState extends State<SearchItemBottomSheet> {
             onChanged: (value) {
               setState(() {
                 _filteredItems = widget.items
-                    .where((element) =>
-                    element.first
+                    .where((element) => element.first
                         .toLowerCase()
                         .contains(value.toLowerCase()))
                     .toList();
@@ -118,53 +116,53 @@ class SearchItemBottomSheetState extends State<SearchItemBottomSheet> {
                       final item = _filteredItems[index];
                       return ListTile(
                         trailing: _selectedItems.value
-                            .where((e) => e.second == item.second)
-                            .isNotEmpty
+                                .where((e) => e.second == item.second)
+                                .isNotEmpty
                             ? Checkbox(value: true, onChanged: (_) {})
                             : Checkbox(value: false, onChanged: (_) {}),
                         title: Text(
-                        item.first,
-                        style: context.textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
+                          item.first,
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      selected: _selectedItems.value
-                          .where((e) => e.second == item.second)
-                          .isNotEmpty,
-                      selectedTileColor:
-                      context.theme.colorScheme.primaryContainer,
-                      onTap: () {
-                      if (!widget.isMultipleSelect) {
-                      widget.onSelected(item);
-                      Navigator.pop(context);
-                      return;
-                      }
-                      setState(() {
-                      if (_selectedItems.value
-                          .where((e) => e.second == item.second)
-                          .isNotEmpty) {
-                      _selectedItems.value.removeWhere(
-                      (e) => e.second == item.second,
-                      );
-                      } else {
-                      _selectedItems.value.add(item);
-                      }
-                      });
-                      widget.onSelected(
-                      _selectedItems.value.isEmpty
-                      ? null
-                          : Pair(
-                      _selectedItems.value
-                          .map((e) => e.first)
-                          .toSet()
-                          .join('|'),
-                      _selectedItems.value
-                          .map((e) => e.second)
-                          .toSet()
-                          .join('|'),
-                      ),
-                      );
-                      },
+                        selected: _selectedItems.value
+                            .where((e) => e.second == item.second)
+                            .isNotEmpty,
+                        selectedTileColor:
+                            context.theme.colorScheme.primaryContainer,
+                        onTap: () {
+                          if (!widget.isMultipleSelect) {
+                            widget.onSelected(item);
+                            context.pop();
+                            return;
+                          }
+                          setState(() {
+                            if (_selectedItems.value
+                                .where((e) => e.second == item.second)
+                                .isNotEmpty) {
+                              _selectedItems.value.removeWhere(
+                                (e) => e.second == item.second,
+                              );
+                            } else {
+                              _selectedItems.value.add(item);
+                            }
+                          });
+                          widget.onSelected(
+                            _selectedItems.value.isEmpty
+                                ? null
+                                : Pair(
+                                    _selectedItems.value
+                                        .map((e) => e.first)
+                                        .toSet()
+                                        .join('|'),
+                                    _selectedItems.value
+                                        .map((e) => e.second)
+                                        .toSet()
+                                        .join('|'),
+                                  ),
+                          );
+                        },
                       );
                     },
                     separatorBuilder: (context, index) {

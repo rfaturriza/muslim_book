@@ -43,4 +43,6 @@ class HiveTypeConst {
   static const int prayerScheduleSettingModel = 7;
   static const int geoLocation = 8;
   static const int coordinate = 9;
+
+  static const String tajweedCacheClearedVersionKey = 'tajweedCacheClearedVersionKey';
 }

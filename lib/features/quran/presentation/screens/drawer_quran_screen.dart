@@ -3,12 +3,13 @@ import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:quranku/core/constants/url_constants.dart';
+import 'package:quranku/core/route/root_router.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
-import 'package:quranku/features/setting/presentation/screens/styling_setting_screen.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -17,8 +18,6 @@ import '../../../../core/components/spacer.dart';
 import '../../../../generated/locale_keys.g.dart';
 import '../../../../injection.dart';
 import '../../../../theme_provider.dart';
-import '../../../payment/presentation/screens/donation_screen.dart';
-import '../../../setting/presentation/screens/language_setting_screen.dart';
 
 class DrawerQuranScreen extends StatelessWidget {
   const DrawerQuranScreen({super.key});
@@ -85,7 +84,7 @@ class _ListItemMenu extends StatelessWidget {
           icon: Icons.language,
           title: LocaleKeys.language.tr(),
           onTap: () {
-            context.navigateTo(const LanguageSettingScreen());
+            context.pushNamed(RootRouter.languageSettingRoute.name);
           },
           withDecoration: false,
         ),
@@ -93,7 +92,7 @@ class _ListItemMenu extends StatelessWidget {
           icon: Icons.format_size,
           title: LocaleKeys.stylingView.tr(),
           onTap: () {
-            context.navigateTo(const StylingSettingScreen());
+            context.pushNamed(RootRouter.styleSettingRoute.name);
           },
           withDecoration: false,
         ),
@@ -136,12 +135,20 @@ class _Footer extends StatelessWidget {
                     method: 'Share Drawer Button',
                   );
                   final info = await PackageInfo.fromPlatform();
-                  final link =
-                      'https://play.google.com/store/apps/details?id=${info
-                      .packageName}';
-                  await Share.shareWithResult(
+                  final appName = info.appName;
+                  const iosAppId = '6739066951';
+                  final linkAndroid =
+                      'https://play.google.com/store/apps/details?id=${info.packageName}';
+                  final linkIOS =
+                      'https://apps.apple.com/app/${appName.toLowerCase()}/id$iosAppId';
+                  final link = Platform.isIOS ? linkIOS : linkAndroid;
+
+                  await Share.share(
                     LocaleKeys.shareAppDescription.tr(
-                      args: [info.appName, link],
+                      args: [
+                        info.appName,
+                        link,
+                      ],
                     ),
                   );
                 },
@@ -151,14 +158,17 @@ class _Footer extends StatelessWidget {
             ),
           ],
         ),
-        const VSpacer(),
-        ButtonDrawer(
-          onTap: () {
-            context.navigateTo(const DonationPaymentScreen());
-          },
-          icon: Icons.volunteer_activism,
-          title: LocaleKeys.supportUs.tr(),
-        ),
+        if (Platform.isAndroid) ...[
+          const VSpacer(),
+          ButtonDrawer(
+            onTap: () {
+              context.pushNamed(RootRouter.donationRoute.name);
+            },
+            icon: Icons.volunteer_activism,
+            title: LocaleKeys.supportUs.tr(),
+          ),
+          const VSpacer(),
+        ],
         const VSpacer(),
         ButtonDrawer(
           onTap: () async {
@@ -286,7 +296,7 @@ class _ThemePickerBottomSheet extends StatelessWidget {
                     : null,
                 onTap: () {
                   themeProvider.setThemeMode(ThemeMode.system);
-                  Navigator.pop(context);
+                  context.pop();
                 },
               ),
               ListTile(
@@ -297,7 +307,7 @@ class _ThemePickerBottomSheet extends StatelessWidget {
                     : null,
                 onTap: () {
                   themeProvider.setThemeMode(ThemeMode.light);
-                  Navigator.pop(context);
+                  context.pop();
                 },
               ),
               ListTile(
@@ -308,7 +318,7 @@ class _ThemePickerBottomSheet extends StatelessWidget {
                     : null,
                 onTap: () {
                   themeProvider.setThemeMode(ThemeMode.dark);
-                  Navigator.pop(context);
+                  context.pop();
                 },
               ),
             ],

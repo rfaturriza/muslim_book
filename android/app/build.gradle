@@ -43,6 +43,7 @@ def keystorePropertiesFile = rootProject.file('key.properties')
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
+def appName = "KajianHub"
 
 android {
     namespace 'com.rizz.quranku'
@@ -82,15 +83,15 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
-            resValue "string", "app_name", "Muslim Book (Debug)"
+            resValue "string", "app_name", appName + "-Debug"
         }
         profile {
             applicationIdSuffix ".debug"
-            resValue "string", "app_name", "Muslim Book (Profile)"
+            resValue "string", "app_name", appName + "-Profile"
         }
         release {
             signingConfig signingConfigs.release
-            resValue "string", "app_name", "Muslim Book"
+            resValue "string", "app_name", appName
         }
     }
 }

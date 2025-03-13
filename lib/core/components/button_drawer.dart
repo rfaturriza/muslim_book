@@ -28,8 +28,8 @@ class ButtonDrawer extends StatelessWidget {
                 begin: Alignment.topRight,
                 end: Alignment.bottomLeft,
                 colors: [
-                  context.theme.colorScheme.primary.withOpacity(0.5),
-                  context.theme.colorScheme.primary.withOpacity(0),
+                  context.theme.colorScheme.primary.withValues(alpha: 0.5),
+                  context.theme.colorScheme.primary.withValues(alpha: 0),
                 ],
               ),
               shape: const RoundedRectangleBorder(

@@ -243,7 +243,6 @@ class _HistorySectionState extends State<_HistorySection> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: context.theme.colorScheme.surfaceContainer,
@@ -259,8 +258,9 @@ class _HistorySectionState extends State<_HistorySection> {
                 Expanded(
                   flex: 1,
                   child: TabBar(
-                    labelPadding: EdgeInsets.zero,
                     isScrollable: true,
+                    tabAlignment: TabAlignment.start,
+                    labelPadding: EdgeInsets.zero,
                     labelStyle: context.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -314,7 +314,8 @@ class _HistoryTile extends StatelessWidget {
       if (history.publishedAt.isEmpty) {
         return emptyString;
       }
-      return DateTime.parse(history.publishedAt).toEEEEddMMMMyyyy(context.locale);
+      return DateTime.parse(history.publishedAt)
+          .toEEEEddMMMMyyyy(context.locale);
     }();
     return GestureDetector(
       onTap: () async {

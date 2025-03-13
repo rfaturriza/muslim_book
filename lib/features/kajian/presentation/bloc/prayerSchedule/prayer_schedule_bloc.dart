@@ -12,14 +12,14 @@ import 'package:quranku/core/utils/extension/dartz_ext.dart';
 import '../../../../../core/utils/pair.dart';
 import '../../../../shalat/domain/usecase/get_current_location_usecase.dart';
 import '../../../data/models/mosques_response_model.codegen.dart';
-import '../../../data/models/ramadhan_schedule_request_model.codegen.dart';
+import '../../../data/models/prayer_kajian_schedule_request_model.codegen.dart';
 import '../../../domain/entities/filter_prayer_schedule.codegen.dart';
 import '../../../domain/entities/kajian_schedule.codegen.dart';
-import '../../../domain/entities/ramadhan_schedules.codegen.dart';
+import '../../../domain/entities/prayer_kajian_schedules.codegen.dart';
 import '../../../domain/usecases/get_cities_usecase.dart';
 import '../../../domain/usecases/get_mosques_usecase.dart';
 import '../../../domain/usecases/get_provinces_usecase.dart';
-import '../../../domain/usecases/get_ramadhan_schedules_usecase.dart';
+import '../../../domain/usecases/get_prayer_kajian_schedules_usecase.dart';
 
 part 'prayer_schedule_bloc.freezed.dart';
 part 'prayer_schedule_event.dart';
@@ -28,7 +28,7 @@ part 'prayer_schedule_state.dart';
 @injectable
 class PrayerScheduleBloc
     extends Bloc<PrayerScheduleEvent, PrayerScheduleState> {
-  final GetRamadhanSchedulesUseCase _getRamadhanSchedulesUseCase;
+  final GetPrayerKajianSchedulesUseCase _getPrayerKajianSchedulesUseCase;
   final GetCurrentLocationUseCase _getCurrentLocation;
   final GetProvincesUseCase _getProvincesUseCase;
   final GetCitiesUseCase _getCitiesUseCase;
@@ -38,7 +38,7 @@ class PrayerScheduleBloc
   final int limit = 10;
 
   PrayerScheduleBloc(
-    this._getRamadhanSchedulesUseCase,
+    this._getPrayerKajianSchedulesUseCase,
     this._getCurrentLocation,
     this._getProvincesUseCase,
     this._getCitiesUseCase,
@@ -51,7 +51,7 @@ class PrayerScheduleBloc
           ),
         )) {
     _firebaseAnalytics.logScreenView(screenName: 'Jadwal Ramadhan Screen');
-    on<_FetchRamadhanSchedules>(_onFetchRamadhanSchedules);
+    on<_FetchPrayerKajianSchedules>(_onFetchPrayerKajianSchedules);
     on<_ToggleNearby>(_onToggleNearby);
     on<_FetchProvinces>(_onFetchProvinces);
     on<_FetchCities>(_onFetchCities);
@@ -66,8 +66,8 @@ class PrayerScheduleBloc
     on<_ResetFilter>(_onResetFilter);
   }
 
-  void _onFetchRamadhanSchedules(
-    _FetchRamadhanSchedules event,
+  void _onFetchPrayerKajianSchedules(
+    _FetchPrayerKajianSchedules event,
     Emitter<PrayerScheduleState> emit,
   ) async {
     if (state.lastPage != null && event.pageNumber > state.lastPage!) {
@@ -75,10 +75,10 @@ class PrayerScheduleBloc
     }
     emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
     if (event.pageNumber == 1) {
-      emit(state.copyWith(ramadhanSchedules: []));
+      emit(state.copyWith(prayerKajianSchedules: []));
     }
     try {
-      var request = RamadhanScheduleRequestModel(
+      var request = PrayerKajianScheduleRequestModel(
         type: 'pagination',
         page: event.pageNumber,
         limit: limit,
@@ -112,11 +112,24 @@ class PrayerScheduleBloc
         );
       }
       if (state.filter.prayerSchedule != null) {
+        final splitId = state.filter.prayerSchedule?.second.split(':');
+        final type =
+            (splitId != null && splitId.isNotEmpty) ? splitId[0] : null;
+        final subtype =
+            (splitId != null && splitId.length > 1) ? splitId[1] : null;
+        final options = [
+          ...?request.options,
+        ];
+
+        if (type != null && type.isNotEmpty) {
+          options.add('filter,type_id,equal,$type');
+        }
+        if (subtype != null && subtype.isNotEmpty) {
+          options.add('filter,subtype_id,equal,$subtype');
+        }
+
         request = request.copyWith(
-          options: [
-            ...?request.options,
-            'filter,subtype_id,equal,${state.filter.prayerSchedule!.second}',
-          ],
+          options: options,
         );
       }
       if (state.filter.khatib != null) {
@@ -165,7 +178,7 @@ class PrayerScheduleBloc
         name: 'fetch_ramadhan_schedules',
         parameters: request.toAnalytic(),
       );
-      final result = await _getRamadhanSchedulesUseCase(
+      final result = await _getPrayerKajianSchedulesUseCase(
         request,
       );
       result.fold(
@@ -173,11 +186,11 @@ class PrayerScheduleBloc
           state.copyWith(status: FormzSubmissionStatus.failure),
         ),
         (data) {
-          final currentData = state.ramadhanSchedules;
+          final currentData = state.prayerKajianSchedules;
           final newData = (currentData + (data?.data ?? [])).toSet().toList();
           emit(state.copyWith(
             status: FormzSubmissionStatus.success,
-            ramadhanSchedules: newData,
+            prayerKajianSchedules: newData,
             currentPage: data?.meta.currentPage ?? 0,
             totalData: data?.meta.total ?? 0,
             lastPage: data?.meta.lastPage ?? 0,

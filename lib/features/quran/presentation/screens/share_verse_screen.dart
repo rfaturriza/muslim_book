@@ -3,17 +3,33 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quranku/core/components/spacer.dart';
 import 'package:quranku/core/constants/admob_constants.dart';
 import 'package:quranku/core/constants/asset_constants.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
+import 'package:quranku/features/quran/domain/entities/juz.codegen.dart';
 import 'package:quranku/features/setting/presentation/bloc/styling_setting/styling_setting_bloc.dart';
 import 'package:quranku/generated/locale_keys.g.dart';
 
+import '../../../../core/network/remote_config.dart';
 import '../../../../core/utils/extension/string_ext.dart';
+import '../../../../injection.dart';
 import '../../../setting/presentation/bloc/language_setting/language_setting_bloc.dart';
+import '../../domain/entities/detail_surah.codegen.dart';
+import '../../domain/entities/verses.codegen.dart';
 import '../bloc/shareVerse/share_verse_bloc.dart';
+
+class ShareVerseScreenExtra {
+  final Verses verse;
+  final JuzConstant? juz;
+  final DetailSurah? surah;
+  const ShareVerseScreenExtra({
+    required this.verse,
+    this.juz,
+    this.surah,
+  });
+}
 
 class ShareVerseScreen extends StatelessWidget {
   const ShareVerseScreen({super.key});
@@ -57,11 +73,11 @@ class ShareVerseScreen extends StatelessWidget {
                         );
                   },
                   onFailedToLoad: (error) {
-                    context.navigateBack();
+                    context.pop();
                     context.showErrorToast(error);
                   },
                   onLoaded: () {
-                    context.navigateBack();
+                    context.pop();
                   },
                 );
               },
@@ -106,11 +122,11 @@ class _CanvasPreview extends StatelessWidget {
                 image: state.backgroundColor == null
                     ? DecorationImage(
                         image: CachedNetworkImageProvider(
-                          AssetConst.imageRandomUrl,
+                          sl<RemoteConfigService>().imageRandomUrl,
                           cacheKey: state.randomImageUrl,
                         ),
                         colorFilter: ColorFilter.mode(
-                          Colors.black.withOpacity(0.5),
+                          Colors.black.withValues(alpha: 0.5),
                           BlendMode.darken,
                         ),
                         fit: BoxFit.cover,
@@ -234,7 +250,7 @@ class _CanvasPreview extends StatelessWidget {
                         ],
                       ],
                     ),
-                    const _CopyRightMuslimBook(),
+                    const _CopyRightLogo(),
                   ],
                 ),
               ),
@@ -246,33 +262,17 @@ class _CanvasPreview extends StatelessWidget {
   }
 }
 
-class _CopyRightMuslimBook extends StatelessWidget {
-  const _CopyRightMuslimBook();
+class _CopyRightLogo extends StatelessWidget {
+  const _CopyRightLogo();
 
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.bottomRight,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          ClipOval(
-            child: SvgPicture.asset(
-              AssetConst.logoAPP,
-              width: 18,
-              height: 18,
-            ),
-          ),
-          const HSpacer(width: 4),
-          Text(
-            LocaleKeys.appName.tr(),
-            style: context.textTheme.titleSmall?.copyWith(
-              fontSize: 10,
-              color: Colors.white,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+      child: Image.asset(
+        AssetConst.kajianHubLogoLight,
+        width: 32,
+        height: 32,
       ),
     );
   }
@@ -321,7 +321,7 @@ class _RowListColorSetting extends StatelessWidget {
             children: [
               CachedNetworkImage(
                 cacheKey: state.randomImageUrl,
-                imageUrl: AssetConst.imageRandomUrl,
+                imageUrl: sl<RemoteConfigService>().imageRandomUrl,
                 errorWidget: (context, url, error) {
                   return GestureDetector(
                     onTap: () {
