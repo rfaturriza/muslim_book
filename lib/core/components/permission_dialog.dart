@@ -27,12 +27,10 @@ class PermissionDialog extends StatelessWidget {
         content ?? LocaleKeys.defaultPermissionMessage.tr(),
       ),
       actions: [
-        if (Platform.isAndroid) ...[
-          TextButton(
-            onPressed: () => context.pop(),
-            child: Text(LocaleKeys.cancel.tr()),
-          ),
-        ],
+        TextButton(
+          onPressed: () => context.pop(),
+          child: Text(LocaleKeys.cancel.tr()),
+        ),
         ElevatedButton(
           onPressed: () {
             onOk();
