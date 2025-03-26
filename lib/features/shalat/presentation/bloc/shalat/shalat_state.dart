@@ -10,5 +10,6 @@ class ShalatState with _$ShalatState {
     Either<Failure, ScheduleByMonth?>? scheduleByMonth,
     GeoLocation? geoLocation,
     @Default(false) bool isLoading,
+    bool? hasShownPermissionDialog,
   }) = _ShalatState;
 }
