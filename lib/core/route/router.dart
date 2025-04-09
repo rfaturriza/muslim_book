@@ -19,6 +19,7 @@ import '../../features/quran/presentation/screens/history_read_screen.dart';
 import '../../features/quran/presentation/screens/share_verse_screen.dart';
 import '../../features/setting/presentation/screens/language_setting_screen.dart';
 import '../../features/setting/presentation/screens/styling_setting_screen.dart';
+import '../../features/shalat/presentation/screens/prayer_schedule_screen.dart';
 import '../../injection.dart';
 import '../components/error_screen.dart';
 import 'root_router.dart';
@@ -176,6 +177,11 @@ final router = GoRouter(
           name: RootRouter.donationRoute.name,
           path: RootRouter.donationRoute.path,
           builder: (_, __) => DonationPaymentScreen(),
+        ),
+        GoRoute(
+          name: RootRouter.prayerTimeRoute.name,
+          path: RootRouter.prayerTimeRoute.path,
+          builder: (_, __) => PrayerScheduleScreen(),
         ),
         GoRoute(
           name: RootRouter.error.name,

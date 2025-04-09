@@ -57,6 +57,7 @@ dependencies:
   go_router: ^14.6.3
   go_provider: ^1.8.0
   shimmer: ^3.0.0
+  jhijri: ^1.0.0
 
 dev_dependencies:
   flutter_test:
