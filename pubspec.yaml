@@ -58,6 +58,8 @@ dependencies:
   go_provider: ^1.8.0
   shimmer: ^3.0.0
   jhijri: ^1.0.0
+  flutter_timezone: ^4.0.0
+  timezone: ^0.10.0
 
 dev_dependencies:
   flutter_test:

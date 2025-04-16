@@ -218,5 +218,7 @@
   "islamicStudiesNearbyInformationLabel": "Info Kajian Terdekat",
   "doneAction": "Sudah",
   "kajian": "Kajian",
-  "errorOpenMap": "Mohon maaf, tidak dapat membuka peta"
+  "errorOpenMap": "Mohon maaf, tidak dapat membuka peta",
+  "notificationPrayerTitle": "Waktunya {prayer} Pukul {time}",
+  "notificationPrayerDescription": "Lihat informasi waktu shalat di {location}"
 }

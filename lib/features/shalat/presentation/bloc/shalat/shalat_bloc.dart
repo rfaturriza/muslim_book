@@ -13,6 +13,7 @@ import 'package:quranku/core/utils/extension/dartz_ext.dart';
 import 'package:quranku/core/utils/extension/extension.dart';
 import 'package:quranku/features/shalat/domain/entities/geolocation.codegen.dart';
 import 'package:quranku/features/shalat/domain/usecase/get_location_manual_usecase.dart';
+import 'package:quranku/features/shalat/domain/usecase/schedule_prayer_alarm_usecase.dart';
 import 'package:quranku/features/shalat/domain/usecase/set_location_manual_usecase.dart';
 
 import '../../../../../core/error/failures.dart';
@@ -46,6 +47,7 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
   final SetLocationManualUseCase _setLocationManual;
   final GetPrayerScheduleSettingUseCase _getPrayerScheduleSetting;
   final SetPrayerScheduleSettingUseCase _setPrayerScheduleSetting;
+  final SchedulePrayerAlarmUseCase _schedulePrayerAlarmUseCase;
 
   StreamSubscription<Either<Failure, LocationStatus>>?
       _streamPermissionLocation;
@@ -54,7 +56,8 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
     this._getLocationManual,
     this._setLocationManual,
     this._getPrayerScheduleSetting,
-    this._setPrayerScheduleSetting, {
+    this._setPrayerScheduleSetting,
+    this._schedulePrayerAlarmUseCase, {
     required this.getCityId,
     required this.getScheduleByDay,
     required this.getScheduleByMonth,
@@ -73,6 +76,7 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
     on<_SetLocationManualEvent>(_onSetLocationManual);
     on<_GetPrayerScheduleSettingEvent>(_onGetPrayerScheduleSetting);
     on<_SetPrayerScheduleSettingEvent>(_onSetPrayerScheduleSetting);
+    on<_SchedulePrayerAlarmEvent>(_onSchedulePrayerAlarmEvent);
   }
 
   void _onStreamPermissionLocation() {
@@ -99,6 +103,7 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
     Emitter<ShalatState> emit,
   ) async {
     emit(state.copyWith(locale: event.locale ?? const Locale('en', 'US')));
+    add(_SchedulePrayerAlarmEvent());
   }
 
   void _onChangedLocationStatus(
@@ -182,11 +187,12 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
     final prayerTimes = PrayerTimes.today(coordinate, params);
     final Either<Failure, ScheduleByDay> resultSchedule = right(
       ScheduleByDay(
-          location: geoLocation.asRight()?.country,
-          area: geoLocation.asRight()?.regions?.first,
-          coordinate: geoLocation.asRight()?.coordinate,
-          prayerTimes: prayerTimes,
-          schedule: Schedule.fromPrayerTimes(prayerTimes)),
+        location: geoLocation.asRight()?.country,
+        area: geoLocation.asRight()?.regions?.first,
+        coordinate: geoLocation.asRight()?.coordinate,
+        prayerTimes: prayerTimes,
+        schedule: Schedule.fromPrayerTimes(prayerTimes),
+      ),
     );
     emit(
       state.copyWith(
@@ -289,8 +295,13 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
     _SetPrayerScheduleSettingEvent event,
     Emitter<ShalatState> emit,
   ) async {
+    final geoLocation = await getCurrentLocation(
+      GetCurrentLocationParams(locale: state.locale),
+    );
     final result = await _setPrayerScheduleSetting(
-      event.model,
+      event.model?.copyWith(
+        location: geoLocation.asRight()?.place ?? '',
+      ),
     );
     emit(
       state.copyWith(
@@ -304,6 +315,13 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
         ),
       ),
     );
+  }
+
+  void _onSchedulePrayerAlarmEvent(
+    _SchedulePrayerAlarmEvent event,
+    Emitter<ShalatState> emit,
+  ) async {
+    await _schedulePrayerAlarmUseCase(NoParams());
   }
 
   @override

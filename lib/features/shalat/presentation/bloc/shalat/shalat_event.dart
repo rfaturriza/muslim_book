@@ -35,4 +35,7 @@ class ShalatEvent with _$ShalatEvent {
   const factory ShalatEvent.setPrayerScheduleSettingEvent({
     required PrayerScheduleSetting? model,
   }) = _SetPrayerScheduleSettingEvent;
+
+  const factory ShalatEvent.schedulePrayerAlarmEvent() =
+      _SchedulePrayerAlarmEvent;
 }

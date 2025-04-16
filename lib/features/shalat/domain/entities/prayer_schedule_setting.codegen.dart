@@ -1,5 +1,6 @@
 import 'package:adhan/adhan.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:quranku/features/shalat/presentation/helper/helper_time_shalat.dart';
 
 part 'prayer_schedule_setting.codegen.freezed.dart';
 
@@ -9,6 +10,7 @@ class PrayerScheduleSetting with _$PrayerScheduleSetting {
     @Default([]) List<PrayerAlarm> alarms,
     @Default(CalculationMethod.egyptian) CalculationMethod calculationMethod,
     @Default(Madhab.shafi) Madhab madhab,
+    @Default('') String location,
   }) = _PrayerScheduleSetting;
 }
 
@@ -16,7 +18,7 @@ class PrayerScheduleSetting with _$PrayerScheduleSetting {
 class PrayerAlarm with _$PrayerAlarm {
   const factory PrayerAlarm({
     DateTime? time,
-    Prayer? prayer,
+    PrayerInApp? prayer,
     @Default(false) bool isAlarmActive,
   }) = _PrayerAlarm;
 }

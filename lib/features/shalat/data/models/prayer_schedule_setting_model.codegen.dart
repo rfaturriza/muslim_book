@@ -1,6 +1,7 @@
 import 'package:adhan/adhan.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
+import 'package:quranku/features/shalat/presentation/helper/helper_time_shalat.dart';
 
 import '../../../../core/constants/hive_constants.dart';
 import '../../domain/entities/prayer_schedule_setting.codegen.dart';
@@ -15,6 +16,7 @@ class PrayerScheduleSettingModel with _$PrayerScheduleSettingModel {
     @HiveField(0) @Default([]) List<PrayerAlarmModel> alarms,
     @HiveField(1) @Default('egyptian') String calculationMethod,
     @HiveField(2) @Default('shafi') String madhab,
+    @HiveField(3) @Default('') String location,
   }) = _PrayerScheduleSettingModel;
 
   const PrayerScheduleSettingModel._();
@@ -24,7 +26,9 @@ class PrayerScheduleSettingModel with _$PrayerScheduleSettingModel {
 
   factory PrayerScheduleSettingModel.fromEntity(PrayerScheduleSetting? entity) {
     return PrayerScheduleSettingModel(
-      calculationMethod: entity?.calculationMethod.name ?? CalculationMethod.egyptian.name,
+      calculationMethod:
+          entity?.calculationMethod.name ?? CalculationMethod.egyptian.name,
+      location: entity?.location ?? '',
       madhab: entity?.madhab.name ?? Madhab.shafi.name,
       alarms: entity?.alarms
               .map((e) => PrayerAlarmModel.fromEntity(
@@ -38,6 +42,7 @@ class PrayerScheduleSettingModel with _$PrayerScheduleSettingModel {
   PrayerScheduleSetting toEntity() {
     return PrayerScheduleSetting(
       alarms: alarms.map((e) => e.toEntity()).toList(),
+      location: location,
       calculationMethod: CalculationMethod.values.firstWhere(
         (element) => element.name == calculationMethod,
       ),
@@ -73,8 +78,9 @@ class PrayerAlarmModel with _$PrayerAlarmModel {
   PrayerAlarm toEntity() {
     return PrayerAlarm(
       time: time,
-      prayer: Prayer.values.firstWhere(
+      prayer: PrayerInApp.values.firstWhere(
         (element) => element.name == prayer,
+        orElse: () => PrayerInApp.imsak,
       ),
       isAlarmActive: isAlarmActive,
     );

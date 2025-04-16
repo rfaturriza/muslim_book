@@ -11,6 +11,7 @@ import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/core/utils/extension/dartz_ext.dart';
 import 'package:quranku/core/utils/extension/string_ext.dart';
 import 'package:quranku/features/shalat/domain/entities/prayer_schedule_setting.codegen.dart';
+import 'package:quranku/features/shalat/domain/entities/schedule.codegen.dart';
 import 'package:quranku/features/shalat/presentation/helper/helper_time_shalat.dart';
 
 import '../../../setting/presentation/bloc/language_setting/language_setting_bloc.dart';
@@ -26,14 +27,24 @@ class PrayerScheduleScreen extends StatelessWidget {
         ..add(
           const ShalatEvent.getPrayerScheduleSettingEvent(),
         ),
-      child: Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(),
-        body: Column(
-          children: [
-            const _InfoSection(),
-            const _PrayerScheduleSection(),
-          ],
+      child: PopScope(
+        onPopInvokedWithResult: (didPop, _) {
+          if (didPop) {
+            context
+                .read<ShalatBloc>()
+                .add(ShalatEvent.schedulePrayerAlarmEvent());
+            return;
+          }
+        },
+        child: Scaffold(
+          extendBodyBehindAppBar: true,
+          appBar: AppBar(),
+          body: Column(
+            children: [
+              const _InfoSection(),
+              const _PrayerScheduleSection(),
+            ],
+          ),
         ),
       ),
     );
@@ -458,38 +469,75 @@ class _PrayerScheduleSectionState extends State<_PrayerScheduleSection> {
               AssetConst.imsakIcon,
               AssetConst.subuhIcon,
               AssetConst.syuruqIcon,
+              AssetConst.dhuhaIcon,
               AssetConst.dhuhurIcon,
               AssetConst.asharIcon,
               AssetConst.maghribIcon,
               AssetConst.isyaIcon,
             ];
+            final time = () {
+              final params = CalculationMethod.values
+                  .firstWhere(
+                    (e) => e.name == schedule?.calculationMethod.name,
+                    orElse: () => CalculationMethod.umm_al_qura,
+                  )
+                  .getParameters();
+              params.madhab = schedule?.madhab ?? Madhab.shafi;
+              final coordinate = Coordinates(
+                state.geoLocation?.coordinate?.lat ?? 0,
+                state.geoLocation?.coordinate?.lon ?? 0,
+                validate: true,
+              );
+              final prayerTimes = PrayerTimes(
+                coordinate,
+                DateComponents.from(dateSelected),
+                params,
+              );
+              return prayerTimes;
+            }();
+
+            final prayersByLocale = HelperTimeShalat.prayerNameByLocale(
+              context.locale,
+            );
+            final scheduleTime = Schedule.fromPrayerTimes(time);
             return Card(
               child: Column(
                 children: ListTile.divideTiles(
                   context: context,
-                  tiles: Prayer.values.asMap().entries.map((entry) {
+                  tiles: prayersByLocale.asMap().entries.map((entry) {
                     final index = entry.key;
                     final prayer = entry.value;
-                    if (prayer == Prayer.none) return const SizedBox();
-                    final time = () {
-                      final params = CalculationMethod.values
-                          .firstWhere(
-                            (e) => e.name == schedule?.calculationMethod.name,
-                          )
-                          .getParameters();
-                      params.madhab = schedule?.madhab ?? Madhab.shafi;
-                      final coordinate = Coordinates(
-                        state.geoLocation?.coordinate?.lat ?? 0,
-                        state.geoLocation?.coordinate?.lon ?? 0,
-                        validate: true,
-                      );
-                      final prayerTimes = PrayerTimes(
-                        coordinate,
-                        DateComponents.from(dateSelected),
-                        params,
-                      );
-                      return prayerTimes;
+                    final timePrayerText = () {
+                      String? text;
+                      if (prayer == prayersByLocale[0]) {
+                        text = scheduleTime.imsak;
+                      } else if (prayer == prayersByLocale[1]) {
+                        text = scheduleTime.subuh;
+                      } else if (prayer == prayersByLocale[2]) {
+                        text = scheduleTime.syuruq;
+                      } else if (prayer == prayersByLocale[3]) {
+                        text = scheduleTime.dhuha;
+                      } else if (prayer == prayersByLocale[4]) {
+                        text = scheduleTime.dzuhur;
+                      } else if (prayer == prayersByLocale[5]) {
+                        text = scheduleTime.ashar;
+                      } else if (prayer == prayersByLocale[6]) {
+                        text = scheduleTime.maghrib;
+                      } else if (prayer == prayersByLocale[7]) {
+                        text = scheduleTime.isya;
+                      } else {
+                        text = scheduleTime.dzuhur;
+                      }
+                      return text ?? '';
                     }();
+                    final hour = timePrayerText.isNotEmpty
+                        ? timePrayerText.split(' ')[0].split(':')[0]
+                        : '';
+
+                    final minute = timePrayerText.isNotEmpty
+                        ? timePrayerText.split(' ')[0].split(':')[1]
+                        : '';
+
                     return ListTile(
                       leading: SvgPicture.asset(
                         icons[index],
@@ -501,20 +549,13 @@ class _PrayerScheduleSectionState extends State<_PrayerScheduleSection> {
                         height: 24,
                       ),
                       title: Text(
-                        HelperTimeShalat.getPrayerNameByEnum(
-                          prayer,
-                          context.locale,
-                        ),
+                        prayer.capitalizeEveryWord(),
                         style: context.textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       subtitle: Text(
-                        () {
-                          if (time.timeForPrayer(prayer) == null) return '';
-                          return DateFormat('HH:mm')
-                              .format(time.timeForPrayer(prayer)!);
-                        }(),
+                        timePrayerText,
                         style: context.textTheme.bodyMedium?.copyWith(
                           color: context.theme.colorScheme.primary,
                         ),
@@ -522,9 +563,11 @@ class _PrayerScheduleSectionState extends State<_PrayerScheduleSection> {
                       trailing: Builder(
                         builder: (context) {
                           final alarm = alarms.firstWhere(
-                            (e) => e.prayer == prayer,
+                            (e) => e.prayer?.index == index,
                             orElse: () => PrayerAlarm(
-                              prayer: prayer,
+                              prayer: PrayerInApp.values.firstWhere(
+                                (e) => e.index == index,
+                              ),
                               isAlarmActive: false,
                             ),
                           );
@@ -546,8 +589,13 @@ class _PrayerScheduleSectionState extends State<_PrayerScheduleSection> {
                                     ShalatEvent.setPrayerScheduleSettingEvent(
                                       model: schedule?.copyWith(
                                         alarms: alarms.map((e) {
-                                          if (e.prayer == prayer) {
+                                          if (e.prayer?.index == index) {
                                             return e.copyWith(
+                                              time: DateTime.now().copyWith(
+                                                hour: int.tryParse(hour) ?? 0,
+                                                minute:
+                                                    int.tryParse(minute) ?? 0,
+                                              ),
                                               isAlarmActive:
                                                   !alarm.isAlarmActive,
                                             );

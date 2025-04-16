@@ -218,5 +218,7 @@
   "islamicStudiesNearbyInformationLabel": "Studies Nearby Info",
   "doneAction": "Done",
   "kajian": "Kajian",
-  "errorOpenMap": "Sorry, unable to open the map"
+  "errorOpenMap": "Sorry, unable to open the map",
+  "notificationPrayerTitle": "Time for {prayer} at {time}",
+  "notificationPrayerDescription": "View prayer times information in {location}"
 }

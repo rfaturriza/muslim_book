@@ -28,7 +28,7 @@ class HiveConst {
   static const String tajweedStatusKey = 'tajweedModeKey';
 
   static const String tajweedCacheClearedVersionKey = 'tajweedCacheClearedVersionKey';
-  static const String prayerAlarmScheduleBox = 'prayerAlarmScheduleBox';
+  static const String prayerAlarmScheduleKey = 'prayerAlarmScheduleKey';
   static const String locationPrayerKey = 'locationPrayerKey';
 }
 

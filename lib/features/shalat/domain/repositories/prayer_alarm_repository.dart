@@ -8,7 +8,7 @@ abstract class PrayerAlarmRepository {
   Future<Either<Failure, PrayerScheduleSetting?>> getPrayerAlarmSchedule();
 
   Future<Either<Failure, Unit>> setPrayerAlarmSchedule(
-      PrayerScheduleSetting? model,
+    PrayerScheduleSetting? model,
   );
 
   Future<Either<Failure, GeoLocation?>> getPrayerLocationManual();
@@ -16,4 +16,6 @@ abstract class PrayerAlarmRepository {
   Future<Either<Failure, Unit>> setPrayerLocationManual(
     GeoLocation? location,
   );
+
+  Future<Either<Failure, Unit>> schedulePrayerAlarm();
 }
