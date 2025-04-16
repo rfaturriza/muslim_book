@@ -142,11 +142,8 @@ class LocalNotification {
       iOS: iosPlatformChannelSpecifics,
     );
 
-    // Get the current date and time
-    final now = DateTime.now();
-
-    // Calculate the next occurrence of the specified time
-    final scheduledDate = DateTime(
+    final now = tz.TZDateTime.now(tz.local);
+    final scheduledDate = tz.TZDateTime.local(
       now.year,
       now.month,
       now.day,
@@ -154,25 +151,20 @@ class LocalNotification {
       timeOfDay.minute,
     );
 
-    // If the scheduled time is in the past, schedule it for the next day
-    final tzDateTime = tz.TZDateTime.from(
-      scheduledDate.isBefore(now)
-          ? scheduledDate.add(const Duration(days: 1))
-          : scheduledDate,
-      tz.local,
-    );
+    final firstSchedule = scheduledDate.isBefore(now)
+        ? scheduledDate.add(const Duration(days: 1))
+        : scheduledDate;
 
     await _flutterLocalNotificationsPlugin.zonedSchedule(
       id,
       title,
       body,
-      tzDateTime,
+      firstSchedule,
       platformChannelSpecifics,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       payload: payload,
-      matchDateTimeComponents:
-          DateTimeComponents.time, // Repeat daily at the same time
+      matchDateTimeComponents: DateTimeComponents.time,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     );
   }
