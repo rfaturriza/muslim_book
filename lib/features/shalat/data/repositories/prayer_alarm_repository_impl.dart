@@ -64,11 +64,13 @@ class PrayerAlarmRepositoryImpl implements PrayerAlarmRepository {
 
     alarms?.forEach((element) async {
       if (element.time == null) return;
+      final hour = TimeOfDay.fromDateTime(element.time!).hour;
+      final minute = TimeOfDay.fromDateTime(element.time!).minute;
       await localNotification.schedulePeriodically(
         id: element.prayer?.index ?? 0,
         title: LocaleKeys.notificationPrayerTitle.tr(namedArgs: {
           'prayer': element.prayer?.name.capitalizeEveryWord() ?? '',
-          'time': TimeOfDay.fromDateTime(element.time!).toString(),
+          'time': '$hour:$minute',
         }),
         body: LocaleKeys.notificationPrayerDescription.tr(
           namedArgs: {
