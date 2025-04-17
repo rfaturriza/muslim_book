@@ -21,7 +21,7 @@ case $1 in
   release)
     flutterfire config \
       --project=play-integrity-obnkqdhsjgwbto9 \
-      --out=lib/firebase_options_release.dart \
+      --out=lib/firebase_options.dart \
       --ios-bundle-id=com.kajianhub \
       --ios-out=ios/Runner/Firebase/Release/GoogleService-Info.plist \
       --android-package-name=com.kajianhub \

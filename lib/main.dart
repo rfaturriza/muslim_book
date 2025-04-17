@@ -17,7 +17,7 @@ import 'core/utils/bloc_observe.dart';
 import 'core/utils/firebase_cloud_message.dart';
 import 'core/utils/local_notification.dart';
 import 'firebase_options_debug.dart' as firebase_debug;
-import 'firebase_options_release.dart' as firebase_release;
+import 'firebase_options.dart' as firebase_release;
 import 'hive_adapter_register.dart';
 import 'injection.dart';
 
