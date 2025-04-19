@@ -42,7 +42,9 @@ class PrayerScheduleScreen extends StatelessWidget {
           body: Column(
             children: [
               const _InfoSection(),
-              const _PrayerScheduleSection(),
+              Expanded(
+                child: const _PrayerScheduleSection(),
+              ),
             ],
           ),
         ),
@@ -71,11 +73,12 @@ class _InfoSection extends StatelessWidget {
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
             context.theme.colorScheme.surface.withValues(alpha: 0.5),
-            BlendMode.darken,
+            context.isDarkMode ? BlendMode.darken : BlendMode.lighten,
           ),
         ),
       ),
       child: SafeArea(
+        bottom: false,
         child: Column(
           children: [
             BlocBuilder<LanguageSettingBloc, LanguageSettingState>(
@@ -158,78 +161,6 @@ class _InfoSection extends StatelessWidget {
                 );
               },
             ),
-            // BlocBuilder<ShalatBloc, ShalatState>(
-            //   buildWhen: (p, c) =>
-            //       p.prayerScheduleSetting != c.prayerScheduleSetting,
-            //   builder: (context, state) {
-            //     return ListTile(
-            //       title: Text(
-            //         'Perhitungan',
-            //         style: context.textTheme.titleSmall?.copyWith(
-            //           fontWeight: FontWeight.bold,
-            //         ),
-            //       ),
-            //       subtitle: Column(
-            //         crossAxisAlignment: CrossAxisAlignment.start,
-            //         children: [
-            //           Text.rich(
-            //             TextSpan(
-            //               text: 'Metode - ',
-            //               style: context.textTheme.bodyMedium?.copyWith(
-            //                 fontWeight: FontWeight.bold,
-            //               ),
-            //               children: [
-            //                 TextSpan(
-            //                   text: state.prayerScheduleSetting
-            //                           ?.asRight()
-            //                           ?.calculationMethod
-            //                           .name
-            //                           .capitalizeEveryWord() ??
-            //                       '-',
-            //                   style: context.textTheme.bodyMedium?.copyWith(
-            //                     fontWeight: FontWeight.normal,
-            //                   ),
-            //                 ),
-            //               ],
-            //             ),
-            //           ),
-            //           Text.rich(
-            //             TextSpan(
-            //               text: 'Mazhab - ',
-            //               style: context.textTheme.bodyMedium?.copyWith(
-            //                 fontWeight: FontWeight.bold,
-            //               ),
-            //               children: [
-            //                 TextSpan(
-            //                   text: state.prayerScheduleSetting
-            //                           ?.asRight()
-            //                           ?.madhab
-            //                           .name
-            //                           .capitalizeEveryWord() ??
-            //                       '-',
-            //                   style: context.textTheme.bodyMedium?.copyWith(
-            //                     fontWeight: FontWeight.normal,
-            //                   ),
-            //                 ),
-            //               ],
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //       trailing: IconButton(
-            //         icon: const Icon(Icons.settings),
-            //         onPressed: () {
-            //           showModalBottomSheet(
-            //             context: context,
-            //             builder: (_) {
-            //               return const _BottomSheetCalculationSetting();
-            //             },
-            //           );
-            //         },
-            //       ),
-            //     );
-            //   },
-            // ),
           ],
         ),
       ),
@@ -449,172 +380,174 @@ class _PrayerScheduleSectionState extends State<_PrayerScheduleSection> {
           },
           dateNow: dateSelected,
         ),
-        BlocBuilder<ShalatBloc, ShalatState>(
-          buildWhen: (p, c) =>
-              p.prayerScheduleSetting != c.prayerScheduleSetting,
-          builder: (context, state) {
-            if (state.prayerScheduleSetting?.isLeft() == true) {
-              return Card(
-                child: ListTile(
-                  title: Text(
-                    state.prayerScheduleSetting?.asLeft().message ??
-                        'Tidak ada jadwal shalat',
+        Expanded(
+          child: BlocBuilder<ShalatBloc, ShalatState>(
+            buildWhen: (p, c) =>
+                p.prayerScheduleSetting != c.prayerScheduleSetting,
+            builder: (context, state) {
+              if (state.prayerScheduleSetting?.isLeft() == true) {
+                return Card(
+                  child: ListTile(
+                    title: Text(
+                      state.prayerScheduleSetting?.asLeft().message ??
+                          'Tidak ada jadwal shalat',
+                    ),
                   ),
+                );
+              }
+              final schedule = state.prayerScheduleSetting?.asRight();
+              final alarms = schedule?.alarms ?? [];
+              final icons = [
+                AssetConst.imsakIcon,
+                AssetConst.subuhIcon,
+                AssetConst.syuruqIcon,
+                AssetConst.dhuhaIcon,
+                AssetConst.dhuhurIcon,
+                AssetConst.asharIcon,
+                AssetConst.maghribIcon,
+                AssetConst.isyaIcon,
+              ];
+              final time = () {
+                final params = CalculationMethod.values
+                    .firstWhere(
+                      (e) => e.name == schedule?.calculationMethod.name,
+                      orElse: () => CalculationMethod.umm_al_qura,
+                    )
+                    .getParameters();
+                params.madhab = schedule?.madhab ?? Madhab.shafi;
+                final coordinate = Coordinates(
+                  state.geoLocation?.coordinate?.lat ?? 0,
+                  state.geoLocation?.coordinate?.lon ?? 0,
+                  validate: true,
+                );
+                final prayerTimes = PrayerTimes(
+                  coordinate,
+                  DateComponents.from(dateSelected),
+                  params,
+                );
+                return prayerTimes;
+              }();
+
+              final prayersByLocale = HelperTimeShalat.prayerNameByLocale(
+                context.locale,
+              );
+              final scheduleTime = Schedule.fromPrayerTimes(time);
+              return SingleChildScrollView(
+                child: Column(
+                  children: ListTile.divideTiles(
+                    context: context,
+                    tiles: prayersByLocale.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final prayer = entry.value;
+                      final timePrayerText = () {
+                        String? text;
+                        if (prayer == prayersByLocale[0]) {
+                          text = scheduleTime.imsak;
+                        } else if (prayer == prayersByLocale[1]) {
+                          text = scheduleTime.subuh;
+                        } else if (prayer == prayersByLocale[2]) {
+                          text = scheduleTime.syuruq;
+                        } else if (prayer == prayersByLocale[3]) {
+                          text = scheduleTime.dhuha;
+                        } else if (prayer == prayersByLocale[4]) {
+                          text = scheduleTime.dzuhur;
+                        } else if (prayer == prayersByLocale[5]) {
+                          text = scheduleTime.ashar;
+                        } else if (prayer == prayersByLocale[6]) {
+                          text = scheduleTime.maghrib;
+                        } else if (prayer == prayersByLocale[7]) {
+                          text = scheduleTime.isya;
+                        } else {
+                          text = scheduleTime.dzuhur;
+                        }
+                        return text ?? '';
+                      }();
+                      final hour = timePrayerText.isNotEmpty
+                          ? timePrayerText.split(' ')[0].split(':')[0]
+                          : '';
+
+                      final minute = timePrayerText.isNotEmpty
+                          ? timePrayerText.split(' ')[0].split(':')[1]
+                          : '';
+
+                      return ListTile(
+                        leading: SvgPicture.asset(
+                          icons[index],
+                          colorFilter: ColorFilter.mode(
+                            context.theme.colorScheme.onSurface,
+                            BlendMode.srcIn,
+                          ),
+                          width: 24,
+                          height: 24,
+                        ),
+                        title: Text(
+                          prayer.capitalizeEveryWord(),
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Text(
+                          timePrayerText,
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            color: context.theme.colorScheme.primary,
+                          ),
+                        ),
+                        trailing: Builder(
+                          builder: (context) {
+                            final alarm = alarms.firstWhere(
+                              (e) => e.prayer?.index == index,
+                              orElse: () => PrayerAlarm(
+                                prayer: PrayerInApp.values.firstWhere(
+                                  (e) => e.index == index,
+                                ),
+                                isAlarmActive: false,
+                              ),
+                            );
+                            return IconButton(
+                              icon: Icon(
+                                () {
+                                  return alarm.isAlarmActive
+                                      ? Icons.notifications_active
+                                      : Icons.notifications_off;
+                                }(),
+                                color: () {
+                                  return alarm.isAlarmActive
+                                      ? context.theme.colorScheme.primary
+                                      : context.theme.colorScheme.onSurface;
+                                }(),
+                              ),
+                              onPressed: () {
+                                context.read<ShalatBloc>().add(
+                                      ShalatEvent.setPrayerScheduleSettingEvent(
+                                        model: schedule?.copyWith(
+                                          alarms: alarms.map((e) {
+                                            if (e.prayer?.index == index) {
+                                              return e.copyWith(
+                                                time: DateTime.now().copyWith(
+                                                  hour: int.tryParse(hour) ?? 0,
+                                                  minute:
+                                                      int.tryParse(minute) ?? 0,
+                                                ),
+                                                isAlarmActive:
+                                                    !alarm.isAlarmActive,
+                                              );
+                                            }
+                                            return e;
+                                          }).toList(),
+                                        ),
+                                      ),
+                                    );
+                              },
+                            );
+                          },
+                        ),
+                      );
+                    }).toList(),
+                  ).toList(),
                 ),
               );
-            }
-            final schedule = state.prayerScheduleSetting?.asRight();
-            final alarms = schedule?.alarms ?? [];
-            final icons = [
-              AssetConst.imsakIcon,
-              AssetConst.subuhIcon,
-              AssetConst.syuruqIcon,
-              AssetConst.dhuhaIcon,
-              AssetConst.dhuhurIcon,
-              AssetConst.asharIcon,
-              AssetConst.maghribIcon,
-              AssetConst.isyaIcon,
-            ];
-            final time = () {
-              final params = CalculationMethod.values
-                  .firstWhere(
-                    (e) => e.name == schedule?.calculationMethod.name,
-                    orElse: () => CalculationMethod.umm_al_qura,
-                  )
-                  .getParameters();
-              params.madhab = schedule?.madhab ?? Madhab.shafi;
-              final coordinate = Coordinates(
-                state.geoLocation?.coordinate?.lat ?? 0,
-                state.geoLocation?.coordinate?.lon ?? 0,
-                validate: true,
-              );
-              final prayerTimes = PrayerTimes(
-                coordinate,
-                DateComponents.from(dateSelected),
-                params,
-              );
-              return prayerTimes;
-            }();
-
-            final prayersByLocale = HelperTimeShalat.prayerNameByLocale(
-              context.locale,
-            );
-            final scheduleTime = Schedule.fromPrayerTimes(time);
-            return Card(
-              child: Column(
-                children: ListTile.divideTiles(
-                  context: context,
-                  tiles: prayersByLocale.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final prayer = entry.value;
-                    final timePrayerText = () {
-                      String? text;
-                      if (prayer == prayersByLocale[0]) {
-                        text = scheduleTime.imsak;
-                      } else if (prayer == prayersByLocale[1]) {
-                        text = scheduleTime.subuh;
-                      } else if (prayer == prayersByLocale[2]) {
-                        text = scheduleTime.syuruq;
-                      } else if (prayer == prayersByLocale[3]) {
-                        text = scheduleTime.dhuha;
-                      } else if (prayer == prayersByLocale[4]) {
-                        text = scheduleTime.dzuhur;
-                      } else if (prayer == prayersByLocale[5]) {
-                        text = scheduleTime.ashar;
-                      } else if (prayer == prayersByLocale[6]) {
-                        text = scheduleTime.maghrib;
-                      } else if (prayer == prayersByLocale[7]) {
-                        text = scheduleTime.isya;
-                      } else {
-                        text = scheduleTime.dzuhur;
-                      }
-                      return text ?? '';
-                    }();
-                    final hour = timePrayerText.isNotEmpty
-                        ? timePrayerText.split(' ')[0].split(':')[0]
-                        : '';
-
-                    final minute = timePrayerText.isNotEmpty
-                        ? timePrayerText.split(' ')[0].split(':')[1]
-                        : '';
-
-                    return ListTile(
-                      leading: SvgPicture.asset(
-                        icons[index],
-                        colorFilter: ColorFilter.mode(
-                          context.theme.colorScheme.onSurface,
-                          BlendMode.srcIn,
-                        ),
-                        width: 24,
-                        height: 24,
-                      ),
-                      title: Text(
-                        prayer.capitalizeEveryWord(),
-                        style: context.textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      subtitle: Text(
-                        timePrayerText,
-                        style: context.textTheme.bodyMedium?.copyWith(
-                          color: context.theme.colorScheme.primary,
-                        ),
-                      ),
-                      trailing: Builder(
-                        builder: (context) {
-                          final alarm = alarms.firstWhere(
-                            (e) => e.prayer?.index == index,
-                            orElse: () => PrayerAlarm(
-                              prayer: PrayerInApp.values.firstWhere(
-                                (e) => e.index == index,
-                              ),
-                              isAlarmActive: false,
-                            ),
-                          );
-                          return IconButton(
-                            icon: Icon(
-                              () {
-                                return alarm.isAlarmActive
-                                    ? Icons.notifications_active
-                                    : Icons.notifications_off;
-                              }(),
-                              color: () {
-                                return alarm.isAlarmActive
-                                    ? context.theme.colorScheme.primary
-                                    : context.theme.colorScheme.onSurface;
-                              }(),
-                            ),
-                            onPressed: () {
-                              context.read<ShalatBloc>().add(
-                                    ShalatEvent.setPrayerScheduleSettingEvent(
-                                      model: schedule?.copyWith(
-                                        alarms: alarms.map((e) {
-                                          if (e.prayer?.index == index) {
-                                            return e.copyWith(
-                                              time: DateTime.now().copyWith(
-                                                hour: int.tryParse(hour) ?? 0,
-                                                minute:
-                                                    int.tryParse(minute) ?? 0,
-                                              ),
-                                              isAlarmActive:
-                                                  !alarm.isAlarmActive,
-                                            );
-                                          }
-                                          return e;
-                                        }).toList(),
-                                      ),
-                                    ),
-                                  );
-                            },
-                          );
-                        },
-                      ),
-                    );
-                  }).toList(),
-                ).toList(),
-              ),
-            );
-          },
+            },
+          ),
         ),
       ],
     );
