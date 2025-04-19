@@ -95,7 +95,6 @@ class ShalatInfoCard extends StatelessWidget {
                       context.pushNamed(RootRouter.prayerTimeRoute.name);
                     },
                   ),
-                  const Divider(thickness: 2),
                   BlocBuilder<LastReadCubit, LastReadState>(
                       builder: (context, state) {
                     if (state.lastReadSurah.isEmpty &&
