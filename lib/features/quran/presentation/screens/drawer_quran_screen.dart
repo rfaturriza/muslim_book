@@ -84,7 +84,7 @@ class _ListItemMenu extends StatelessWidget {
           icon: Icons.language,
           title: LocaleKeys.language.tr(),
           onTap: () {
-            context.pushNamed(RootRouter.languageSettingRoute.name);
+            context.goNamed(RootRouter.languageSettingRoute.name);
           },
           withDecoration: false,
         ),
@@ -92,7 +92,7 @@ class _ListItemMenu extends StatelessWidget {
           icon: Icons.format_size,
           title: LocaleKeys.stylingView.tr(),
           onTap: () {
-            context.pushNamed(RootRouter.styleSettingRoute.name);
+            context.goNamed(RootRouter.styleSettingRoute.name);
           },
           withDecoration: false,
         ),
@@ -162,7 +162,7 @@ class _Footer extends StatelessWidget {
           const VSpacer(),
           ButtonDrawer(
             onTap: () {
-              context.pushNamed(RootRouter.donationRoute.name);
+              context.goNamed(RootRouter.donationRoute.name);
             },
             icon: Icons.volunteer_activism,
             title: LocaleKeys.supportUs.tr(),

@@ -92,7 +92,7 @@ class ShalatInfoCard extends StatelessWidget {
                   InkWell(
                     child: const _PrayTimeInfo(),
                     onTap: () {
-                      context.pushNamed(RootRouter.prayerTimeRoute.name);
+                      context.goNamed(RootRouter.prayerTimeRoute.name);
                     },
                   ),
                   BlocBuilder<LastReadCubit, LastReadState>(
@@ -340,7 +340,7 @@ class _LastReadInfo extends StatelessWidget {
                 IconButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {
-                    context.pushNamed(RootRouter.historyRoute.name);
+                    context.goNamed(RootRouter.historyRoute.name);
                   },
                   icon: const Icon(
                     Icons.list_alt_rounded,

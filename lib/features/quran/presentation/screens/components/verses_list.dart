@@ -246,9 +246,10 @@ class _VersesListState extends State<VersesList> {
       canPop: false,
       onPopInvokedWithResult: (didPop, _) {
         if (didPop) {
-          return;
+          saveLastReading();
         }
-        saveLastReading();
+
+        print('onPopInvokedWithResult');
       },
       child: BlocListener<AudioVerseBloc, AudioVerseState>(
         listener: (context, state) {
@@ -462,7 +463,7 @@ class ListTileVerses extends StatelessWidget {
                                   context, verses, clickFrom, juz, surah);
                             },
                             onSharePressed: () {
-                              context.pushNamed(
+                              context.goNamed(
                                 RootRouter.shareVerseRoute.name,
                                 extra: ShareVerseScreenExtra(
                                   verse: verses,

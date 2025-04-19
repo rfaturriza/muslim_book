@@ -58,7 +58,7 @@ class KajianHubCard extends StatelessWidget {
                 onTap: isLocationNotGranted || isNotIndonesia
                     ? null
                     : () {
-                        context.pushNamed(RootRouter.kajianRoute.name);
+                        context.goNamed(RootRouter.kajianRoute.name);
                       },
                 child: Container(
                   decoration: ShapeDecoration(
