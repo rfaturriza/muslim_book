@@ -138,7 +138,7 @@ class _VersesListState extends State<VersesList> {
   Widget build(BuildContext context) {
     final isPreBismillah = widget.preBismillah?.isNotEmpty == true;
     final lastReadReminderMode =
-        context.read<StylingSettingBloc>().state.lastReadReminderMode;
+        context.watch<StylingSettingBloc>().state.lastReadReminderMode;
     final isLastReadReminderOn =
         lastReadReminderMode == LastReadReminderModes.on;
     VersesNumber? getVerseNumber() {
