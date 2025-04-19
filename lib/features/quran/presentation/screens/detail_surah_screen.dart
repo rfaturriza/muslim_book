@@ -13,6 +13,7 @@ import 'package:quranku/features/quran/presentation/screens/components/bottom_na
 import 'package:quranku/features/quran/presentation/screens/components/verses_list.dart';
 
 import '../../../../generated/locale_keys.g.dart';
+import '../../../../injection.dart';
 import '../../domain/entities/surah.codegen.dart';
 import '../bloc/detailSurah/detail_surah_bloc.dart';
 
@@ -32,6 +33,39 @@ class DetailSurahScreen extends StatelessWidget {
 
   const DetailSurahScreen({
     super.key,
+    this.surah,
+    this.jumpToVerse,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<SurahDetailBloc>(
+          create: (context) => sl<SurahDetailBloc>()
+            ..add(
+              FetchSurahDetailEvent(
+                surahNumber: surah?.number,
+              ),
+            ),
+        ),
+        BlocProvider<AudioVerseBloc>(
+          create: (context) => sl<AudioVerseBloc>(),
+        ),
+      ],
+      child: _DetailSurahScaffold(
+        surah: surah,
+        jumpToVerse: jumpToVerse,
+      ),
+    );
+  }
+}
+
+class _DetailSurahScaffold extends StatelessWidget {
+  final Surah? surah;
+  final int? jumpToVerse;
+
+  const _DetailSurahScaffold({
     this.surah,
     this.jumpToVerse,
   });
@@ -84,8 +118,7 @@ class DetailSurahScreen extends StatelessWidget {
               : null;
           return NestedScrollView(
             floatHeaderSlivers: true,
-            headerSliverBuilder:
-                (BuildContext context, bool innerBoxIsScrolled) {
+            headerSliverBuilder: (context, _) {
               return [
                 SliverAppBarDetailScreen(
                   isBookmarked: detailSurah?.isBookmarked ?? false,

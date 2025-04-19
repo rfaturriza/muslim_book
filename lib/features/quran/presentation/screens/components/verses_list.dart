@@ -188,16 +188,16 @@ class _VersesListState extends State<VersesList> {
 
     Future<void> saveLastReading() async {
       if (widget.view == ViewMode.setting) {
-        Navigator.of(context).pop(false);
+        context.pop(false);
         return;
       }
       if (lastReadReminderMode == LastReadReminderModes.autoSave) {
         setLastReading();
-        Navigator.of(context).pop(false);
+        context.pop(false);
         return;
       }
       if (!isLastReadReminderOn) {
-        Navigator.of(context).pop(false);
+        context.pop(false);
         return;
       }
       final verse = getVerseNumber();
@@ -219,8 +219,8 @@ class _VersesListState extends State<VersesList> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop(false);
-                  Navigator.of(context).pop(false);
+                  context.pop(false);
+                  context.pop(false);
                 },
                 child: Text(LocaleKeys.no.tr()),
               ),
@@ -231,8 +231,8 @@ class _VersesListState extends State<VersesList> {
                 ),
                 onPressed: () {
                   setLastReading();
-                  Navigator.of(context).pop(false);
-                  Navigator.of(context).pop(false);
+                  context.pop(false);
+                  context.pop(false);
                 },
                 child: Text(LocaleKeys.yes.tr()),
               ),
@@ -246,10 +246,9 @@ class _VersesListState extends State<VersesList> {
       canPop: false,
       onPopInvokedWithResult: (didPop, _) {
         if (didPop) {
-          saveLastReading();
+          return;
         }
-
-        print('onPopInvokedWithResult');
+        saveLastReading();
       },
       child: BlocListener<AudioVerseBloc, AudioVerseState>(
         listener: (context, state) {

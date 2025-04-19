@@ -99,8 +99,7 @@ class _DetailJuzScaffold extends StatelessWidget {
               : null;
           return NestedScrollView(
             floatHeaderSlivers: true,
-            headerSliverBuilder:
-                (BuildContext context, bool innerBoxIsScrolled) {
+            headerSliverBuilder: (context, _) {
               return [
                 SliverAppBarDetailScreen(
                   title: juz?.name ?? emptyString,
