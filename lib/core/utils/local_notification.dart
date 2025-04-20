@@ -118,7 +118,7 @@ class LocalNotification {
     );
   }
 
-  Future<void> schedulePeriodically({
+  Future<void> scheduleDaily({
     required int id,
     required String title,
     required String body,

@@ -66,7 +66,7 @@ class PrayerAlarmRepositoryImpl implements PrayerAlarmRepository {
       if (element.time == null) return;
       final hour = TimeOfDay.fromDateTime(element.time!).hour;
       final minute = TimeOfDay.fromDateTime(element.time!).minute;
-      await localNotification.schedulePeriodically(
+      await localNotification.scheduleDaily(
         id: element.prayer?.index ?? 0,
         title: LocaleKeys.notificationPrayerTitle.tr(namedArgs: {
           'prayer': element.prayer?.name.capitalizeEveryWord() ?? '',
