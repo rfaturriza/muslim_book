@@ -115,14 +115,14 @@ jobs:
       - name: Install Cider
         run: dart pub global activate cider
 
-      - name: Increment Build Number
+      - name: Increment Version and Build Number
         run: |
           if [[ "${{ github.event.inputs.lane }}" == *_major ]]; then
-            flutter pub global run cider bump major
+            flutter pub global run cider bump major --bump-build
           elif [[ "${{ github.event.inputs.lane }}" == *_minor ]]; then
-            flutter pub global run cider bump minor
+            flutter pub global run cider bump minor --bump-build
           elif [[ "${{ github.event.inputs.lane }}" == *_patch ]]; then
-            flutter pub global run cider bump patch
+            flutter pub global run cider bump patch --bump-build
           else
             echo "Skipping version increment for promotion lanes"
           fi
