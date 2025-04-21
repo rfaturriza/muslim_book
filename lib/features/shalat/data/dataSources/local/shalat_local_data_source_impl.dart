@@ -30,8 +30,7 @@ class ShalatLocalDataSourceImpl implements ShalatLocalDataSource {
                   isAlarmActive: false,
                 ))
             .toList();
-        await box.put(
-          HiveConst.prayerAlarmScheduleKey,
+        await setPrayerScheduleSetting(
           PrayerScheduleSettingModel(alarms: alarm),
         );
         return right(PrayerScheduleSettingModel(alarms: alarm));

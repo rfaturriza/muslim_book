@@ -436,118 +436,128 @@ class _PrayerScheduleSectionState extends State<_PrayerScheduleSection> {
                 context.locale,
               );
               final scheduleTime = Schedule.fromPrayerTimes(time);
-              return SingleChildScrollView(
-                child: Column(
-                  children: ListTile.divideTiles(
-                    context: context,
-                    tiles: prayersByLocale.asMap().entries.map((entry) {
-                      final index = entry.key;
-                      final prayer = entry.value;
-                      final timePrayerText = () {
-                        String? text;
-                        if (prayer == prayersByLocale[0]) {
-                          text = scheduleTime.imsak;
-                        } else if (prayer == prayersByLocale[1]) {
-                          text = scheduleTime.subuh;
-                        } else if (prayer == prayersByLocale[2]) {
-                          text = scheduleTime.syuruq;
-                        } else if (prayer == prayersByLocale[3]) {
-                          text = scheduleTime.dhuha;
-                        } else if (prayer == prayersByLocale[4]) {
-                          text = scheduleTime.dzuhur;
-                        } else if (prayer == prayersByLocale[5]) {
-                          text = scheduleTime.ashar;
-                        } else if (prayer == prayersByLocale[6]) {
-                          text = scheduleTime.maghrib;
-                        } else if (prayer == prayersByLocale[7]) {
-                          text = scheduleTime.isya;
-                        } else {
-                          text = scheduleTime.dzuhur;
-                        }
-                        return text ?? '';
-                      }();
-                      final hour = timePrayerText.isNotEmpty
-                          ? timePrayerText.split(' ')[0].split(':')[0]
-                          : '';
+              return SafeArea(
+                top: false,
+                bottom: true,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: ListTile.divideTiles(
+                      context: context,
+                      tiles: prayersByLocale.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final prayer = entry.value;
 
-                      final minute = timePrayerText.isNotEmpty
-                          ? timePrayerText.split(' ')[0].split(':')[1]
-                          : '';
+                        final timePrayerText = () {
+                          String? text;
+                          if (prayer == prayersByLocale[0]) {
+                            text = scheduleTime.imsak;
+                          } else if (prayer == prayersByLocale[1]) {
+                            text = scheduleTime.subuh;
+                          } else if (prayer == prayersByLocale[2]) {
+                            text = scheduleTime.syuruq;
+                          } else if (prayer == prayersByLocale[3]) {
+                            text = scheduleTime.dhuha;
+                          } else if (prayer == prayersByLocale[4]) {
+                            text = scheduleTime.dzuhur;
+                          } else if (prayer == prayersByLocale[5]) {
+                            text = scheduleTime.ashar;
+                          } else if (prayer == prayersByLocale[6]) {
+                            text = scheduleTime.maghrib;
+                          } else if (prayer == prayersByLocale[7]) {
+                            text = scheduleTime.isya;
+                          } else {
+                            text = scheduleTime.dzuhur;
+                          }
+                          return text ?? '';
+                        }();
+                        final parts = timePrayerText.isNotEmpty
+                            ? timePrayerText
+                                .split(' ')
+                                .firstOrNull
+                                ?.split(RegExp('[.:]'))
+                            : null;
+                        final hour = parts?.elementAtOrNull(0) ?? '';
+                        final minute = parts?.elementAtOrNull(1) ?? '';
 
-                      return ListTile(
-                        leading: SvgPicture.asset(
-                          icons[index],
-                          colorFilter: ColorFilter.mode(
-                            context.theme.colorScheme.onSurface,
-                            BlendMode.srcIn,
+                        return ListTile(
+                          leading: SvgPicture.asset(
+                            icons[index],
+                            colorFilter: ColorFilter.mode(
+                              context.theme.colorScheme.onSurface,
+                              BlendMode.srcIn,
+                            ),
+                            width: 24,
+                            height: 24,
                           ),
-                          width: 24,
-                          height: 24,
-                        ),
-                        title: Text(
-                          prayer.capitalizeEveryWord(),
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
+                          title: Text(
+                            prayer.capitalizeEveryWord(),
+                            style: context.textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        subtitle: Text(
-                          timePrayerText,
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            color: context.theme.colorScheme.primary,
+                          subtitle: Text(
+                            timePrayerText,
+                            style: context.textTheme.bodyMedium?.copyWith(
+                              color: context.theme.colorScheme.primary,
+                            ),
                           ),
-                        ),
-                        trailing: Builder(
-                          builder: (context) {
-                            final alarm = alarms.firstWhere(
-                              (e) => e.prayer?.index == index,
-                              orElse: () => PrayerAlarm(
-                                prayer: PrayerInApp.values.firstWhere(
-                                  (e) => e.index == index,
+                          trailing: Builder(
+                            builder: (context) {
+                              final alarm = alarms.firstWhere(
+                                (e) => e.prayer?.index == index,
+                                orElse: () => PrayerAlarm(
+                                  prayer: PrayerInApp.values.firstWhere(
+                                    (e) => e.index == index,
+                                    orElse: () => PrayerInApp.dzuhur,
+                                  ),
+                                  isAlarmActive: false,
                                 ),
-                                isAlarmActive: false,
-                              ),
-                            );
-                            return IconButton(
-                              icon: Icon(
-                                () {
-                                  return alarm.isAlarmActive
-                                      ? Icons.notifications_active
-                                      : Icons.notifications_off;
-                                }(),
-                                color: () {
-                                  return alarm.isAlarmActive
-                                      ? context.theme.colorScheme.primary
-                                      : context.theme.colorScheme.onSurface;
-                                }(),
-                              ),
-                              onPressed: () {
-                                context.read<ShalatBloc>().add(
-                                      ShalatEvent.setPrayerScheduleSettingEvent(
-                                        model: schedule?.copyWith(
-                                          alarms: alarms.map((e) {
-                                            if (e.prayer?.index == index) {
-                                              return e.copyWith(
-                                                time: DateTime.now().copyWith(
-                                                  hour: int.tryParse(hour) ?? 0,
-                                                  minute:
-                                                      int.tryParse(minute) ?? 0,
-                                                ),
-                                                isAlarmActive:
-                                                    !alarm.isAlarmActive,
-                                              );
-                                            }
-                                            return e;
-                                          }).toList(),
+                              );
+                              return IconButton(
+                                icon: Icon(
+                                  () {
+                                    return alarm.isAlarmActive
+                                        ? Icons.notifications_active
+                                        : Icons.notifications_off;
+                                  }(),
+                                  color: () {
+                                    return alarm.isAlarmActive
+                                        ? context.theme.colorScheme.primary
+                                        : context.theme.colorScheme.onSurface;
+                                  }(),
+                                ),
+                                onPressed: () {
+                                  context.read<ShalatBloc>().add(
+                                        ShalatEvent
+                                            .setPrayerScheduleSettingEvent(
+                                          model: schedule?.copyWith(
+                                            alarms: alarms.map((e) {
+                                              if (e.prayer?.index == index) {
+                                                return e.copyWith(
+                                                  time: DateTime.now().copyWith(
+                                                    hour:
+                                                        int.tryParse(hour) ?? 0,
+                                                    minute:
+                                                        int.tryParse(minute) ??
+                                                            0,
+                                                  ),
+                                                  isAlarmActive:
+                                                      !alarm.isAlarmActive,
+                                                );
+                                              }
+                                              return e;
+                                            }).toList(),
+                                          ),
                                         ),
-                                      ),
-                                    );
-                              },
-                            );
-                          },
-                        ),
-                      );
-                    }).toList(),
-                  ).toList(),
+                                      );
+                                },
+                              );
+                            },
+                          ),
+                        );
+                      }).toList(),
+                    ).toList(),
+                  ),
                 ),
               );
             },
