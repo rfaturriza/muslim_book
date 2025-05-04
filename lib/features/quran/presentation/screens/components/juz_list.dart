@@ -90,7 +90,7 @@ class JuzList extends StatelessWidget {
     int? juzNumber, {
     int? jumpToVerse,
   }) {
-    context.pushNamed(
+    context.goNamed(
       RootRouter.juzRoute.name,
       queryParameters: {
         'no': juzNumber.toString(),

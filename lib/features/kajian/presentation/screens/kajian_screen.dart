@@ -461,7 +461,7 @@ class _KajianTile extends StatelessWidget {
     }();
     return GestureDetector(
       onTap: () {
-        context.pushNamed(
+        context.goNamed(
           RootRouter.kajianDetailRoute.name,
           pathParameters: {
             'id': kajian.id.toString(),

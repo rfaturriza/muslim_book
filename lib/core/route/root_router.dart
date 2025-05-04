@@ -81,4 +81,11 @@ class RootRouter {
     path: '/donation',
     parent: rootRoute,
   );
+
+   static const RouteModel prayerTimeRoute = RouteModel(
+    name: 'prayerTime',
+    path: '/prayer-time',
+    parent: rootRoute,
+  );
+
 }

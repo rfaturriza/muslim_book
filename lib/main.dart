@@ -9,7 +9,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:quranku/core/network/remote_config.dart';
-import 'package:quranku/features/quran/presentation/utils/tajweed_token.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import 'app.dart';
@@ -17,21 +16,16 @@ import 'core/constants/admob_constants.dart';
 import 'core/utils/bloc_observe.dart';
 import 'core/utils/firebase_cloud_message.dart';
 import 'core/utils/local_notification.dart';
-import 'features/quran/presentation/utils/tajweed_rule.dart';
-import 'features/quran/presentation/utils/tajweed_subrule.dart';
-import 'features/quran/presentation/utils/tajweed_word.dart';
-import 'firebase_options.dart';
+import 'firebase_options_debug.dart' as firebase_debug;
+import 'firebase_options.dart' as firebase_release;
+import 'hive_adapter_register.dart';
 import 'injection.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await Hive.initFlutter();
-  Hive.registerAdapter(TajweedTokenAdapter());
-  Hive.registerAdapter(TajweedWordAdapter());
-  Hive.registerAdapter(TajweedWordListAdapter());
-  Hive.registerAdapter(TajweedRuleAdapter());
-  Hive.registerAdapter(TajweedSubruleAdapter());
+  await registerHiveAdapter();
   await configureDependencies();
   await dotenv.load(fileName: ".env");
   unawaited(MobileAds.instance.initialize());
@@ -40,9 +34,15 @@ void main() async {
       testDeviceIds: kDebugMode ? AdMobConst.testDevice : [],
     ),
   );
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  if (kReleaseMode) {
+    await Firebase.initializeApp(
+      options: firebase_release.DefaultFirebaseOptions.currentPlatform,
+    );
+  } else {
+    await Firebase.initializeApp(
+      options: firebase_debug.DefaultFirebaseOptions.currentPlatform,
+    );
+  }
   await sl<RemoteConfigService>().initialize();
 
   /// iOS skip this step because it's need Account in Apple Developer

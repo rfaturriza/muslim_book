@@ -29,4 +29,18 @@ class HiveConst {
   static const String tajweedCacheClearedVersionKey = 'tajweedCacheClearedVersionKey';
   static const String permissionBox = 'permissionBox';
   static const String hasShownLocationPermissionKey = 'hasShownLocationPermissionKey';
+  static const String prayerAlarmScheduleKey = 'prayerAlarmScheduleKey';
+  static const String locationPrayerKey = 'locationPrayerKey';
+}
+
+class HiveTypeConst {
+  static const int tajweedToken = 1;
+  static const int tajweedRule = 2;
+  static const int tajweedSubRule = 3;
+  static const int tajweedWord = 4;
+  static const int tajweedWordList = 5;
+  static const int prayerAlarmModel = 6;
+  static const int prayerScheduleSettingModel = 7;
+  static const int geoLocation = 8;
+  static const int coordinate = 9;
 }

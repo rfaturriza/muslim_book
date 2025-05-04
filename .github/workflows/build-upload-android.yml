@@ -31,15 +31,17 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: 17
-          distribution: 'temurin'
+          distribution: "temurin"
 
       - name: Configure Firebase
         run: |
           echo "$FIREBASE_OPTIONS" | base64 --decode > lib/firebase_options.dart
+          echo "$FIREBASE_OPTIONS_DEBUG" | base64 --decode > lib/firebase_options_debug.dart
           echo "$FIREBASE_ANDROID_JSON" | base64 --decode > android/app/google-services.json
           echo "$FIREBASE_IOS_PLIST" | base64 --decode > ios/Runner/GoogleService-Info.plist
         env:
           FIREBASE_OPTIONS: ${{ secrets.FIREBASE_OPTION_FILE }}
+          FIREBASE_OPTIONS_DEBUG: ${{ secrets.FIREBASE_OPTION_FILE_DEBUG }}
           FIREBASE_ANDROID_JSON: ${{ secrets.GOOGLE_SERVICE_ANDROID_JSON_FILE }}
           FIREBASE_IOS_PLIST: ${{ secrets.GOOGLE_SERVICE_IOS_PLIST_FILE }}
 
@@ -63,7 +65,7 @@ jobs:
       - name: Setup Ruby, Bundler, and Gemfile dependencies
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.2.2'
+          ruby-version: "3.2.2"
           bundler-cache: true
           working-directory: android
 
@@ -95,7 +97,7 @@ jobs:
         env:
           PLAY_STORE_CONFIG_JSON: ${{ secrets.GPLAY_SERVICE_ACCOUNT_KEY_JSON }}
         working-directory: android
-      
+
   bump-version:
     name: Bump Version
     needs: release-android
@@ -103,18 +105,18 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Read Version Flutter
         id: read_fvm_config
         uses: juliangruber/read-file-action@v1.1.6
         with:
           path: ./.fvm/fvm_config.json
-        
+
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ fromJson(steps.read_fvm_config.outputs.content).flutterSdkVersion }}
-          
+
       - name: Get branch name
         id: branch-name
         run: |
@@ -123,22 +125,22 @@ jobs:
           else
             echo "name=${{ github.ref_name }}" >> $GITHUB_OUTPUT
           fi
-          
+
       - name: Install Cider
         run: dart pub global activate cider
-      
-      - name: Increment Build Number
+
+      - name: Increment Version and Build Number
         run: |
           if [[ "${{ github.event.inputs.lane }}" == *_major ]]; then
-            flutter pub global run cider bump major
+            flutter pub global run cider bump major --bump-build
           elif [[ "${{ github.event.inputs.lane }}" == *_minor ]]; then
-            flutter pub global run cider bump minor
+            flutter pub global run cider bump minor --bump-build
           elif [[ "${{ github.event.inputs.lane }}" == *_patch ]]; then
-            flutter pub global run cider bump patch
+            flutter pub global run cider bump patch --bump-build
           else
             echo "Skipping version increment for promotion lanes"
           fi
-      
+
       - name: Commit & Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:

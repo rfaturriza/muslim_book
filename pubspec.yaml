@@ -2,7 +2,7 @@ name: quranku
 description: Aplikasi quran mobile
 publish_to: "none"
 
-version: 1.10.6+59
+version: 1.11.2+61
 
 environment:
   sdk: ">=3.2.0 <4.0.0"
@@ -57,6 +57,9 @@ dependencies:
   go_router: ^14.6.3
   go_provider: ^1.8.0
   shimmer: ^3.0.0
+  jhijri: ^1.0.0
+  flutter_timezone: ^4.0.0
+  timezone: ^0.10.0
 
 dev_dependencies:
   flutter_test:

@@ -107,7 +107,7 @@ class SurahList extends StatelessWidget {
     Surah? surah, {
     int? jumpToVerse,
   }) {
-    context.pushNamed(
+    context.goNamed(
       RootRouter.surahRoute.name,
       queryParameters: {
         'jump_to': jumpToVerse?.toString(),

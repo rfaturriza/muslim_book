@@ -10,8 +10,6 @@ import '../../features/kajian/presentation/screens/kajian_detail_screen.dart';
 import '../../features/kajian/presentation/screens/kajianhub_screen.dart';
 import '../../features/payment/presentation/screens/donation_screen.dart';
 import '../../features/qibla/presentation/screens/qibla_compass.dart';
-import '../../features/quran/presentation/bloc/audioVerse/audio_verse_bloc.dart';
-import '../../features/quran/presentation/bloc/detailSurah/detail_surah_bloc.dart';
 import '../../features/quran/presentation/bloc/shareVerse/share_verse_bloc.dart';
 import '../../features/quran/presentation/screens/detail_juz_screen.dart';
 import '../../features/quran/presentation/screens/detail_surah_screen.dart';
@@ -19,6 +17,7 @@ import '../../features/quran/presentation/screens/history_read_screen.dart';
 import '../../features/quran/presentation/screens/share_verse_screen.dart';
 import '../../features/setting/presentation/screens/language_setting_screen.dart';
 import '../../features/setting/presentation/screens/styling_setting_screen.dart';
+import '../../features/shalat/presentation/screens/prayer_schedule_screen.dart';
 import '../../injection.dart';
 import '../components/error_screen.dart';
 import 'root_router.dart';
@@ -102,18 +101,10 @@ final router = GoRouter(
             );
           },
         ),
-        GoProviderRoute(
+        GoRoute(
           name: RootRouter.surahRoute.name,
           path: RootRouter.surahRoute.path,
-          providers: [
-            BlocProvider<SurahDetailBloc>(
-              create: (context) => sl<SurahDetailBloc>(),
-            ),
-            BlocProvider<AudioVerseBloc>(
-              create: (context) => sl<AudioVerseBloc>(),
-            ),
-          ],
-          builder: (context, state) {
+          builder: (_, state) {
             final jumpToVerse = state.uri.queryParameters['jump_to'];
             final detailSurahScreenExtra =
                 state.extra as DetailSurahScreenExtra;
@@ -124,17 +115,9 @@ final router = GoRouter(
               );
             }
 
-            return BlocProvider.value(
-              value: context.read<SurahDetailBloc>()
-                ..add(
-                  FetchSurahDetailEvent(
-                    surahNumber: detailSurahScreenExtra.surah?.number,
-                  ),
-                ),
-              child: DetailSurahScreen(
-                surah: detailSurahScreenExtra.surah,
-                jumpToVerse: int.tryParse(jumpToVerse ?? ''),
-              ),
+            return DetailSurahScreen(
+              surah: detailSurahScreenExtra.surah,
+              jumpToVerse: int.tryParse(jumpToVerse ?? ''),
             );
           },
         ),
@@ -176,6 +159,11 @@ final router = GoRouter(
           name: RootRouter.donationRoute.name,
           path: RootRouter.donationRoute.path,
           builder: (_, __) => DonationPaymentScreen(),
+        ),
+        GoRoute(
+          name: RootRouter.prayerTimeRoute.name,
+          path: RootRouter.prayerTimeRoute.path,
+          builder: (_, __) => PrayerScheduleScreen(),
         ),
         GoRoute(
           name: RootRouter.error.name,

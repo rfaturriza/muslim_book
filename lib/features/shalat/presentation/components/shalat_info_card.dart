@@ -94,7 +94,12 @@ class ShalatInfoCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const _PrayTimeInfo(),
+                  InkWell(
+                    child: const _PrayTimeInfo(),
+                    onTap: () {
+                      context.goNamed(RootRouter.prayerTimeRoute.name);
+                    },
+                  ),
                   BlocBuilder<LastReadCubit, LastReadState>(
                       builder: (context, state) {
                     if (state.lastReadSurah.isEmpty &&
@@ -340,7 +345,7 @@ class _LastReadInfo extends StatelessWidget {
                 IconButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {
-                    context.pushNamed(RootRouter.historyRoute.name);
+                    context.goNamed(RootRouter.historyRoute.name);
                   },
                   icon: const Icon(
                     Icons.list_alt_rounded,

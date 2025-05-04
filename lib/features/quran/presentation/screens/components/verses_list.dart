@@ -138,7 +138,7 @@ class _VersesListState extends State<VersesList> {
   Widget build(BuildContext context) {
     final isPreBismillah = widget.preBismillah?.isNotEmpty == true;
     final lastReadReminderMode =
-        context.read<StylingSettingBloc>().state.lastReadReminderMode;
+        context.watch<StylingSettingBloc>().state.lastReadReminderMode;
     final isLastReadReminderOn =
         lastReadReminderMode == LastReadReminderModes.on;
     VersesNumber? getVerseNumber() {
@@ -188,16 +188,16 @@ class _VersesListState extends State<VersesList> {
 
     Future<void> saveLastReading() async {
       if (widget.view == ViewMode.setting) {
-        Navigator.of(context).pop(false);
+        context.pop(false);
         return;
       }
       if (lastReadReminderMode == LastReadReminderModes.autoSave) {
         setLastReading();
-        Navigator.of(context).pop(false);
+        context.pop(false);
         return;
       }
       if (!isLastReadReminderOn) {
-        Navigator.of(context).pop(false);
+        context.pop(false);
         return;
       }
       final verse = getVerseNumber();
@@ -219,8 +219,8 @@ class _VersesListState extends State<VersesList> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop(false);
-                  Navigator.of(context).pop(false);
+                  context.pop(false);
+                  context.pop(false);
                 },
                 child: Text(LocaleKeys.no.tr()),
               ),
@@ -231,8 +231,8 @@ class _VersesListState extends State<VersesList> {
                 ),
                 onPressed: () {
                   setLastReading();
-                  Navigator.of(context).pop(false);
-                  Navigator.of(context).pop(false);
+                  context.pop(false);
+                  context.pop(false);
                 },
                 child: Text(LocaleKeys.yes.tr()),
               ),
@@ -462,7 +462,7 @@ class ListTileVerses extends StatelessWidget {
                                   context, verses, clickFrom, juz, surah);
                             },
                             onSharePressed: () {
-                              context.pushNamed(
+                              context.goNamed(
                                 RootRouter.shareVerseRoute.name,
                                 extra: ShareVerseScreenExtra(
                                   verse: verses,
