@@ -8,7 +8,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qiblah/flutter_qiblah.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
+import 'package:quranku/core/constants/hive_constants.dart';
 import 'package:quranku/core/utils/extension/dartz_ext.dart';
 import 'package:quranku/core/utils/extension/extension.dart';
 import 'package:quranku/features/shalat/domain/entities/geolocation.codegen.dart';
@@ -72,6 +74,7 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
     on<GetShalatScheduleByDayEvent>(_onShalatScheduleByDayFetch);
     on<GetShalatScheduleByMonthEvent>(_onShalatScheduleByMonthFetch);
     on<_OnChangedLocationStatusEvent>(_onChangedLocationStatus);
+    on<_OnChangedPermissionDialogEvent>(_onChangedPermissionDialog);
     on<_GetLocationManualEvent>(_onGetLocationManual);
     on<_SetLocationManualEvent>(_onSetLocationManual);
     on<_GetPrayerScheduleSettingEvent>(_onGetPrayerScheduleSetting);
@@ -104,6 +107,9 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
   ) async {
     emit(state.copyWith(locale: event.locale ?? const Locale('en', 'US')));
     add(_SchedulePrayerAlarmEvent());
+    final box = await Hive.openBox<bool>(HiveConst.permissionBox);
+    final hasShown = box.get(HiveConst.hasShownLocationPermissionKey) ?? false;
+    emit(state.copyWith(hasShownPermissionDialog: hasShown));
   }
 
   void _onChangedLocationStatus(
@@ -228,6 +234,22 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
           ),
           (data) => right(data),
         ),
+      ),
+    );
+  }
+
+  void _onChangedPermissionDialog(
+    _OnChangedPermissionDialogEvent event,
+    Emitter<ShalatState> emit,
+  ) async {
+    final box = await Hive.openBox<bool>(HiveConst.permissionBox);
+    box.put(
+      HiveConst.hasShownLocationPermissionKey,
+      event.hasShownPermissionDialog,
+    );
+    emit(
+      state.copyWith(
+        hasShownPermissionDialog: event.hasShownPermissionDialog,
       ),
     );
   }

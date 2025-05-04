@@ -23,6 +23,11 @@ class ShalatEvent with _$ShalatEvent {
     LocationStatus? status,
   }) = _OnChangedLocationStatusEvent;
 
+  const factory ShalatEvent.onChangedPermissionDialogEvent(
+    bool hasShownPermissionDialog,
+  ) =
+      _OnChangedPermissionDialogEvent;
+
   const factory ShalatEvent.getLocationManualEvent() = _GetLocationManualEvent;
 
   const factory ShalatEvent.setLocationManualEvent({

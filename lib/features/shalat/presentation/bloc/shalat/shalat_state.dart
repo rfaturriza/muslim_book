@@ -12,5 +12,6 @@ class ShalatState with _$ShalatState {
     Either<Failure, PrayerScheduleSetting?>? prayerScheduleSetting,
     Either<Failure, GeoLocation?>? manualLocation,
     @Default(false) bool isLoading,
+    bool? hasShownPermissionDialog,
   }) = _ShalatState;
 }

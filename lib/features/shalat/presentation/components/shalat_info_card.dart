@@ -30,7 +30,8 @@ class ShalatInfoCard extends StatelessWidget {
     final shalatBloc = context.read<ShalatBloc>();
     return BlocListener<ShalatBloc, ShalatState>(
       listener: (context, state) {
-        if (state.locationStatus?.status.isNotGranted == true) {
+        if (state.locationStatus?.status.isNotGranted == true &&
+            state.hasShownPermissionDialog == false) {
           AppDialog.showPermissionDialog(
             context,
             content: LocaleKeys.permissionMessageLocation.tr(),
@@ -45,7 +46,11 @@ class ShalatInfoCard extends StatelessWidget {
                 ),
               );
             },
-          );
+          ).whenComplete(() {
+            shalatBloc.add(
+              const ShalatEvent.onChangedPermissionDialogEvent(true),
+            );
+          });
         }
       },
       child: Stack(
