@@ -57,20 +57,22 @@ class SliverAppBarDetailScreen extends StatelessWidget
           color: context.theme.colorScheme.onSurface,
         ),
       ),
+      
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 8),
           child: IconButton(
             onPressed: onPressedBookmark,
-              icon: () {
-                if (isBookmarked) {
-                  return const Icon(Icons.bookmark);
+            icon: () {
+              if (isBookmarked) {
+                return const Icon(Icons.bookmark);
               }
               return const Icon(Icons.bookmark_border);
             }(),
-              color: context.theme.colorScheme.tertiary,
-              disabledColor:
-                  context.theme.colorScheme.tertiary.withValues(alpha:0.5)),
+            color: context.theme.colorScheme.tertiary,
+            disabledColor:
+                context.theme.colorScheme.tertiary.withValues(alpha: 0.5),
+          ),
         ),
       ],
     );

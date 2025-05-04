@@ -10,6 +10,7 @@ import 'package:quranku/features/quran/presentation/screens/components/verses_li
 import 'package:quranku/generated/locale_keys.g.dart';
 
 import '../../../../core/components/loading_screen.dart';
+import '../../../../injection.dart';
 import '../../domain/entities/juz.codegen.dart';
 import '../bloc/audioVerse/audio_verse_bloc.dart';
 import '../bloc/detailJuz/detail_juz_bloc.dart';
@@ -17,13 +18,42 @@ import 'components/app_bar_detail_screen.dart';
 import 'components/bottom_nav_player.dart';
 
 class DetailJuzScreen extends StatelessWidget {
-  final JuzConstant? juz;
+  final int? juzNumber;
   final int? jumpToVerse;
-
-  const DetailJuzScreen({super.key, this.juz, this.jumpToVerse});
+  const DetailJuzScreen({super.key, this.juzNumber, this.jumpToVerse});
 
   @override
   Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<JuzDetailBloc>(
+          create: (_) => sl<JuzDetailBloc>()
+            ..add(FetchJuzDetailEvent(juzNumber: juzNumber)),
+        ),
+        BlocProvider<AudioVerseBloc>(
+          create: (context) => sl<AudioVerseBloc>(),
+        ),
+      ],
+      child: _DetailJuzScaffold(
+        juzNumber: juzNumber,
+        jumpToVerse: jumpToVerse,
+      ),
+    );
+  }
+}
+
+class _DetailJuzScaffold extends StatelessWidget {
+  final int? juzNumber;
+  final int? jumpToVerse;
+
+  const _DetailJuzScaffold({this.juzNumber, this.jumpToVerse});
+
+  @override
+  Widget build(BuildContext context) {
+    final juz = JuzConstant.juzList.cast<JuzConstant?>().firstWhere(
+          (element) => element?.number == juzNumber,
+          orElse: () => null,
+        );
     final juzDetailBloc = context.read<JuzDetailBloc>();
     final audioBloc = context.watch<AudioVerseBloc>();
     return Scaffold(
@@ -69,8 +99,7 @@ class DetailJuzScreen extends StatelessWidget {
               : null;
           return NestedScrollView(
             floatHeaderSlivers: true,
-            headerSliverBuilder:
-                (BuildContext context, bool innerBoxIsScrolled) {
+            headerSliverBuilder: (context, _) {
               return [
                 SliverAppBarDetailScreen(
                   title: juz?.name ?? emptyString,
@@ -120,7 +149,7 @@ class DetailJuzScreen extends StatelessWidget {
                     onRefresh: () {
                       if (juz == null) return;
                       juzDetailBloc.add(
-                        FetchJuzDetailEvent(juzNumber: juz?.number),
+                        FetchJuzDetailEvent(juzNumber: juz.number),
                       );
                     },
                   );

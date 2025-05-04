@@ -8,22 +8,30 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qiblah/flutter_qiblah.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
+import 'package:quranku/core/constants/hive_constants.dart';
 import 'package:quranku/core/utils/extension/dartz_ext.dart';
 import 'package:quranku/core/utils/extension/extension.dart';
 import 'package:quranku/features/shalat/domain/entities/geolocation.codegen.dart';
+import 'package:quranku/features/shalat/domain/usecase/get_location_manual_usecase.dart';
+import 'package:quranku/features/shalat/domain/usecase/schedule_prayer_alarm_usecase.dart';
+import 'package:quranku/features/shalat/domain/usecase/set_location_manual_usecase.dart';
 
 import '../../../../../core/error/failures.dart';
 import '../../../../../core/usecases/usecase.dart';
 import '../../../../../generated/locale_keys.g.dart';
 import '../../../../qibla/domain/usecases/stream_permission_location_usecase.dart';
+import '../../../domain/entities/prayer_schedule_setting.codegen.dart';
 import '../../../domain/entities/schedule.codegen.dart';
 import '../../../domain/entities/shalat_location.codegen.dart';
 import '../../../domain/usecase/get_current_location_usecase.dart';
+import '../../../domain/usecase/get_prayer_schedule_setting_usecase.dart';
 import '../../../domain/usecase/get_shalat_cityid_by_citiesname_usecase.dart';
 import '../../../domain/usecase/get_shalat_cityid_by_cityname_usecase.dart';
 import '../../../domain/usecase/get_shalat_schedule_by_day_usecase.dart';
 import '../../../domain/usecase/get_shalat_schedule_by_month_usecase.dart';
+import '../../../domain/usecase/set_prayer_schedule_setting_usecase.dart';
 
 part 'shalat_bloc.freezed.dart';
 part 'shalat_event.dart';
@@ -37,11 +45,21 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
   final GetCurrentLocationUseCase getCurrentLocation;
   final StreamPermissionLocationUseCase streamPermissionLocation;
   final GetShalatCityIdByCitiesUseCase getCityIdByCities;
+  final GetLocationManualUseCase _getLocationManual;
+  final SetLocationManualUseCase _setLocationManual;
+  final GetPrayerScheduleSettingUseCase _getPrayerScheduleSetting;
+  final SetPrayerScheduleSettingUseCase _setPrayerScheduleSetting;
+  final SchedulePrayerAlarmUseCase _schedulePrayerAlarmUseCase;
 
   StreamSubscription<Either<Failure, LocationStatus>>?
       _streamPermissionLocation;
 
-  ShalatBloc({
+  ShalatBloc(
+    this._getLocationManual,
+    this._setLocationManual,
+    this._getPrayerScheduleSetting,
+    this._setPrayerScheduleSetting,
+    this._schedulePrayerAlarmUseCase, {
     required this.getCityId,
     required this.getScheduleByDay,
     required this.getScheduleByMonth,
@@ -56,6 +74,12 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
     on<GetShalatScheduleByDayEvent>(_onShalatScheduleByDayFetch);
     on<GetShalatScheduleByMonthEvent>(_onShalatScheduleByMonthFetch);
     on<_OnChangedLocationStatusEvent>(_onChangedLocationStatus);
+    on<_OnChangedPermissionDialogEvent>(_onChangedPermissionDialog);
+    on<_GetLocationManualEvent>(_onGetLocationManual);
+    on<_SetLocationManualEvent>(_onSetLocationManual);
+    on<_GetPrayerScheduleSettingEvent>(_onGetPrayerScheduleSetting);
+    on<_SetPrayerScheduleSettingEvent>(_onSetPrayerScheduleSetting);
+    on<_SchedulePrayerAlarmEvent>(_onSchedulePrayerAlarmEvent);
   }
 
   void _onStreamPermissionLocation() {
@@ -82,6 +106,10 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
     Emitter<ShalatState> emit,
   ) async {
     emit(state.copyWith(locale: event.locale ?? const Locale('en', 'US')));
+    add(_SchedulePrayerAlarmEvent());
+    final box = await Hive.openBox<bool>(HiveConst.permissionBox);
+    final hasShown = box.get(HiveConst.hasShownLocationPermissionKey) ?? false;
+    emit(state.copyWith(hasShownPermissionDialog: hasShown));
   }
 
   void _onChangedLocationStatus(
@@ -147,16 +175,30 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
       geoLocation.asRight()?.coordinate?.lon ?? 0,
       validate: true,
     );
-    final params = CalculationMethod.egyptian.getParameters();
-    params.madhab = Madhab.shafi;
+    final prayerScheduleSetting = await _getPrayerScheduleSetting(NoParams());
+    final method = prayerScheduleSetting.fold(
+          (failure) => CalculationMethod.egyptian,
+          (data) => data?.calculationMethod,
+        ) ??
+        CalculationMethod.egyptian;
+    final madhab = prayerScheduleSetting.fold(
+          (failure) => Madhab.shafi,
+          (data) => data?.madhab,
+        ) ??
+        Madhab.shafi;
+    final params = CalculationMethod.values
+        .firstWhere((element) => element == method)
+        .getParameters();
+    params.madhab = madhab;
     final prayerTimes = PrayerTimes.today(coordinate, params);
     final Either<Failure, ScheduleByDay> resultSchedule = right(
       ScheduleByDay(
-          location: geoLocation.asRight()?.country,
-          area: geoLocation.asRight()?.regions?.first,
-          coordinate: geoLocation.asRight()?.coordinate,
-          prayerTimes: prayerTimes,
-          schedule: Schedule.fromPrayerTimes(prayerTimes)),
+        location: geoLocation.asRight()?.country,
+        area: geoLocation.asRight()?.regions?.first,
+        coordinate: geoLocation.asRight()?.coordinate,
+        prayerTimes: prayerTimes,
+        schedule: Schedule.fromPrayerTimes(prayerTimes),
+      ),
     );
     emit(
       state.copyWith(
@@ -194,6 +236,114 @@ class ShalatBloc extends Bloc<ShalatEvent, ShalatState> {
         ),
       ),
     );
+  }
+
+  void _onChangedPermissionDialog(
+    _OnChangedPermissionDialogEvent event,
+    Emitter<ShalatState> emit,
+  ) async {
+    final box = await Hive.openBox<bool>(HiveConst.permissionBox);
+    box.put(
+      HiveConst.hasShownLocationPermissionKey,
+      event.hasShownPermissionDialog,
+    );
+    emit(
+      state.copyWith(
+        hasShownPermissionDialog: event.hasShownPermissionDialog,
+      ),
+    );
+  }
+
+  void _onGetLocationManual(
+    _GetLocationManualEvent event,
+    Emitter<ShalatState> emit,
+  ) async {
+    final result = await _getLocationManual(NoParams());
+    emit(
+      state.copyWith(
+        manualLocation: result.fold(
+          (failure) => left(
+            GeneralFailure(
+              message: failure.message ?? LocaleKeys.locationNotFound.tr(),
+            ),
+          ),
+          (data) => right(data),
+        ),
+      ),
+    );
+  }
+
+  void _onSetLocationManual(
+    _SetLocationManualEvent event,
+    Emitter<ShalatState> emit,
+  ) async {
+    final result = await _setLocationManual(
+      event.location,
+    );
+    emit(
+      state.copyWith(
+        manualLocation: result.fold(
+          (failure) => left(
+            GeneralFailure(
+              message: failure.message ?? LocaleKeys.locationNotFound.tr(),
+            ),
+          ),
+          (data) => right(event.location),
+        ),
+      ),
+    );
+  }
+
+  void _onGetPrayerScheduleSetting(
+    _GetPrayerScheduleSettingEvent event,
+    Emitter<ShalatState> emit,
+  ) async {
+    final result = await _getPrayerScheduleSetting(NoParams());
+    emit(
+      state.copyWith(
+        prayerScheduleSetting: result.fold(
+          (failure) => left(
+            GeneralFailure(
+              message: failure.message ?? LocaleKeys.locationNotFound.tr(),
+            ),
+          ),
+          (data) => right(data),
+        ),
+      ),
+    );
+  }
+
+  void _onSetPrayerScheduleSetting(
+    _SetPrayerScheduleSettingEvent event,
+    Emitter<ShalatState> emit,
+  ) async {
+    final geoLocation = await getCurrentLocation(
+      GetCurrentLocationParams(locale: state.locale),
+    );
+    final result = await _setPrayerScheduleSetting(
+      event.model?.copyWith(
+        location: geoLocation.asRight()?.place ?? '',
+      ),
+    );
+    emit(
+      state.copyWith(
+        prayerScheduleSetting: result.fold(
+          (failure) => left(
+            GeneralFailure(
+              message: failure.message ?? LocaleKeys.locationNotFound.tr(),
+            ),
+          ),
+          (data) => right(event.model),
+        ),
+      ),
+    );
+  }
+
+  void _onSchedulePrayerAlarmEvent(
+    _SchedulePrayerAlarmEvent event,
+    Emitter<ShalatState> emit,
+  ) async {
+    await _schedulePrayerAlarmUseCase(NoParams());
   }
 
   @override

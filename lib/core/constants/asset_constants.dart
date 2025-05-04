@@ -13,6 +13,19 @@ class AssetConst {
   static const String kajianHubTextLogoDark =
       'assets/images/KajianHub-text.png';
   static const String googleMapsIcon = 'assets/svg/google_maps_icon.svg';
-  static const String mosqueDummyImageUrl = 'https://kajianhub.com/img/dummy/dummy-masjid.jpg';
-  static const String compassCalibrationGif = 'assets/gif/compass-calibration.gif';
+  static const String mosqueDummyImageUrl =
+      'https://kajianhub.com/img/dummy/dummy-masjid.jpg';
+  static const String compassCalibrationGif =
+      'assets/gif/compass-calibration.gif';
+  static const String prayerTimeBackground =
+      'assets/images/prayer-time-background.jpeg';
+
+  static const String imsakIcon = 'assets/svg/imsak_ic.svg';
+  static const String subuhIcon = 'assets/svg/subuh_ic.svg';
+  static const String syuruqIcon = 'assets/svg/syuruq_ic.svg';
+  static const String dhuhaIcon = 'assets/svg/dhuha_ic.svg';
+  static const String dhuhurIcon = 'assets/svg/dzuhur_ic.svg';
+  static const String asharIcon = 'assets/svg/ashar_ic.svg';
+  static const String maghribIcon = 'assets/svg/maghrib_ic.svg';
+  static const String isyaIcon = 'assets/svg/isya_ic.svg';
 }

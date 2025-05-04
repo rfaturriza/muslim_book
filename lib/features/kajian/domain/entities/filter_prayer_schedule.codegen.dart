@@ -9,9 +9,7 @@ class FilterPrayerSchedule with _$FilterPrayerSchedule {
     Pair<String, String>? studyLocationProvinceId,
     Pair<String, String>? studyLocationCityId,
     Pair<String, String>? locationId,
-
     Pair<String, String>? prayerSchedule,
-
     DateTime? prayDate,
     String? imam,
     String? khatib,
@@ -19,6 +17,17 @@ class FilterPrayerSchedule with _$FilterPrayerSchedule {
   }) = _FilterPrayerSchedule;
 
   const FilterPrayerSchedule._();
+
+  int get totalActive {
+    int count = 0;
+    if (studyLocationProvinceId != null) count++;
+    if (studyLocationCityId != null) count++;
+    if (locationId != null) count++;
+    if (imam != null) count++;
+    if (khatib != null) count++;
+    if (isNearby) count++;
+    return count;
+  }
 
   bool isEmpty() {
     return this == const FilterPrayerSchedule();

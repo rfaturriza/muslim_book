@@ -16,6 +16,7 @@ import 'package:quranku/generated/locale_keys.g.dart';
 import 'package:quranku/injection.dart';
 import 'package:quranku/theme_provider.dart';
 
+import 'core/route/router.dart';
 import 'features/quran/presentation/bloc/surah/surah_bloc.dart';
 import 'features/setting/presentation/bloc/language_setting/language_setting_bloc.dart';
 import 'features/setting/presentation/bloc/styling_setting/styling_setting_bloc.dart';
@@ -68,7 +69,8 @@ class App extends StatelessWidget {
               final isDynamicColor = themeProvider.dynamicColor;
               return DynamicColorBuilder(
                 builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
-                  return MaterialApp(
+                  return MaterialApp.router(
+                    routerConfig: router,
                     title: LocaleKeys.appName.tr(),
                     debugShowCheckedModeBanner: false,
                     theme: themeData(
@@ -87,7 +89,6 @@ class App extends StatelessWidget {
                     ],
                     supportedLocales: context.supportedLocales,
                     locale: context.locale,
-                    home: const ScaffoldConnection(),
                   );
                 },
               );

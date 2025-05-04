@@ -1,17 +1,16 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quranku/core/components/error_screen.dart';
 import 'package:quranku/core/components/search_box.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
-import 'package:quranku/features/quran/presentation/bloc/detailSurah/detail_surah_bloc.dart';
 import 'package:quranku/features/quran/presentation/bloc/surah/surah_bloc.dart';
 
+import '../../../../../core/route/root_router.dart';
 import '../../../../../core/utils/extension/string_ext.dart';
 import '../../../../../generated/locale_keys.g.dart';
-import '../../../../../injection.dart';
 import '../../../domain/entities/surah.codegen.dart';
-import '../../bloc/audioVerse/audio_verse_bloc.dart';
 import '../detail_surah_screen.dart';
 import 'list_tile_surah.dart';
 
@@ -103,24 +102,17 @@ class SurahList extends StatelessWidget {
     );
   }
 
-  static void onTapSurah(BuildContext context, Surah? surah,
-      {int? jumpToVerse}) {
-    context.navigateTo(
-      MultiBlocProvider(
-        providers: [
-          BlocProvider<SurahDetailBloc>(
-            create: (context) => sl<SurahDetailBloc>()
-              ..add(FetchSurahDetailEvent(surahNumber: surah?.number)),
-          ),
-          BlocProvider<AudioVerseBloc>(
-            create: (context) => sl<AudioVerseBloc>(),
-          ),
-        ],
-        child: DetailSurahScreen(
-          surah: surah,
-          jumpToVerse: jumpToVerse,
-        ),
-      ),
+  static void onTapSurah(
+    BuildContext context,
+    Surah? surah, {
+    int? jumpToVerse,
+  }) {
+    context.goNamed(
+      RootRouter.surahRoute.name,
+      queryParameters: {
+        'jump_to': jumpToVerse?.toString(),
+      },
+      extra: DetailSurahScreenExtra(surah: surah),
     );
   }
 }

@@ -13,13 +13,13 @@ class AppDialog {
     );
   }
 
-  static void showPermissionDialog(
+  static Future<void> showPermissionDialog(
     BuildContext context, {
     String? title,
     String? content,
     required VoidCallback onOk,
   }) {
-    showDialog(
+   return showDialog(
       context: context,
       builder: (context) => PermissionDialog(
         onOk: onOk,
