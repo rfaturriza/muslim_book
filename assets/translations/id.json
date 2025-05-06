@@ -220,5 +220,12 @@
   "kajian": "Kajian",
   "errorOpenMap": "Mohon maaf, tidak dapat membuka peta",
   "notificationPrayerTitle": "Waktunya {prayer} Pukul {time}",
-  "notificationPrayerDescription": "Lihat informasi waktu shalat di {location}"
+  "notificationPrayerDescription": "Lihat informasi waktu shalat di {location}",
+  "ustadzAiButtonLabel": "Ustadz AI",
+  "ustadzAiScreen": {
+    "title": "Tanya Ustadz AI",
+    "description": "Tanyakan pertanyaan seputar Islam kepada Ustadz AI",
+    "labelTextField": "Tanya apa saja tentang Islam",
+    "generating": "Ditunggu ya, pertanyaan kamu sedang diproses"
+  }
 }

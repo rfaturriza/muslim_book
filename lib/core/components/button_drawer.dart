@@ -3,18 +3,26 @@ import 'package:quranku/core/utils/extension/context_ext.dart';
 
 class ButtonDrawer extends StatelessWidget {
   final IconData icon;
+  final Color? iconColor;
   final String title;
   final String? subtitle;
   final VoidCallback onTap;
   final bool withDecoration;
+  final bool showBadge;
+  final String? badgeText;
+  final Color? badgeColor;
 
   const ButtonDrawer({
     super.key,
     required this.icon,
+    this.iconColor,
     required this.title,
     this.subtitle,
     required this.onTap,
     this.withDecoration = true,
+    this.showBadge = false,
+    this.badgeText,
+    this.badgeColor,
   });
 
   @override
@@ -57,10 +65,21 @@ class ButtonDrawer extends StatelessWidget {
         dense: true,
         leading: Icon(
           icon,
+          color: iconColor,
         ),
-        title: Text(
-          title,
-          style: context.textTheme.bodyMedium,
+        title: Badge(
+          label: Text(
+            badgeText ?? '',
+            style: context.textTheme.labelSmall?.copyWith(
+              color: context.theme.colorScheme.onPrimary,
+            ),
+          ),
+          isLabelVisible: showBadge,
+          backgroundColor: context.theme.colorScheme.primary,
+          child: Text(
+            title,
+            style: context.textTheme.bodyMedium,
+          ),
         ),
         subtitle: subtitle != null
             ? Text(

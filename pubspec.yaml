@@ -60,6 +60,7 @@ dependencies:
   jhijri: ^1.0.0
   flutter_timezone: ^4.0.0
   timezone: ^0.10.0
+  material_symbols_icons: ^4.2815.0
 
 dev_dependencies:
   flutter_test:
@@ -165,5 +166,3 @@ flutter:
     - family: PDMS-Saleem
       fonts:
         - asset: assets/fonts/Arabic/PDMS-Saleem.ttf
-
-

@@ -220,5 +220,12 @@
   "kajian": "Kajian",
   "errorOpenMap": "Sorry, unable to open the map",
   "notificationPrayerTitle": "Time for {prayer} at {time}",
-  "notificationPrayerDescription": "View prayer times information in {location}"
+  "notificationPrayerDescription": "View prayer times information in {location}",
+  "ustadzAiButtonLabel": "Ustadz AI",
+  "ustadzAiScreen": {
+    "title": "Ask Ustadz AI",
+    "description": "Ask questions about Islam to Ustadz AI",
+    "labelTextField": "Ask anything about Islam",
+    "generating": "Please wait, your question is being processed"
+  }
 }

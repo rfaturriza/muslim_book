@@ -6,7 +6,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:quranku/core/components/expandable_webview.dart';
 import 'package:quranku/core/components/loading_screen.dart';
 import 'package:quranku/core/constants/url_constants.dart';
-import 'package:quranku/core/network/remote_config.dart';
+import 'package:quranku/features/config/remote_config.dart';
 import 'package:quranku/core/utils/extension/context_ext.dart';
 import 'package:quranku/features/payment/presentation/bloc/in_app_purchase/in_app_purchase_bloc.dart';
 import 'package:quranku/features/payment/presentation/bloc/midtrans/midtrans_bloc.dart';
