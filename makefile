@@ -23,3 +23,9 @@ clean_structure:
 	@echo "Removing folder structure for feature: $(FEATURE_NAME)"
 	@rm -rf lib/features/$(FEATURE_NAME)
 	@echo "Folder structure removed successfully for feature: $(FEATURE_NAME)"
+
+generate_firebase:
+	@echo "Generating Firebase configuration release and debug"
+	./flutterfire_config.sh release
+	./flutterfire_config.sh debug
+	@echo "Firebase configuration generated successfully"
