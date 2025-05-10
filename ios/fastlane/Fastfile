@@ -2,15 +2,21 @@ default_platform(:ios)
 
 platform :ios do
   before_all do
-    key_content = File.read(ENV["APP_STORE_CONNECT_API_KEY_PATH"])
-    if key_content.include?("\0")
-      UI.user_error!("App Store Connect API Key contains null bytes. Please check the key file.")
+    # Check every environment variable is set
+    required_env_vars = [
+      "APP_STORE_CONNECT_KEY_ID",
+      "APP_STORE_CONNECT_ISSUER_ID",
+      "APP_STORE_CONNECT_API_KEY_CONTENT_DECODED",
+    ]
+    required_env_vars.each do |var|
+      if ENV[var].nil? || ENV[var].empty?
+        UI.user_error!("Missing environment variable: #{var}")
+      end
     end
-  
     app_store_connect_api_key(
       key_id: ENV["APP_STORE_CONNECT_KEY_ID"],
       issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
-      key_filepath: ENV["APP_STORE_CONNECT_API_KEY_PATH"],
+      key_content: ENV["APP_STORE_CONNECT_API_KEY_CONTENT_DECODED"],
       in_house: false
     )
   end
