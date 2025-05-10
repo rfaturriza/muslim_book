@@ -79,8 +79,7 @@ jobs:
 
       - name: Execute Fastlane
         run: |
-          # set decoded key as env variable
-          echo "$APP_STORE_CONNECT_API_KEY_CONTENT_DECODED" | base64 --decode > ./fastlane/AppStoreConnectAuthKey.p8
+          export APP_STORE_CONNECT_API_KEY_CONTENT_DECODED=$(cat ./fastlane/AppStoreConnectAuthKey.p8)
           echo "APP_STORE_CONNECT_KEY_ID: $APP_STORE_CONNECT_KEY_ID"
           echo "APP_STORE_CONNECT_ISSUER_ID: $APP_STORE_CONNECT_ISSUER_ID"
           echo "APP_STORE_CONNECT_API_KEY_PATH: $APP_STORE_CONNECT_API_KEY_PATH"
@@ -93,7 +92,6 @@ jobs:
           APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_PATH: ./fastlane/AppStoreConnectAuthKey.p8
-
   bump-version:
     name: Bump Version
     needs: release-ios
