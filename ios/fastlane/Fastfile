@@ -65,7 +65,19 @@ platform :ios do
     return version_parts.join(".")
   end
 
-  def build_configured_ios_app()
+  desc "Submit patch build to TestFlight (internal)"
+  lane :internal_patch do
+    new_version = update_ios_version("patch")
+
+    increment_version_number(
+      version_number: new_version,
+      xcodeproj: "Runner.xcodeproj"
+    )
+
+    increment_build_number(
+      xcodeproj: "Runner.xcodeproj"
+    )
+
     build_ios_app(
       workspace: "Runner.xcworkspace",
       configuration: "Release",
@@ -81,22 +93,6 @@ platform :ios do
         }
       }
     )
-  end
-
-  desc "Submit patch build to TestFlight (internal)"
-  lane :internal_patch do
-    new_version = update_ios_version("patch")
-
-    increment_version_number(
-      version_number: new_version,
-      xcodeproj: "Runner.xcodeproj"
-    )
-
-    increment_build_number(
-      xcodeproj: "Runner.xcodeproj"
-    )
-
-    build_configured_ios_app()
 
     upload_to_testflight(
       ipa: "./fastlane/build/app.ipa",
@@ -118,7 +114,21 @@ platform :ios do
       xcodeproj: "Runner.xcodeproj"
     )
 
-    build_configured_ios_app()
+    build_ios_app(
+      workspace: "Runner.xcworkspace",
+      configuration: "Release",
+      scheme: "Runner",
+      silent: true,
+      clean: true,
+      output_directory: "./fastlane/build",
+      output_name: "app.ipa",
+      export_method: "app-store",
+      export_options: {
+        provisioningProfiles: {
+          "com.kajianhub": "com.kajianhub AppStore"
+        }
+      }
+    )
 
     upload_to_testflight(
       skip_waiting_for_build_processing: true
@@ -137,8 +147,22 @@ platform :ios do
     increment_build_number(
       xcodeproj: "Runner.xcodeproj"
     )
-
-    build_configured_ios_app()
+    
+    build_ios_app(
+      workspace: "Runner.xcworkspace",
+      configuration: "Release",
+      scheme: "Runner",
+      silent: true,
+      clean: true,
+      output_directory: "./fastlane/build",
+      output_name: "app.ipa",
+      export_method: "app-store",
+      export_options: {
+        provisioningProfiles: {
+          "com.kajianhub": "com.kajianhub AppStore"
+        }
+      }
+    )
 
     upload_to_testflight(
       skip_waiting_for_build_processing: true
