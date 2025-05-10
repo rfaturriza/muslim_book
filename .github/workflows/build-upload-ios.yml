@@ -78,6 +78,7 @@ jobs:
 
       - name: Build ipa without signing
         run: |
+          dart pub global activate flutterfire_cli
           flutter build ipa --no-codesign
 
       - name: Configure AppStore Connect
