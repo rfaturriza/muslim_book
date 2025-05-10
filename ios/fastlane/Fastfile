@@ -81,6 +81,7 @@ platform :ios do
         }
       }
     )
+  end
 
   desc "Submit patch build to TestFlight (internal)"
   lane :internal_patch do
