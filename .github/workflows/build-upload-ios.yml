@@ -66,9 +66,9 @@ jobs:
           FIREBASE_ANDROID_JSON: ${{ secrets.GOOGLE_SERVICE_ANDROID_JSON_FILE }}
           FIREBASE_IOS_PLIST: ${{ secrets.GOOGLE_SERVICE_IOS_PLIST_FILE }}
 
-      - name: Config Flutter for iOS
+      - name: Build ipa without signing
         run: |
-          flutter build ios --config-only --release
+          flutter build ipa --no-codesign
 
       - name: Configure AppStore Connect
         run: |
