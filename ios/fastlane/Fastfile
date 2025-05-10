@@ -45,6 +45,15 @@ platform :ios do
       sdk: "iphoneos*",
       profile_name: "com.kajianhub AppStore"
     )
+    
+    Dir.chdir "../.." do
+      sh(
+        "flutter",
+        "build",
+        "ipa",
+        "--no-codesign"
+      )
+    end
   end
   
   def update_ios_version(typeUpdate)
