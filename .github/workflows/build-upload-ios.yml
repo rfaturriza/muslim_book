@@ -78,11 +78,12 @@ jobs:
 
       - name: Execute Fastlane
         run: |
-          bundle exec fastlane ${{ github.event.inputs.lane || 'internal_patch' }}
           echo "APP_STORE_CONNECT_KEY_ID: $APP_STORE_CONNECT_KEY_ID"
           echo "APP_STORE_CONNECT_ISSUER_ID: $APP_STORE_CONNECT_ISSUER_ID"
           echo "APP_STORE_CONNECT_API_KEY_PATH: $APP_STORE_CONNECT_API_KEY_PATH"
           ls -la ./fastlane
+          bundle exec fastlane ${{ github.event.inputs.lane || 'internal_patch' }}
+
         working-directory: ios
         env:
           APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
