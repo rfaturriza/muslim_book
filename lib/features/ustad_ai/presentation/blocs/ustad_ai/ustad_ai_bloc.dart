@@ -1,6 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:quranku/core/error/exceptions.dart';
+import 'package:quranku/generated/locale_keys.g.dart';
 
 import '../../../domain/usecases/get_ai_response_usecase.dart';
 
@@ -27,7 +30,11 @@ class UstadAiBloc extends Bloc<UstadAiEvent, UstadAiState> {
       }
       emit(UstadAiState.streaming(text: accumulated, isGenerating: false));
     } catch (e) {
-      emit(UstadAiState.error(e.toString()));
+      var errorMessage = LocaleKeys.defaultErrorMessage.tr();
+      if (e is ServerException) {
+        errorMessage = e.message;
+      }
+      emit(UstadAiState.error(errorMessage));
     }
   }
 }

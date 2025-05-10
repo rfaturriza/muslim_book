@@ -51,7 +51,12 @@ class _AiScreenState extends State<AiScreen> {
                         );
                       }
                       return SingleChildScrollView(
-                        child: MarkdownBody(data: state.text),
+                        physics: const BouncingScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        child: MarkdownBody(
+                          data: state.text,
+                          selectable: true,
+                        ),
                       );
                     } else if (state is UstadAiErrorState) {
                       return SingleChildScrollView(

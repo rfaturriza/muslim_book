@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:quranku/core/error/exceptions.dart';
 
 @lazySingleton
 class AiDataSource {
@@ -33,9 +34,7 @@ class AiDataSource {
         yield chunk;
       }
     } on DioException catch (e) {
-      throw Exception('Network error: ${e.message}');
-    } on FormatException catch (e) {
-      throw Exception('Data format error: ${e.message}');
+      throw ServerException(e);
     } catch (e) {
       throw Exception('Unexpected error: $e');
     }

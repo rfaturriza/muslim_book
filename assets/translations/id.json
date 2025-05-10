@@ -3,7 +3,7 @@
   "defaultErrorMessage": "Mohon maaf, Terjadi kesalahan silahkan coba lagi",
   "loading": "Memuat",
   "noData": "Tidak ada data",
-  "noInternetConnection": "Tidak ada koneksi internet",
+  "noInternetConnection": "Tidak ada koneksi internet, periksa koneksi Anda dan coba lagi",
   "pleaseWait": "Mohon tunggu...",
   "juzOneDescription": "Mulai dari Al-Fatihah ayat 1 sampai Al-Baqarah ayat 141",
   "juzTwoDescription": "Mulai dari Al-Baqarah ayat 142 sampai Al-Baqarah ayat 252",

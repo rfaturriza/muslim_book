@@ -3,7 +3,7 @@
   "defaultErrorMessage": "I'm sorry, an error occurred, please try again",
   "loading": "Loading",
   "noData": "No data",
-  "noInternetConnection": "No internet connection",
+  "noInternetConnection": "No internet connection, please check your connection",
   "pleaseWait": "Please wait...",
   "juzOneDescription": "Starting from Al-Fatihah verse 1 to Al-Baqarah verse 141",
   "juzTwoDescription": "Starting from Al-Baqarah verse 142 to Al-Baqarah verse 252",
