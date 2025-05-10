@@ -13,11 +13,37 @@ platform :ios do
         UI.user_error!("Missing environment variable: #{var}")
       end
     end
+
     app_store_connect_api_key(
       key_id: ENV["APP_STORE_CONNECT_KEY_ID"],
       issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
       key_content: ENV["APP_STORE_CONNECT_API_KEY_CONTENT_DECODED"],
       in_house: false
+    )
+
+    import_certificate(
+      certificate_path: "./fastlane/DistributionCertificate.p12",
+      certificate_password: ENV["DISTRIBUTION_CERTIFICATE_PASSWORD"],
+      keychain_name: "login", # default keychain of macos, if you want to use in github actions, you may need to create a temporary keychain and set as default
+      keychain_password: ""
+    )
+
+    get_provisioning_profile(
+      output_path: "./fastlane/profiles",
+      filename: "appstore.mobileprovision",
+      provisioning_name: "com.kajianhub AppStore",
+      ignore_profiles_with_different_name: true,
+      app_identifier: "com.kajianhub"
+    )
+
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      targets: ["Runner"],
+      path: "Runner.xcodeproj",
+      code_sign_identity: "iPhone Distribution",
+      build_configurations: ['Release'],
+      sdk: "iphoneos*",
+      profile_name: "com.kajianhub AppStore"
     )
   end
   
@@ -39,6 +65,23 @@ platform :ios do
     return version_parts.join(".")
   end
 
+  def build_configured_ios_app()
+    build_ios_app(
+      workspace: "Runner.xcworkspace",
+      configuration: "Release",
+      scheme: "Runner",
+      silent: true,
+      clean: true,
+      output_directory: "./fastlane/build",
+      output_name: "app.ipa",
+      export_method: "app-store",
+      export_options: {
+        provisioningProfiles: {
+          "com.kajianhub": "com.kajianhub AppStore"
+        }
+      }
+    )
+
   desc "Submit patch build to TestFlight (internal)"
   lane :internal_patch do
     new_version = update_ios_version("patch")
@@ -52,13 +95,12 @@ platform :ios do
       xcodeproj: "Runner.xcodeproj"
     )
 
-    build_ios_app(
-      scheme: "Runner",
-      export_method: "app-store"
-    )
+    build_configured_ios_app()
 
     upload_to_testflight(
-      skip_waiting_for_build_processing: true
+      ipa: "./fastlane/build/app.ipa",
+      skip_submission: true,
+      skip_waiting_for_build_processing: true,
     )
   end
 
@@ -75,10 +117,7 @@ platform :ios do
       xcodeproj: "Runner.xcodeproj"
     )
 
-    build_ios_app(
-      scheme: "Runner",
-      export_method: "app-store"
-    )
+    build_configured_ios_app()
 
     upload_to_testflight(
       skip_waiting_for_build_processing: true
@@ -98,10 +137,7 @@ platform :ios do
       xcodeproj: "Runner.xcodeproj"
     )
 
-    build_ios_app(
-      scheme: "Runner",
-      export_method: "app-store"
-    )
+    build_configured_ios_app()
 
     upload_to_testflight(
       skip_waiting_for_build_processing: true

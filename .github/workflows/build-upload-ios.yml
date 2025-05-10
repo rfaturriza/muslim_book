@@ -73,25 +73,21 @@ jobs:
       - name: Configure AppStore Connect
         run: |
           echo "$APP_STORE_CONNECT_API_KEY_CONTENT" | base64 --decode > ios/fastlane/AppStoreConnectAuthKey.p8
-          cat ios/fastlane/AppStoreConnectAuthKey.p8
+          echo "$DISTRIBUTION_CERTIFICATE" | base64 --decode > ios/fastlane/DistributionCertificate.p12
         env:
           APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
+          DISTRIBUTION_CERTIFICATE: ${{ secrets.DISTRIBUTION_CERTIFICATE }}
 
       - name: Execute Fastlane
         run: |
           export APP_STORE_CONNECT_API_KEY_CONTENT_DECODED=$(cat ./fastlane/AppStoreConnectAuthKey.p8)
-          echo "APP_STORE_CONNECT_KEY_ID: $APP_STORE_CONNECT_KEY_ID"
-          echo "APP_STORE_CONNECT_ISSUER_ID: $APP_STORE_CONNECT_ISSUER_ID"
-          echo "APP_STORE_CONNECT_API_KEY_PATH: $APP_STORE_CONNECT_API_KEY_PATH"
-          cat ./fastlane/AppStoreConnectAuthKey.p8
-          ls -la ./fastlane
-          bundle update fastlane
           bundle exec fastlane ${{ github.event.inputs.lane || 'internal_patch' }}
         working-directory: ios
         env:
           APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
-          APP_STORE_CONNECT_API_KEY_PATH: ./fastlane/AppStoreConnectAuthKey.p8
+          DISTRIBUTION_CERTIFICATE_PASSWORD: ${{ secrets.DISTRIBUTION_CERTIFICATE_PASSWORD }}
+
   bump-version:
     name: Bump Version
     needs: release-ios
