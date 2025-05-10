@@ -2,6 +2,11 @@ default_platform(:ios)
 
 platform :ios do
   before_all do
+    key_content = File.read(ENV["APP_STORE_CONNECT_API_KEY_PATH"])
+    if key_content.include?("\0")
+      UI.user_error!("App Store Connect API Key contains null bytes. Please check the key file.")
+    end
+  
     app_store_connect_api_key(
       key_id: ENV["APP_STORE_CONNECT_KEY_ID"],
       issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
