@@ -33,6 +33,7 @@ jobs:
           echo "$FIREBASE_OPTIONS_DEBUG" | base64 --decode > lib/firebase_options_debug.dart
           echo "$FIREBASE_ANDROID_JSON" | base64 --decode > android/app/google-services.json
           echo "$FIREBASE_IOS_PLIST" | base64 --decode > ios/Runner/GoogleService-Info.plist
+          echo "$FIREBASE_IOS_PLIST" | base64 --decode > ios/Runner/Firebase/Release/GoogleService-Info.plist
         env:
           FIREBASE_OPTIONS: ${{ secrets.FIREBASE_OPTION_FILE }}
           FIREBASE_OPTIONS_DEBUG: ${{ secrets.FIREBASE_OPTION_FILE_DEBUG }}
