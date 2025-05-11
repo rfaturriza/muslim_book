@@ -27,6 +27,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Cache Ruby gems
+        uses: actions/cache@v3
+        with:
+          path: ios/vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('ios/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+    
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pub-cache
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
+              
       - name: Configure Firebase
         run: |
           echo "$FIREBASE_OPTIONS" | base64 --decode > lib/firebase_options.dart
