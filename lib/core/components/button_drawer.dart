@@ -75,7 +75,7 @@ class ButtonDrawer extends StatelessWidget {
             ),
           ),
           isLabelVisible: showBadge,
-          backgroundColor: context.theme.colorScheme.primary,
+          backgroundColor: badgeColor ?? context.theme.colorScheme.primary,
           child: Text(
             title,
             style: context.textTheme.bodyMedium,
