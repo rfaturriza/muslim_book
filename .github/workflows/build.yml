@@ -13,7 +13,7 @@ permissions:
 jobs:
   build:
     name: Build ${{ matrix.target }}
-    runs-on: macos-latest
+    runs-on: macos-15
     outputs:
       flutter_version: ${{ steps.read_fvm_config.outputs.content }}
     strategy:
