@@ -32,6 +32,7 @@ jobs:
     secrets: inherit
 
   bump-version:
+    needs: [release-android, release-ios]
     uses: ./.github/workflows/bump-version.yml
     with:
       lane: ${{ github.event.inputs.lane }}
