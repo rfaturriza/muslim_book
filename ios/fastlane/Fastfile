@@ -64,11 +64,6 @@ platform :ios do
       output_directory: "./fastlane/build",
       output_name: "app.ipa",
       export_method: "app-store",
-      export_options: {
-        provisioningProfiles: {
-          "com.kajianhub": "com.kajianhub AppStore"
-        }
-      }
     )
 
     upload_to_testflight(
