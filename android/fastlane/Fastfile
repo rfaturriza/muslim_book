@@ -30,7 +30,7 @@ def update_flutter_version(type)
   flutter_set_version(
     path_to_yaml: "../pubspec.yaml",
     version_name: get_updated_version_name(type),
-    version_code: get_latest_build_number
+    version_code: get_latest_build_number.to_s
   )
 end
 
