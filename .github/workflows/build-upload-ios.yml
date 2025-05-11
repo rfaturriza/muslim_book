@@ -105,10 +105,10 @@ jobs:
         env:
           APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
           DISTRIBUTION_CERTIFICATE: ${{ secrets.DISTRIBUTION_CERTIFICATE }}
-  
+    
       - name: Execute Fastlane
         run: |
-          fastlane match appstore
+          bundle exec fastlane match appstore
           export APP_STORE_CONNECT_API_KEY_CONTENT_DECODED=$(cat ./fastlane/AppStoreConnectAuthKey.p8)
           bundle exec fastlane ${{ github.event.inputs.lane || 'internal_patch' }}
         working-directory: ios
