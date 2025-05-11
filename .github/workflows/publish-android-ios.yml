@@ -1,4 +1,4 @@
-name: iOS Build & Deploy
+name: Android and iOS Publish
 
 on:
   workflow_dispatch:
@@ -17,6 +17,84 @@ on:
           - production_major
 
 jobs:
+  release-android:
+    name: Build and release Android app
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: "temurin"
+
+      - name: Configure Firebase
+        run: |
+          echo "$FIREBASE_OPTIONS" | base64 --decode > lib/firebase_options.dart
+          echo "$FIREBASE_OPTIONS_DEBUG" | base64 --decode > lib/firebase_options_debug.dart
+          echo "$FIREBASE_ANDROID_JSON" | base64 --decode > android/app/google-services.json
+          echo "$FIREBASE_IOS_PLIST" | base64 --decode > ios/Runner/GoogleService-Info.plist
+        env:
+          FIREBASE_OPTIONS: ${{ secrets.FIREBASE_OPTION_FILE }}
+          FIREBASE_OPTIONS_DEBUG: ${{ secrets.FIREBASE_OPTION_FILE_DEBUG }}
+          FIREBASE_ANDROID_JSON: ${{ secrets.GOOGLE_SERVICE_ANDROID_JSON_FILE }}
+          FIREBASE_IOS_PLIST: ${{ secrets.GOOGLE_SERVICE_IOS_PLIST_FILE }}
+
+      - name: Add .env file
+        run: |
+          echo "$ENV_FILE" | base64 --decode > .env
+        env:
+          ENV_FILE: ${{ secrets.ENV_FILE }}
+
+      - name: Read Version Flutter
+        id: read_fvm_config
+        uses: juliangruber/read-file-action@v1.1.6
+        with:
+          path: ./.fvm/fvm_config.json
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{fromJson(steps.read_fvm_config.outputs.content).flutterSdkVersion}}
+
+      - name: Setup Ruby, Bundler, and Gemfile dependencies
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2.2"
+          bundler-cache: true
+          working-directory: android
+
+      - name: Install packages
+        run: flutter pub get
+
+      - name: Run build-runner
+        run: flutter pub run build_runner build --delete-conflicting-outputs
+
+      - name: Run easy_localization
+        run: flutter pub run easy_localization:generate -f keys -o locale_keys.g.dart --source-dir assets/translations
+
+      - name: Configure Keystore
+        run: |
+          echo "$PLAY_STORE_UPLOAD_KEY" | base64 --decode > app/upload-keystore.jks
+          echo "storeFile=upload-keystore.jks" >> key.properties
+          echo "keyAlias=$KEYSTORE_KEY_ALIAS" >> key.properties
+          echo "storePassword=$KEYSTORE_STORE_PASSWORD" >> key.properties
+          echo "keyPassword=$KEYSTORE_KEY_PASSWORD" >> key.properties
+        env:
+          PLAY_STORE_UPLOAD_KEY: ${{ secrets.KEYSTORE_FILE }}
+          KEYSTORE_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEYSTORE_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEYSTORE_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        working-directory: android
+
+      - name: Execute Fastlane
+        run: bundle exec fastlane ${{ github.event.inputs.lane || 'internal' }}
+        env:
+          PLAY_STORE_CONFIG_JSON: ${{ secrets.GPLAY_SERVICE_ACCOUNT_KEY_JSON }}
+        working-directory: android
+
   release-ios:
     name: Build and release iOS app
     runs-on: macos-15
@@ -31,7 +109,7 @@ jobs:
           key: ${{ runner.os }}-gems-${{ hashFiles('ios/Gemfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-gems-
-    
+
       - name: Cache Flutter dependencies
         uses: actions/cache@v3
         with:
@@ -102,7 +180,7 @@ jobs:
         env:
           APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
           DISTRIBUTION_CERTIFICATE: ${{ secrets.DISTRIBUTION_CERTIFICATE }}
-    
+
       - name: Execute Fastlane
         run: |
           bundle exec fastlane match appstore --readonly
@@ -119,13 +197,13 @@ jobs:
 
   bump-version:
     name: Bump Version
-    needs: release-ios
+    needs: release-android
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Read Flutter version
+      - name: Read Version Flutter
         id: read_fvm_config
         uses: juliangruber/read-file-action@v1.1.6
         with:
