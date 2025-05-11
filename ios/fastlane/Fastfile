@@ -29,6 +29,7 @@ platform :ios do
   
   def update_ios_version(typeUpdate)
     current_version = get_version_number(xcodeproj: "Runner.xcodeproj")
+    current_build_number = app_store_build_number()
     version_parts = current_version.split(".")
 
     if typeUpdate == "major"
@@ -42,7 +43,18 @@ platform :ios do
       version_parts[2] = version_parts[2].to_i + 1
     end
 
-    return version_parts.join(".")
+    updated_version = version_parts.join(".")
+    updated_build_number = current_build_number + 1
+
+    increment_version_number(
+      version_number: updated_version,
+      xcodeproj: "Runner.xcodeproj"
+    )
+
+    increment_build_number(
+      build_number: updated_build_number,
+      xcodeproj: "Runner.xcodeproj"
+    )
   end
 
   def build_configured_ios_app()
@@ -58,138 +70,58 @@ platform :ios do
     )
   end
 
-  desc "Submit patch build to TestFlight (internal)"
-  lane :internal_patch do
-    new_version = update_ios_version("patch")
-
-    increment_version_number(
-      version_number: new_version,
-      xcodeproj: "Runner.xcodeproj"
-    )
-
-    increment_build_number(
-      xcodeproj: "Runner.xcodeproj"
-    )
-
+  def internal_build_configured_ios_app()
     build_configured_ios_app()
-
     upload_to_testflight(
       ipa: "./fastlane/build/app.ipa",
       skip_submission: true,
       skip_waiting_for_build_processing: true,
     )
+  end
+
+  def production_build_configured_ios_app()
+    build_configured_ios_app()
+    upload_to_app_store(
+      ipa: "./fastlane/build/app.ipa",
+      skip_screenshots: true,
+      skip_metadata: true,
+      submit_for_review: true,
+    )
+  end
+
+  desc "Submit patch build to TestFlight (internal)"
+  lane :internal_patch do
+    update_ios_version("patch")
+    internal_build_configured_ios_app()
   end
 
   desc "Submit minor build to TestFlight (internal)"
   lane :internal_minor do
-    new_version = update_ios_version("minor")
-
-    increment_version_number(
-      version_number: new_version,
-      xcodeproj: "Runner.xcodeproj"
-    )
-
-    increment_build_number(
-      xcodeproj: "Runner.xcodeproj"
-    )
-
-    build_configured_ios_app()
-
-    upload_to_testflight(
-      ipa: "./fastlane/build/app.ipa",
-      skip_submission: true,
-      skip_waiting_for_build_processing: true,
-    )
+    update_ios_version("minor")
+    internal_build_configured_ios_app()
   end
 
   desc "Submit major build to TestFlight (internal)"
   lane :internal_major do
-    new_version = update_ios_version("major")
-
-    increment_version_number(
-      version_number: new_version,
-      xcodeproj: "Runner.xcodeproj"
-    )
-
-    increment_build_number(
-      xcodeproj: "Runner.xcodeproj"
-    )
-
-    build_configured_ios_app()
-
-    upload_to_testflight(
-      ipa: "./fastlane/build/app.ipa",
-      skip_submission: true,
-      skip_waiting_for_build_processing: true,
-    )
+    update_ios_version("major")
+    internal_build_configured_ios_app()
   end
 
   desc "Submit patch update for PRODUCTION build to App Store"
   lane :production_patch do
-    new_version = update_ios_version("patch")
-
-    increment_version_number(
-      version_number: new_version,
-      xcodeproj: "Runner.xcodeproj"
-    )
-
-    increment_build_number(
-      xcodeproj: "Runner.xcodeproj"
-    )
-
-    build_configured_ios_app()
-
-    upload_to_app_store(
-      ipa: "./fastlane/build/app.ipa",
-      skip_screenshots: true,
-      skip_metadata: true,
-      submit_for_review: true,
-    )
+    update_ios_version("patch")
+    production_build_configured_ios_app()
   end
 
   desc "Submit minor update for PRODUCTION build to App Store"
   lane :production_minor do
-    new_version = update_ios_version("minor")
-
-    increment_version_number(
-      version_number: new_version,
-      xcodeproj: "Runner.xcodeproj"
-    )
-
-    increment_build_number(
-      xcodeproj: "Runner.xcodeproj"
-    )
-
-    build_configured_ios_app()
-
-    upload_to_app_store(
-      ipa: "./fastlane/build/app.ipa",
-      skip_screenshots: true,
-      skip_metadata: true,
-      submit_for_review: true,
-    )
+    update_ios_version("minor")
+    production_build_configured_ios_app()
   end
 
   desc "Submit major update for PRODUCTION build to App Store"
   lane :production_major do
-    new_version = update_ios_version("major")
-
-    increment_version_number(
-      version_number: new_version,
-      xcodeproj: "Runner.xcodeproj"
-    )
-
-    increment_build_number(
-      xcodeproj: "Runner.xcodeproj"
-    )
-
-    build_configured_ios_app()
-
-    upload_to_app_store(
-      ipa: "./fastlane/build/app.ipa",
-      skip_screenshots: true,
-      skip_metadata: true,
-      submit_for_review: true,
-    )
+    update_ios_version("major")
+    production_build_configured_ios_app()
   end
 end
