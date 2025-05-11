@@ -6,7 +6,7 @@ on:
       lane:
         description: "Fastlane lane"
         required: true
-        default: "internal"
+        default: "internal_patch"
         type: choice
         options:
           - internal_patch
