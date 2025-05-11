@@ -80,9 +80,6 @@ jobs:
             bundle exec fastlane ${{ inputs.lane }}
           else
             flutter build ipa --no-codesign
-            echo "$APP_STORE_CONNECT_API_KEY_CONTENT" | base64 --decode > fastlane/AppStoreConnectAuthKey.p8
-            echo "$DISTRIBUTION_CERTIFICATE" | base64 --decode > fastlane/DistributionCertificate.p12
-            export APP_STORE_CONNECT_API_KEY_CONTENT_DECODED=$(cat ./fastlane/AppStoreConnectAuthKey.p8)
             bundle exec fastlane match appstore --readonly
             bundle exec fastlane ${{ inputs.lane }}
           fi
@@ -101,4 +98,4 @@ jobs:
           MATCH_KEYCHAIN_PASSWORD: ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
           APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
-          DISTRIBUTION_CERTIFICATE_PASSWORD: ${{ secrets.DISTRIBUTION_CERTIFICATE_PASSWORD }}
+          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
