@@ -1,4 +1,4 @@
-name: iOS Build & Deploy
+name: Android and iOS Publish
 
 on:
   workflow_dispatch:
@@ -17,6 +17,13 @@ on:
           - production_major
 
 jobs:
+  release-android:
+    uses: ./.github/workflows/release-app.yml
+    with:
+      platform: android
+      lane: ${{ github.event.inputs.lane }}
+    secrets: inherit
+
   release-ios:
     uses: ./.github/workflows/release-app.yml
     with:
@@ -25,7 +32,7 @@ jobs:
     secrets: inherit
 
   bump-version:
-    needs: release-ios
+    needs: [release-android, release-ios]
     uses: ./.github/workflows/bump-version.yml
     with:
       lane: ${{ github.event.inputs.lane }}

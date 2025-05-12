@@ -38,7 +38,6 @@ TextTheme textThemeStyle({required bool isDarkMode}) {
       fontSize: 16,
       color: defaultColor,
       fontWeight: FontWeight.w400,
-      letterSpacing: 0.15,
     ),
     titleSmall: TextStyle(
       fontSize: 14,

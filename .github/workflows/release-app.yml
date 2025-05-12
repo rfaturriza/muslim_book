@@ -1,0 +1,101 @@
+name: Release App
+
+on:
+  workflow_call:
+    inputs:
+      platform:
+        required: true
+        type: string
+      lane:
+        required: true
+        type: string
+
+jobs:
+  build:
+    name: Release ${{ inputs.platform }}
+    runs-on: ${{ inputs.platform == 'ios' && 'macos-15' || 'ubuntu-latest' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        if: ${{ inputs.platform == 'android' }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: "temurin"
+
+      - name: Configure Firebase & Env
+        run: |
+          echo "$FIREBASE_OPTIONS" | base64 --decode > lib/firebase_options.dart
+          echo "$FIREBASE_OPTIONS_DEBUG" | base64 --decode > lib/firebase_options_debug.dart
+          echo "$FIREBASE_ANDROID_JSON" | base64 --decode > android/app/google-services.json
+          echo "$FIREBASE_IOS_PLIST" | base64 --decode > ios/Runner/GoogleService-Info.plist
+          mkdir -p ios/Runner/Firebase/Release
+          mkdir -p ios/Runner/Firebase/Debug
+          echo "$FIREBASE_IOS_PLIST" | base64 --decode > ios/Runner/Firebase/Debug/GoogleService-Info.plist
+          echo "$FIREBASE_IOS_PLIST" | base64 --decode > ios/Runner/Firebase/Release/GoogleService-Info.plist
+          echo "$ENV_FILE" | base64 --decode > .env
+        env:
+          FIREBASE_OPTIONS: ${{ secrets.FIREBASE_OPTION_FILE }}
+          FIREBASE_OPTIONS_DEBUG: ${{ secrets.FIREBASE_OPTION_FILE_DEBUG }}
+          FIREBASE_ANDROID_JSON: ${{ secrets.GOOGLE_SERVICE_ANDROID_JSON_FILE }}
+          FIREBASE_IOS_PLIST: ${{ secrets.GOOGLE_SERVICE_IOS_PLIST_FILE }}
+          ENV_FILE: ${{ secrets.ENV_FILE }}
+
+      - name: Read Flutter version
+        id: read_fvm_config
+        uses: juliangruber/read-file-action@v1.1.6
+        with:
+          path: ./.fvm/fvm_config.json
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ fromJson(steps.read_fvm_config.outputs.content).flutterSdkVersion }}
+
+      - name: Install Dependencies
+        run: |
+          flutter pub get
+          flutter pub run build_runner build --delete-conflicting-outputs
+          flutter pub run easy_localization:generate -f keys -o locale_keys.g.dart --source-dir assets/translations
+          dart pub global activate flutterfire_cli
+
+      - name: Setup Ruby & Bundle
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2.2"
+          bundler-cache: true
+          working-directory: ${{ inputs.platform }}
+
+      - name: Build & Release
+        run: |
+          if [[ "${{ inputs.platform }}" == "android" ]]; then
+            echo "$PLAY_STORE_UPLOAD_KEY" | base64 --decode > app/upload-keystore.jks
+            echo "storeFile=upload-keystore.jks" >> key.properties
+            echo "keyAlias=$KEYSTORE_KEY_ALIAS" >> key.properties
+            echo "storePassword=$KEYSTORE_STORE_PASSWORD" >> key.properties
+            echo "keyPassword=$KEYSTORE_KEY_PASSWORD" >> key.properties
+            bundle exec fastlane ${{ inputs.lane }}
+          else
+            flutter build ipa --no-codesign
+            bundle exec fastlane match appstore --readonly
+            bundle exec fastlane ${{ inputs.lane }}
+          fi
+        working-directory: ${{ inputs.platform }}
+        env:
+          # Android
+          PLAY_STORE_UPLOAD_KEY: ${{ secrets.KEYSTORE_FILE }}
+          KEYSTORE_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEYSTORE_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEYSTORE_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          PLAY_STORE_CONFIG_JSON: ${{ secrets.GPLAY_SERVICE_ACCOUNT_KEY_JSON }}
+
+          # iOS
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
+          MATCH_KEYCHAIN_PASSWORD: ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
