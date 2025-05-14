@@ -82,10 +82,15 @@ class RootRouter {
     parent: rootRoute,
   );
 
-   static const RouteModel prayerTimeRoute = RouteModel(
+  static const RouteModel prayerTimeRoute = RouteModel(
     name: 'prayerTime',
     path: '/prayer-time',
     parent: rootRoute,
   );
 
+  static const RouteModel ustadAiRoute = RouteModel(
+    name: 'ustadAi',
+    path: '/ustad-ai',
+    parent: rootRoute,
+  );
 }

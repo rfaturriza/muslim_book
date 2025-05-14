@@ -3,7 +3,7 @@
   "defaultErrorMessage": "Mohon maaf, Terjadi kesalahan silahkan coba lagi",
   "loading": "Memuat",
   "noData": "Tidak ada data",
-  "noInternetConnection": "Tidak ada koneksi internet",
+  "noInternetConnection": "Tidak ada koneksi internet, periksa koneksi Anda dan coba lagi",
   "pleaseWait": "Mohon tunggu...",
   "juzOneDescription": "Mulai dari Al-Fatihah ayat 1 sampai Al-Baqarah ayat 141",
   "juzTwoDescription": "Mulai dari Al-Baqarah ayat 142 sampai Al-Baqarah ayat 252",
@@ -220,5 +220,12 @@
   "kajian": "Kajian",
   "errorOpenMap": "Mohon maaf, tidak dapat membuka peta",
   "notificationPrayerTitle": "Waktunya {prayer} Pukul {time}",
-  "notificationPrayerDescription": "Lihat informasi waktu shalat di {location}"
+  "notificationPrayerDescription": "Lihat informasi waktu shalat di {location}",
+  "ustadzAiButtonLabel": "Ustadz AI",
+  "ustadzAiScreen": {
+    "title": "Tanya Ustadz AI",
+    "description": "Tanyakan pertanyaan seputar Islam kepada Ustadz AI",
+    "labelTextField": "Tanya apa saja tentang Islam",
+    "generating": "Ditunggu ya, pertanyaan kamu sedang diproses"
+  }
 }

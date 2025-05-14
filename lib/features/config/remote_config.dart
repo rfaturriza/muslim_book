@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
+
+import 'data/model/menu_config_model.dart';
 
 @lazySingleton
 class RemoteConfigService {
@@ -15,7 +19,7 @@ class RemoteConfigService {
         RemoteConfigSettings(
           fetchTimeout: const Duration(minutes: 1),
           minimumFetchInterval: kDebugMode
-              ? const Duration(minutes: 5)
+              ? const Duration(minutes: 10)
               : const Duration(hours: 1),
         ),
       );
@@ -38,4 +42,12 @@ class RemoteConfigService {
 
   get webViewDonationUrl => _remoteConfig.getString('webview_donation_url');
   get imageRandomUrl => _remoteConfig.getString('image_random_url');
+  MenusConfig get menuConfigs {
+    final rawJson = _remoteConfig.getString('menu_config');
+    if (rawJson.isEmpty) {
+      return MenusConfig({});
+    }
+    final parsed = jsonDecode(rawJson);
+    return MenusConfig.fromJson(parsed as Map<String, dynamic>);
+  }
 }

@@ -5,6 +5,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:in_app_review/in_app_review.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:quranku/core/constants/url_constants.dart';
@@ -18,6 +19,7 @@ import '../../../../core/components/spacer.dart';
 import '../../../../generated/locale_keys.g.dart';
 import '../../../../injection.dart';
 import '../../../../theme_provider.dart';
+import '../../../config/remote_config.dart';
 
 class DrawerQuranScreen extends StatelessWidget {
   const DrawerQuranScreen({super.key});
@@ -65,6 +67,8 @@ class _ListItemMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final menuConfigs = sl<RemoteConfigService>().menuConfigs;
+    final ustadAiConfig = menuConfigs.getMenu('ustadAi');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -96,6 +100,19 @@ class _ListItemMenu extends StatelessWidget {
           },
           withDecoration: false,
         ),
+        if (ustadAiConfig.show) ...[
+          ButtonDrawer(
+            icon: Symbols.star_shine,
+            showBadge: ustadAiConfig.showBadge,
+            badgeText: ustadAiConfig.badgeText,
+            iconColor: context.theme.colorScheme.primary,
+            title: LocaleKeys.ustadzAiButtonLabel.tr(),
+            onTap: () {
+              context.pushNamed(RootRouter.ustadAiRoute.name);
+            },
+            withDecoration: false,
+          ),
+        ],
       ],
     );
   }

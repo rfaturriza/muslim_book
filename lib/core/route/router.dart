@@ -18,6 +18,8 @@ import '../../features/quran/presentation/screens/share_verse_screen.dart';
 import '../../features/setting/presentation/screens/language_setting_screen.dart';
 import '../../features/setting/presentation/screens/styling_setting_screen.dart';
 import '../../features/shalat/presentation/screens/prayer_schedule_screen.dart';
+import '../../features/ustad_ai/presentation/blocs/ustad_ai/ustad_ai_bloc.dart';
+import '../../features/ustad_ai/presentation/screens/ustad_ai_screen.dart';
 import '../../injection.dart';
 import '../components/error_screen.dart';
 import 'root_router.dart';
@@ -164,6 +166,14 @@ final router = GoRouter(
           name: RootRouter.prayerTimeRoute.name,
           path: RootRouter.prayerTimeRoute.path,
           builder: (_, __) => PrayerScheduleScreen(),
+        ),
+        GoRoute(
+          name: RootRouter.ustadAiRoute.name,
+          path: RootRouter.ustadAiRoute.path,
+          builder: (_, __) => BlocProvider(
+            create: (context) => sl<UstadAiBloc>(),
+            child: AiScreen(),
+          ),
         ),
         GoRoute(
           name: RootRouter.error.name,
