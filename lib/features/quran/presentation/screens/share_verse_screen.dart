@@ -12,7 +12,7 @@ import 'package:quranku/features/quran/domain/entities/juz.codegen.dart';
 import 'package:quranku/features/setting/presentation/bloc/styling_setting/styling_setting_bloc.dart';
 import 'package:quranku/generated/locale_keys.g.dart';
 
-import '../../../../core/network/remote_config.dart';
+import '../../../config/remote_config.dart';
 import '../../../../core/utils/extension/string_ext.dart';
 import '../../../../injection.dart';
 import '../../../setting/presentation/bloc/language_setting/language_setting_bloc.dart';

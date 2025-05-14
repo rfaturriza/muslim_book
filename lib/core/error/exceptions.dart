@@ -33,6 +33,8 @@ class ServerException implements Exception {
         return LocaleKeys.cancelException.tr();
       case DioExceptionType.badCertificate:
         return LocaleKeys.badCertificateException.tr();
+      case DioExceptionType.connectionError:
+        return LocaleKeys.noInternetConnection.tr();
       default:
         return LocaleKeys.unknownErrorException.tr();
     }
