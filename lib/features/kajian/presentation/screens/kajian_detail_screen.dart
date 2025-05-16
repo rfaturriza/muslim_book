@@ -218,12 +218,13 @@ class _HistorySection extends StatefulWidget {
 }
 
 class _HistorySectionState extends State<_HistorySection> {
-  late final List<HistoryKajian> sortedHistories;
+  late List<HistoryKajian> sortedHistories;
 
   @override
   void initState() {
     super.initState();
-    sortedHistories = widget.histories;
+    sortedHistories = List.from(widget.histories);
+
     if (sortedHistories.isNotEmpty && sortedHistories.length > 1) {
       sortedHistories.sort((a, b) {
         return DateTime.parse(b.publishedAt)
