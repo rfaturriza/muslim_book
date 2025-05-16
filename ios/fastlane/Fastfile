@@ -77,6 +77,7 @@ platform :ios do
       ipa: "./fastlane/build/app.ipa",
       skip_screenshots: true,
       skip_metadata: true,
+      precheck_include_in_app_purchases: false,
       submit_for_review: true
     )
   end
