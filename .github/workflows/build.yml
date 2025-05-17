@@ -39,7 +39,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.29.3'
+          flutter-version: ${{fromJson(steps. read_version.outputs.content).flutterSdkVersion}}
           channel: 'stable'
           architecture: 'x64'
 
