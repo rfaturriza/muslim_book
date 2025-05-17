@@ -3,13 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:quranku/features/quran/domain/entities/verses.codegen.dart';
 import 'package:quranku/features/quran/presentation/bloc/audioVerse/audio_verse_bloc.dart';
 import 'package:quranku/features/quran/presentation/bloc/lastRead/last_read_cubit.dart';
 import 'package:quranku/features/quran/presentation/screens/components/verses_list.dart';
-import 'package:quranku/features/quran/presentation/utils/tajweed_word.dart';
 import 'package:quranku/features/setting/presentation/bloc/language_setting/language_setting_bloc.dart';
 import 'package:quranku/features/setting/presentation/bloc/styling_setting/styling_setting_bloc.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import 'verses_list_test.mocks.dart';
 

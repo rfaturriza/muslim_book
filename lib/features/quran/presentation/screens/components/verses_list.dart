@@ -343,59 +343,49 @@ class _VersesListState extends State<VersesList> {
                 ),
               ],
               Expanded(
-                child: BlocBuilder<AudioVerseBloc, AudioVerseState>(
-                  buildWhen: (previous, current) {
-                    return previous.isShowBottomNavPlayer != current.isShowBottomNavPlayer;
+                child: ScrollablePositionedList.separated(
+                  itemScrollController: _itemScrollController,
+                  itemPositionsListener: _itemPositionsListener,
+                  itemCount: () {
+                    if (isPreBismillah) {
+                      return widget.listVerses.length + 1;
+                    }
+                    return widget.listVerses.length;
+                  }(),
+                  separatorBuilder: (BuildContext context, int index) {
+                    if (isPreBismillah && index == 0) {
+                      return const Divider(color: Colors.transparent);
+                    }
+                    return const Divider(thickness: 0.1);
                   },
-                  builder: (context, audioState) {
-                    return ScrollablePositionedList.separated(
-                      padding: EdgeInsets.only(
-                        bottom: audioState.isShowBottomNavPlayer ? 120.0 : 0.0,
-                      ),
-                      itemScrollController: _itemScrollController,
-                      itemPositionsListener: _itemPositionsListener,
-                      itemCount: () {
-                        if (isPreBismillah) {
-                          return widget.listVerses.length + 1;
-                        }
-                        return widget.listVerses.length;
-                      }(),
-                      separatorBuilder: (BuildContext context, int index) {
-                        if (isPreBismillah && index == 0) {
-                          return const Divider(color: Colors.transparent);
-                        }
-                        return const Divider(thickness: 0.1);
-                      },
-                      itemBuilder: (context, index) {
-                        if (index == 0 && isPreBismillah) {
-                          return BlocBuilder<StylingSettingBloc,
-                              StylingSettingState>(
-                            buildWhen: (p, c) {
-                              return p.fontFamilyArabic != c.fontFamilyArabic ||
-                                  p.arabicFontSize != c.arabicFontSize;
-                            },
-                            builder: (context, state) {
-                              return Text(
-                                widget.preBismillah ?? emptyString,
-                                textAlign: TextAlign.center,
-                                style: context.textTheme.titleLarge?.copyWith(
-                                  fontSize: state.arabicFontSize,
-                                  fontFamily: state.fontFamilyArabic,
-                                ),
-                              );
-                            },
+                  itemBuilder: (context, index) {
+                    if (index == 0 && isPreBismillah) {
+                      return BlocBuilder<StylingSettingBloc,
+                          StylingSettingState>(
+                        buildWhen: (p, c) {
+                          return p.fontFamilyArabic != c.fontFamilyArabic ||
+                              p.arabicFontSize != c.arabicFontSize;
+                        },
+                        builder: (context, state) {
+                          return Text(
+                            widget.preBismillah ?? emptyString,
+                            textAlign: TextAlign.center,
+                            style: context.textTheme.titleLarge?.copyWith(
+                              fontSize: state.arabicFontSize,
+                              fontFamily: state.fontFamilyArabic,
+                            ),
                           );
-                        }
-                        final indexVerses = isPreBismillah ? index - 1 : index;
-                        final verses = widget.listVerses[indexVerses];
-                        return ListTileVerses(
-                          verses: verses,
-                          clickFrom: widget.view,
-                          juz: widget.juz,
-                          surah: widget.surah,
-                          tajweedAya: widget.tajweedWords[indexVerses].tokens,
-                        );
-                      },
+                        },
+                      );
+                    }
+                    final indexVerses = isPreBismillah ? index - 1 : index;
+                    final verses = widget.listVerses[indexVerses];
+                    return ListTileVerses(
+                      verses: verses,
+                      clickFrom: widget.view,
+                      juz: widget.juz,
+                      surah: widget.surah,
+                      tajweedAya: widget.tajweedWords[indexVerses].tokens,
                     );
                   },
                 ),
