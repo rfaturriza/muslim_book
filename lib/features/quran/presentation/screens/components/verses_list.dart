@@ -343,21 +343,29 @@ class _VersesListState extends State<VersesList> {
                 ),
               ],
               Expanded(
-                child: ScrollablePositionedList.separated(
-                  itemScrollController: _itemScrollController,
-                  itemPositionsListener: _itemPositionsListener,
-                  itemCount: () {
-                    if (isPreBismillah) {
-                      return widget.listVerses.length + 1;
-                    }
-                    return widget.listVerses.length;
-                  }(),
-                  separatorBuilder: (BuildContext context, int index) {
-                    if (isPreBismillah && index == 0) {
-                      return const Divider(color: Colors.transparent);
-                    }
-                    return const Divider(thickness: 0.1);
+                child: BlocBuilder<AudioVerseBloc, AudioVerseState>(
+                  buildWhen: (previous, current) {
+                    return previous.isShowBottomNavPlayer != current.isShowBottomNavPlayer;
                   },
+                  builder: (context, audioState) {
+                    return ScrollablePositionedList.separated(
+                      padding: EdgeInsets.only(
+                        bottom: audioState.isShowBottomNavPlayer ? 120.0 : 0.0,
+                      ),
+                      itemScrollController: _itemScrollController,
+                      itemPositionsListener: _itemPositionsListener,
+                      itemCount: () {
+                        if (isPreBismillah) {
+                          return widget.listVerses.length + 1;
+                        }
+                        return widget.listVerses.length;
+                      }(),
+                      separatorBuilder: (BuildContext context, int index) {
+                        if (isPreBismillah && index == 0) {
+                          return const Divider(color: Colors.transparent);
+                        }
+                        return const Divider(thickness: 0.1);
+                      },
                   itemBuilder: (context, index) {
                     if (index == 0 && isPreBismillah) {
                       return BlocBuilder<StylingSettingBloc,
@@ -386,6 +394,9 @@ class _VersesListState extends State<VersesList> {
                       juz: widget.juz,
                       surah: widget.surah,
                       tajweedAya: widget.tajweedWords[indexVerses].tokens,
+                    );
+                  },
+                ),
                     );
                   },
                 ),
