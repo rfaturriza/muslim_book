@@ -366,37 +366,36 @@ class _VersesListState extends State<VersesList> {
                         }
                         return const Divider(thickness: 0.1);
                       },
-                  itemBuilder: (context, index) {
-                    if (index == 0 && isPreBismillah) {
-                      return BlocBuilder<StylingSettingBloc,
-                          StylingSettingState>(
-                        buildWhen: (p, c) {
-                          return p.fontFamilyArabic != c.fontFamilyArabic ||
-                              p.arabicFontSize != c.arabicFontSize;
-                        },
-                        builder: (context, state) {
-                          return Text(
-                            widget.preBismillah ?? emptyString,
-                            textAlign: TextAlign.center,
-                            style: context.textTheme.titleLarge?.copyWith(
-                              fontSize: state.arabicFontSize,
-                              fontFamily: state.fontFamilyArabic,
-                            ),
+                      itemBuilder: (context, index) {
+                        if (index == 0 && isPreBismillah) {
+                          return BlocBuilder<StylingSettingBloc,
+                              StylingSettingState>(
+                            buildWhen: (p, c) {
+                              return p.fontFamilyArabic != c.fontFamilyArabic ||
+                                  p.arabicFontSize != c.arabicFontSize;
+                            },
+                            builder: (context, state) {
+                              return Text(
+                                widget.preBismillah ?? emptyString,
+                                textAlign: TextAlign.center,
+                                style: context.textTheme.titleLarge?.copyWith(
+                                  fontSize: state.arabicFontSize,
+                                  fontFamily: state.fontFamilyArabic,
+                                ),
+                              );
+                            },
                           );
-                        },
-                      );
-                    }
-                    final indexVerses = isPreBismillah ? index - 1 : index;
-                    final verses = widget.listVerses[indexVerses];
-                    return ListTileVerses(
-                      verses: verses,
-                      clickFrom: widget.view,
-                      juz: widget.juz,
-                      surah: widget.surah,
-                      tajweedAya: widget.tajweedWords[indexVerses].tokens,
-                    );
-                  },
-                ),
+                        }
+                        final indexVerses = isPreBismillah ? index - 1 : index;
+                        final verses = widget.listVerses[indexVerses];
+                        return ListTileVerses(
+                          verses: verses,
+                          clickFrom: widget.view,
+                          juz: widget.juz,
+                          surah: widget.surah,
+                          tajweedAya: widget.tajweedWords[indexVerses].tokens,
+                        );
+                      },
                     );
                   },
                 ),
