@@ -64,8 +64,8 @@ jobs:
       - name: Install Dependencies
         run: |
           flutter pub get
-          flutter pub run build_runner build --delete-conflicting-outputs
-          flutter pub run easy_localization:generate -f keys -o locale_keys.g.dart --source-dir assets/translations
+          dart run build_runner build --delete-conflicting-outputs
+          dart run easy_localization:generate -f keys -o locale_keys.g.dart --source-dir assets/translations
           dart pub global activate flutterfire_cli
 
       - name: Build ${{ matrix.target }}
