@@ -40,7 +40,7 @@ jobs:
         with:
           flutter-version: '3.29.3'
           channel: 'stable'
-          architecture: 'arm64'
+          architecture: 'x64'
 
       - name: Setup Firebase Config
         run: |
