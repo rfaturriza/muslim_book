@@ -41,8 +41,8 @@ jobs:
         with:
           flutter-version: ${{fromJson(steps. read_version.outputs.content).flutterSdkVersion}}
           channel: 'stable'
-          architecture: 'x64'
-
+          cache: true
+          
       - name: Configure Firebase and Environment
         run: |
           echo "$FIREBASE_OPTIONS" | base64 --decode > lib/firebase_options.dart
