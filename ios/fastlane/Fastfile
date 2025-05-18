@@ -105,11 +105,7 @@ platform :ios do
   lane :internal_minor do
     release_lane(update_type: "minor", target: :internal)
   end
-
-  desc "Internal release - minor"
-  lane :internal_minor do
-    release_lane(update_type: "minor", target: :internal)
-  end
+  
 
   desc "Internal release - major"
   lane :internal_major do
@@ -125,7 +121,7 @@ platform :ios do
   lane :production_minor do
     release_lane(update_type: "minor", target: :production)
   end
-  
+
   desc "Production release - major"
   lane :production_major do
     release_lane(update_type: "major", target: :production)
