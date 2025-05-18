@@ -67,6 +67,9 @@ jobs:
           dart run build_runner build --delete-conflicting-outputs
           dart run easy_localization:generate -f keys -o locale_keys.g.dart --source-dir assets/translations
           dart pub global activate flutterfire_cli
+      
+      - name: Run Tests
+        run: flutter test --no-pub --coverage
 
       - name: Build ${{ matrix.target }}
         run: flutter build ${{ matrix.target }}
