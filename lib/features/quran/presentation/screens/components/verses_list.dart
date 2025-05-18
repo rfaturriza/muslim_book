@@ -343,12 +343,7 @@ class _VersesListState extends State<VersesList> {
                 ),
               ],
               Expanded(
-                child: BlocBuilder<AudioVerseBloc, AudioVerseState>(
-                  buildWhen: (p, c) => p.isShowBottomNavPlayer != c.isShowBottomNavPlayer,
-                  builder: (context, state) {
-                    final bottomPadding = state.isShowBottomNavPlayer ? 120.0 : 0.0;
-                    return ScrollablePositionedList.separated(
-                      padding: EdgeInsets.only(bottom: bottomPadding),
+                child: ScrollablePositionedList.separated(
                   itemScrollController: _itemScrollController,
                   itemPositionsListener: _itemPositionsListener,
                   itemCount: () {
