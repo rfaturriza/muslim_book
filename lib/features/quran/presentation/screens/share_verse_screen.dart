@@ -52,6 +52,7 @@ class ShareVerseScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         forceMaterialTransparency: true,
+        leading: BackButton(),
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),
