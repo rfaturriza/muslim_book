@@ -160,12 +160,14 @@ class _Footer extends StatelessWidget {
                       'https://apps.apple.com/app/${appName.toLowerCase()}/id$iosAppId';
                   final link = Platform.isIOS ? linkIOS : linkAndroid;
 
-                  await Share.share(
-                    LocaleKeys.shareAppDescription.tr(
-                      args: [
-                        info.appName,
-                        link,
-                      ],
+                  await SharePlus.instance.share(
+                    ShareParams(
+                      text: LocaleKeys.shareAppDescription.tr(
+                        args: [
+                          info.appName,
+                          link,
+                        ],
+                      ),
                     ),
                   );
                 },

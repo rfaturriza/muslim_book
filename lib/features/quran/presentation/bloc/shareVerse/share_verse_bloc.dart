@@ -124,14 +124,16 @@ class ShareVerseBloc extends Bloc<ShareVerseEvent, ShareVerseState> {
       return;
     }
     emit(state.copyWith(isLoading: false));
-    Share.shareXFiles(
-      [
-        XFile.fromData(
-          pngBytes,
-          name: 'verse-story.png',
-          mimeType: 'image/png',
-        ),
-      ],
+    SharePlus.instance.share(
+      ShareParams(
+        files: [
+          XFile.fromData(
+            pngBytes,
+            name: 'verse-story.png',
+            mimeType: 'image/png',
+          ),
+        ],
+      ),
     );
   }
 
