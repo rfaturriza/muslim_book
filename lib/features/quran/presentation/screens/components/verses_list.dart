@@ -343,7 +343,12 @@ class _VersesListState extends State<VersesList> {
                 ),
               ],
               Expanded(
-                child: ScrollablePositionedList.separated(
+                child: BlocBuilder<AudioVerseBloc, AudioVerseState>(
+                  buildWhen: (p, c) => p.isShowBottomNavPlayer != c.isShowBottomNavPlayer,
+                  builder: (context, state) {
+                    final bottomPadding = state.isShowBottomNavPlayer ? 120.0 : 0.0;
+                    return ScrollablePositionedList.separated(
+                      padding: EdgeInsets.only(bottom: bottomPadding),
                   itemScrollController: _itemScrollController,
                   itemPositionsListener: _itemPositionsListener,
                   itemCount: () {
@@ -462,7 +467,7 @@ class ListTileVerses extends StatelessWidget {
                                   context, verses, clickFrom, juz, surah);
                             },
                             onSharePressed: () {
-                              context.pushNamed(
+                              context.goNamed(
                                 RootRouter.shareVerseRoute.name,
                                 extra: ShareVerseScreenExtra(
                                   verse: verses,
