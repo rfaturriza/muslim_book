@@ -27,9 +27,9 @@ dependencies:
   geocoding: ^3.0.0
   freezed_annotation: ^3.0.0
   json_annotation: ^4.8.1
-  hive: ^2.2.3
+  hive_ce: ^2.11.2
+  hive_ce_flutter: ^2.3.1
   path_provider: ^2.1.2
-  hive_flutter: ^1.1.0
   oktoast: ^3.4.0
   scrollable_positioned_list: ^0.3.8
   flutter_qiblah: ^3.0.3
@@ -68,9 +68,9 @@ dev_dependencies:
   flutter_lints: ^5.0.0
   build_runner: ^2.4.8
   injectable_generator: ^2.4.1
-  freezed: ^3.0.0-0.0.dev
+  freezed: ^3.0.6
   json_serializable: ^6.7.1
-  hive_generator: ^2.0.1
+  hive_ce_generator: ^1.9.1
 
 flutter:
   uses-material-design: true

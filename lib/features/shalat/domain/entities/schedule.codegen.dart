@@ -1,7 +1,7 @@
 import 'package:adhan/adhan.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:quranku/core/constants/hive_constants.dart';
 import 'package:quranku/features/shalat/data/models/schedule_model.codegen.dart';
 
@@ -102,7 +102,7 @@ abstract class Schedule with _$Schedule {
 
 @freezed
 @HiveType(typeId: HiveTypeConst.coordinate)
-class Coordinate with _$Coordinate {
+abstract class Coordinate with _$Coordinate {
   const factory Coordinate({
     @HiveField(0) double? lat,
     @HiveField(1) double? lon,
