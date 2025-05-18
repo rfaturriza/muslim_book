@@ -55,11 +55,11 @@ platform :ios do
     build_ios_app(
       workspace: "Runner.xcworkspace",
       scheme: "Runner",
+      output_directory: "./fastlane/build",
+      output_name: "app.ipa",
       configuration: "Release",
       silent: true,
       clean: true,
-      output_directory: "./fastlane/build",
-      output_name: "app.ipa",
       export_method: "app-store"
     )
   end
@@ -77,6 +77,7 @@ platform :ios do
       ipa: "./fastlane/build/app.ipa",
       skip_screenshots: true,
       skip_metadata: true,
+      precheck_include_in_app_purchases: false,
       submit_for_review: true
     )
   end
@@ -104,6 +105,7 @@ platform :ios do
   lane :internal_minor do
     release_lane(update_type: "minor", target: :internal)
   end
+  
 
   desc "Internal release - major"
   lane :internal_major do

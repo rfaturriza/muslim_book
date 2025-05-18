@@ -462,7 +462,7 @@ class ListTileVerses extends StatelessWidget {
                                   context, verses, clickFrom, juz, surah);
                             },
                             onSharePressed: () {
-                              context.goNamed(
+                              context.pushNamed(
                                 RootRouter.shareVerseRoute.name,
                                 extra: ShareVerseScreenExtra(
                                   verse: verses,
