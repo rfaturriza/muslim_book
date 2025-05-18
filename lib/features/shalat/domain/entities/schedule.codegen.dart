@@ -9,7 +9,7 @@ part 'schedule.codegen.freezed.dart';
 part 'schedule.codegen.g.dart';
 
 @freezed
-class ScheduleByDay with _$ScheduleByDay {
+abstract class ScheduleByDay with _$ScheduleByDay {
   const factory ScheduleByDay({
     String? id,
     String? location,
@@ -31,7 +31,7 @@ class ScheduleByDay with _$ScheduleByDay {
 }
 
 @freezed
-class ScheduleByMonth with _$ScheduleByMonth {
+abstract class ScheduleByMonth with _$ScheduleByMonth {
   const factory ScheduleByMonth({
     String? id,
     String? location,
@@ -52,7 +52,7 @@ class ScheduleByMonth with _$ScheduleByMonth {
 }
 
 @freezed
-class Schedule with _$Schedule {
+abstract class Schedule with _$Schedule {
   const factory Schedule({
     String? date,
     String? imsak,
