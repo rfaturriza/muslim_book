@@ -42,12 +42,15 @@ class BottomNavPlayer extends StatelessWidget {
                 },
                 builder: (context, state) {
                   if (state.isLoading) {
-                    return LinearProgressIndicator(
-                      backgroundColor: colorIcon,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        context.theme.colorScheme.secondaryContainer,
+                    return Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: LinearProgressIndicator(
+                        backgroundColor: colorIcon.withAlpha(100),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          colorIcon,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      borderRadius: BorderRadius.circular(10),
                     );
                   }
                   final position = state.position;
@@ -59,7 +62,7 @@ class BottomNavPlayer extends StatelessWidget {
                     if (progress.isNaN || progress.isInfinite) progress = 0.0;
                   }
                   return TweenAnimationBuilder<double>(
-                      duration: const Duration(milliseconds: 500),
+                      duration: const Duration(milliseconds: 50),
                       curve: Curves.easeInOut,
                       tween: Tween<double>(
                         begin: 0,
@@ -70,9 +73,9 @@ class BottomNavPlayer extends StatelessWidget {
                           padding: const EdgeInsets.all(10.0),
                           child: LinearProgressIndicator(
                             value: value,
-                            backgroundColor: colorIcon,
+                            backgroundColor: colorIcon.withAlpha(100),
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              context.theme.colorScheme.onSecondary,
+                              colorIcon,
                             ),
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -80,53 +83,61 @@ class BottomNavPlayer extends StatelessWidget {
                       });
                 },
               ),
-              if (!audioBloc.state.isLoading) ...[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        audioBloc
-                            .add(const AudioVerseEvent.previousAudioVerse());
-                      },
-                      icon: const Icon(Icons.fast_rewind_outlined),
-                      color: colorIcon,
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        audioBloc.add(const AudioVerseEvent.seekAudioVerse(
-                          position: Duration(seconds: -10),
-                        ));
-                      },
-                      icon: const Icon(Icons.replay_10),
-                      color: colorIcon,
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        audioBloc.add(const AudioVerseEvent.stopAudioVerse());
-                      },
-                      icon: const Icon(Icons.stop_circle_outlined),
-                      color: colorIcon,
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        audioBloc.add(const AudioVerseEvent.seekAudioVerse(
-                          position: Duration(seconds: 10),
-                        ));
-                      },
-                      icon: const Icon(Icons.forward_10),
-                      color: colorIcon,
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        audioBloc.add(const AudioVerseEvent.nextAudioVerse());
-                      },
-                      icon: const Icon(Icons.fast_forward_outlined),
-                      color: colorIcon,
-                    ),
-                  ],
-                ),
-              ],
+              BlocBuilder<AudioVerseBloc, AudioVerseState>(
+                buildWhen: (previous, current) {
+                  return previous.isLoading != current.isLoading;
+                },
+                builder: (context, state) {
+                  if (state.isLoading) {
+                    return const SizedBox.shrink();
+                  }
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          audioBloc
+                              .add(const AudioVerseEvent.previousAudioVerse());
+                        },
+                        icon: const Icon(Icons.fast_rewind_outlined),
+                        color: colorIcon,
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          audioBloc.add(const AudioVerseEvent.seekAudioVerse(
+                            position: Duration(seconds: -10),
+                          ));
+                        },
+                        icon: const Icon(Icons.replay_10),
+                        color: colorIcon,
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          audioBloc.add(const AudioVerseEvent.stopAudioVerse());
+                        },
+                        icon: const Icon(Icons.stop_circle_outlined),
+                        color: colorIcon,
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          audioBloc.add(const AudioVerseEvent.seekAudioVerse(
+                            position: Duration(seconds: 10),
+                          ));
+                        },
+                        icon: const Icon(Icons.forward_10),
+                        color: colorIcon,
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          audioBloc.add(const AudioVerseEvent.nextAudioVerse());
+                        },
+                        icon: const Icon(Icons.fast_forward_outlined),
+                        color: colorIcon,
+                      ),
+                    ],
+                  );
+                },
+              ),
             ],
           ),
         ),

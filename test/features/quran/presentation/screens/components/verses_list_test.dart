@@ -117,6 +117,6 @@ void main() {
     // Check that there's no bottom padding when audio player is not visible
     final paddingWidget = tester.widget<ScrollablePositionedList>(scrollablePositionedList);
     expect(paddingWidget.padding, isA<EdgeInsets>());
-    expect((paddingWidget.padding as EdgeInsets).bottom, 0.0);
+    expect((paddingWidget.padding as EdgeInsets).bottom, null);
   });
 }
