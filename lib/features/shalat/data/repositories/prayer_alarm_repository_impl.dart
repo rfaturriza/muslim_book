@@ -9,6 +9,7 @@ import 'package:quranku/core/utils/extension/string_ext.dart';
 import 'package:quranku/features/shalat/data/models/prayer_schedule_setting_model.codegen.dart';
 import 'package:quranku/features/shalat/domain/entities/geolocation.codegen.dart';
 import 'package:quranku/features/shalat/domain/entities/prayer_schedule_setting.codegen.dart';
+import 'package:quranku/features/shalat/domain/entities/prayer_in_app.dart';
 import 'package:quranku/features/shalat/domain/entities/schedule.codegen.dart';
 import 'package:quranku/features/shalat/presentation/helper/location_helper.dart';
 import 'package:quranku/generated/locale_keys.g.dart';

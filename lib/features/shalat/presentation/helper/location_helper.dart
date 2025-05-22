@@ -52,10 +52,10 @@ class LocationHelper {
     
     // Calculate distance between the two locations
     final double distance = calculateDistance(
-      location1.coordinate!.lat,
-      location1.coordinate!.lon,
-      location2.coordinate!.lat,
-      location2.coordinate!.lon,
+      location1.coordinate?.lat ?? 0,
+      location1.coordinate?.lon ?? 0, 
+      location2.coordinate?.lat ?? 0,
+      location2.coordinate?.lon ?? 0,
     );
     
     // Return true if the distance is greater than the threshold
@@ -68,8 +68,8 @@ class LocationHelper {
       return false;
     }
     
-    final double lat = location.coordinate!.lat;
-    final double lon = location.coordinate!.lon;
+    final lat = location.coordinate?.lat ?? 0;
+    final lon = location.coordinate?.lon ?? 0;
     
     // Check if coordinates are within valid ranges
     return lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180;

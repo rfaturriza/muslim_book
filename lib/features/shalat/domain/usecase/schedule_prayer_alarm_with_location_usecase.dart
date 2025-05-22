@@ -21,7 +21,7 @@ class SchedulePrayerAlarmWithLocationUseCase extends UseCase<Unit, SchedulePraye
     final shouldUpdateResult = await _repository.shouldUpdateNotifications(params.location);
     
     if (shouldUpdateResult.isLeft()) {
-      return left(shouldUpdateResult.asLeft());
+      return shouldUpdateResult.fold((l) => left(l), (r) => right(unit));
     }
     
     final shouldUpdate = shouldUpdateResult.getOrElse(() => false);
