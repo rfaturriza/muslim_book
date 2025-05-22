@@ -43,4 +43,12 @@ class ShalatEvent with _$ShalatEvent {
 
   const factory ShalatEvent.schedulePrayerAlarmEvent() =
       _SchedulePrayerAlarmEvent;
+      
+  const factory ShalatEvent.schedulePrayerAlarmWithLocationEvent({
+    required GeoLocation location,
+    bool forceUpdate = false,
+  }) = _SchedulePrayerAlarmWithLocationEvent;
+  
+  const factory ShalatEvent.checkAndUpdateNotificationsEvent() =
+      _CheckAndUpdateNotificationsEvent;
 }
